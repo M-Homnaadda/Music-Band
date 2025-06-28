@@ -281,7 +281,7 @@ function App() {
         {/* Background Image with Parallax Effect */}
         <div className="absolute inset-0">
           <img 
-            src="/src/assets/PhotoRoom-20250628_220338.png"
+            src="https://images.pexels.com/photos/1190297/pexels-photo-1190297.jpeg?auto=compress&cs=tinysrgb&w=1920&h=1080&dpr=2"
             alt="Passionate musician performing"
             className="w-full h-full object-cover object-center transform scale-105"
             style={{ transform: `translateY(${isScrolled ? '10px' : '0px'})` }}
@@ -298,7 +298,7 @@ function App() {
 
         {/* Enhanced Content */}
         <div className="relative z-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-full">
-          <div className="flex items-center h-full pt-16 md:pt-0">
+          <div className="flex items-center h-full pt-20 md:pt-16">
             <div className="w-full lg:w-1/2 text-white space-y-6 md:space-y-8 lg:space-y-10 animate-in fade-in slide-in-from-left duration-1000">
               {/* Enhanced Brand Text */}
               <div className="space-y-2 md:space-y-4 animate-in fade-in slide-in-from-left duration-1000 delay-300">
@@ -501,7 +501,7 @@ function App() {
             <div className="relative animate-in fade-in slide-in-from-right duration-1000 delay-300">
               <div className="absolute -inset-4 bg-gradient-to-r from-emerald-500/20 to-green-500/20 rounded-2xl md:rounded-3xl blur-lg"></div>
               <img 
-                src="/src/assets/pexels-a-darmel-7715653.jpg"
+                src="https://images.pexels.com/photos/7715653/pexels-photo-7715653.jpeg?auto=compress&cs=tinysrgb&w=800&h=600&dpr=2"
                 alt="Svara Band performing live on stage"
                 className="relative w-full h-64 md:h-96 object-cover rounded-xl md:rounded-2xl shadow-lg hover:shadow-xl transition-shadow duration-300"
               />
