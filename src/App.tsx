@@ -269,21 +269,21 @@ function App() {
 
         {/* Enhanced Content */}
         <div className="relative z-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-full">
-          <div className="flex items-center h-full">
-            <div className="w-full lg:w-1/2 text-white space-y-8 lg:space-y-10 animate-in fade-in slide-in-from-left duration-1000">
+          <div className="flex items-center h-full pt-16 md:pt-0">
+            <div className="w-full lg:w-1/2 text-white space-y-6 md:space-y-8 lg:space-y-10 animate-in fade-in slide-in-from-left duration-1000">
               {/* Enhanced Brand Text */}
-              <div className="space-y-4 animate-in fade-in slide-in-from-left duration-1000 delay-300">
-                <h1 className="text-6xl lg:text-7xl xl:text-8xl font-bold leading-none">
+              <div className="space-y-2 md:space-y-4 animate-in fade-in slide-in-from-left duration-1000 delay-300">
+                <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-bold leading-none">
                   <span className="bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent">
                     svara
                   </span>
-                  <span className="text-4xl lg:text-5xl xl:text-6xl block text-white/80 animate-pulse">BAND</span>
+                  <span className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl block text-white/80 animate-pulse">BAND</span>
                 </h1>
               </div>
 
               {/* Enhanced Main Heading */}
-              <div className="space-y-6 animate-in fade-in slide-in-from-left duration-1000 delay-500">
-                <h2 className="text-2xl lg:text-3xl xl:text-4xl font-bold leading-tight">
+              <div className="space-y-4 md:space-y-6 animate-in fade-in slide-in-from-left duration-1000 delay-500">
+                <h2 className="text-lg sm:text-xl md:text-2xl lg:text-3xl xl:text-4xl font-bold leading-tight">
                   FEEL THE MUSICAL ENERGY
                   <br />
                   <span className="bg-gradient-to-r from-amber-400 to-orange-500 bg-clip-text text-transparent">
@@ -291,22 +291,22 @@ function App() {
                   </span>
                 </h2>
                 
-                <p className="text-base lg:text-lg text-gray-300 leading-relaxed max-w-xl">
+                <p className="text-sm sm:text-base lg:text-lg text-gray-300 leading-relaxed max-w-xl">
                   Experience the raw power of live music with Svara Band. Our passionate performances and electrifying stage presence create unforgettable moments that resonate deep within your soul.
                 </p>
               </div>
 
               {/* Enhanced Action Buttons */}
-              <div className="flex flex-col sm:flex-row items-start space-y-4 sm:space-y-0 sm:space-x-8 animate-in fade-in slide-in-from-left duration-1000 delay-700">
+              <div className="flex flex-col sm:flex-row items-start space-y-4 sm:space-y-0 sm:space-x-6 md:space-x-8 animate-in fade-in slide-in-from-left duration-1000 delay-700">
                 <button 
                   onClick={() => scrollToSection('contact')}
-                  className="bg-white text-black px-8 py-4 rounded-full font-semibold hover:bg-gray-100 transition-all duration-300 text-lg transform hover:scale-105 hover:shadow-lg"
+                  className="bg-white text-black px-6 md:px-8 py-3 md:py-4 rounded-full font-semibold hover:bg-gray-100 transition-all duration-300 text-base md:text-lg transform hover:scale-105 hover:shadow-lg"
                 >
                   Join us
                 </button>
                 <button 
                   onClick={() => scrollToSection('about')}
-                  className="text-white font-semibold hover:text-gray-300 transition-colors underline text-lg group"
+                  className="text-white font-semibold hover:text-gray-300 transition-colors underline text-base md:text-lg group"
                 >
                   Read more
                   <ArrowDown className="h-4 w-4 inline ml-2 group-hover:translate-y-1 transition-transform" />
@@ -314,7 +314,7 @@ function App() {
               </div>
 
               {/* Enhanced Social Icons */}
-              <div className="flex space-x-8 pt-6 animate-in fade-in slide-in-from-left duration-1000 delay-900">
+              <div className="flex space-x-6 md:space-x-8 pt-4 md:pt-6 animate-in fade-in slide-in-from-left duration-1000 delay-900">
                 {[
                   { icon: Facebook, href: '#' },
                   { icon: Instagram, href: '#' },
@@ -325,7 +325,7 @@ function App() {
                     href={social.href} 
                     className="text-white/60 hover:text-white transition-all duration-300 transform hover:scale-110 hover:-translate-y-1"
                   >
-                    <social.icon className="h-6 w-6" />
+                    <social.icon className="h-5 w-5 md:h-6 md:w-6" />
                   </a>
                 ))}
               </div>
@@ -346,34 +346,34 @@ function App() {
       </section>
 
       {/* Enhanced Musical Offerings Section */}
-      <section id="music" className="py-20 bg-white">
+      <section id="music" className="py-16 md:py-20 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           {/* Enhanced Decorative Element */}
-          <div className="flex justify-center mb-8 animate-in fade-in slide-in-from-top duration-1000">
-            <div className="w-12 h-12 bg-gradient-to-r from-emerald-500 to-green-500 rounded-full flex items-center justify-center shadow-lg transform hover:scale-110 transition-transform duration-300">
-              <Music className="h-6 w-6 text-white" />
+          <div className="flex justify-center mb-6 md:mb-8 animate-in fade-in slide-in-from-top duration-1000">
+            <div className="w-10 h-10 md:w-12 md:h-12 bg-gradient-to-r from-emerald-500 to-green-500 rounded-full flex items-center justify-center shadow-lg transform hover:scale-110 transition-transform duration-300">
+              <Music className="h-5 w-5 md:h-6 md:w-6 text-white" />
             </div>
           </div>
 
           {/* Enhanced Main Heading */}
-          <h2 className="text-4xl lg:text-5xl font-bold text-gray-900 mb-6 animate-in fade-in slide-in-from-top duration-1000 delay-200" style={{ fontFamily: 'cursive' }}>
+          <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 mb-4 md:mb-6 animate-in fade-in slide-in-from-top duration-1000 delay-200" style={{ fontFamily: 'cursive' }}>
             Our Musical Repertoire
           </h2>
           
-          <p className="text-lg text-gray-600 mb-16 max-w-2xl mx-auto leading-relaxed animate-in fade-in slide-in-from-top duration-1000 delay-400">
+          <p className="text-base md:text-lg text-gray-600 mb-12 md:mb-16 max-w-2xl mx-auto leading-relaxed animate-in fade-in slide-in-from-top duration-1000 delay-400">
             Discover our diverse collection of musical styles and performances. 
             From soulful ballads to energetic rock anthems, we create the perfect atmosphere for every occasion.
           </p>
 
           {/* Enhanced Music Cards Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-12 mb-16">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-12 mb-12 md:mb-16">
             {musicGenres.map((genre, index) => (
               <div 
                 key={genre.id}
                 className="group animate-in fade-in slide-in-from-bottom duration-1000"
                 style={{ animationDelay: `${600 + index * 200}ms` }}
               >
-                <div className="relative mb-6 overflow-hidden rounded-full w-64 h-64 mx-auto shadow-lg group-hover:shadow-2xl transition-all duration-500 transform group-hover:scale-105">
+                <div className="relative mb-4 md:mb-6 overflow-hidden rounded-full w-48 h-48 md:w-64 md:h-64 mx-auto shadow-lg group-hover:shadow-2xl transition-all duration-500 transform group-hover:scale-105">
                   <img 
                     src={genre.image}
                     alt={genre.title}
@@ -384,25 +384,25 @@ function App() {
                   {/* Like Button */}
                   <button
                     onClick={() => toggleLike(genre.id)}
-                    className="absolute top-4 right-4 p-2 bg-white/20 backdrop-blur-sm rounded-full opacity-0 group-hover:opacity-100 transition-all duration-300 hover:bg-white/30 transform hover:scale-110"
+                    className="absolute top-3 right-3 md:top-4 md:right-4 p-2 bg-white/20 backdrop-blur-sm rounded-full opacity-0 group-hover:opacity-100 transition-all duration-300 hover:bg-white/30 transform hover:scale-110"
                   >
                     <Heart 
-                      className={`h-5 w-5 transition-colors duration-200 ${
+                      className={`h-4 w-4 md:h-5 md:w-5 transition-colors duration-200 ${
                         likedCards.includes(genre.id) ? 'text-red-500 fill-current' : 'text-white'
                       }`} 
                     />
                   </button>
 
                   {/* Genre Icon Overlay */}
-                  <div className="absolute bottom-4 left-4 p-3 bg-white/20 backdrop-blur-sm rounded-full opacity-0 group-hover:opacity-100 transition-all duration-300">
+                  <div className="absolute bottom-3 left-3 md:bottom-4 md:left-4 p-2 md:p-3 bg-white/20 backdrop-blur-sm rounded-full opacity-0 group-hover:opacity-100 transition-all duration-300">
                     {genre.icon}
                   </div>
                 </div>
                 
-                <h3 className="text-xl font-bold text-gray-900 mb-3 group-hover:text-emerald-600 transition-colors duration-300">
+                <h3 className="text-lg md:text-xl font-bold text-gray-900 mb-2 md:mb-3 group-hover:text-emerald-600 transition-colors duration-300">
                   {genre.title}
                 </h3>
-                <p className="text-gray-600 leading-relaxed group-hover:text-gray-700 transition-colors duration-300">
+                <p className="text-sm md:text-base text-gray-600 leading-relaxed group-hover:text-gray-700 transition-colors duration-300 px-2 md:px-0">
                   {genre.description}
                 </p>
               </div>
@@ -410,57 +410,57 @@ function App() {
           </div>
 
           {/* Enhanced Show More Button */}
-          <button className="bg-gray-900 text-white px-12 py-4 rounded-full font-semibold hover:bg-gray-800 transition-all duration-300 text-lg tracking-wider transform hover:scale-105 hover:shadow-lg animate-in fade-in slide-in-from-bottom duration-1000 delay-1200">
+          <button className="bg-gray-900 text-white px-8 md:px-12 py-3 md:py-4 rounded-full font-semibold hover:bg-gray-800 transition-all duration-300 text-base md:text-lg tracking-wider transform hover:scale-105 hover:shadow-lg animate-in fade-in slide-in-from-bottom duration-1000 delay-1200">
             SHOW MORE
           </button>
         </div>
       </section>
 
       {/* Enhanced Quote Section */}
-      <section className="py-16 bg-gradient-to-r from-gray-50 to-white">
+      <section className="py-12 md:py-16 bg-gradient-to-r from-gray-50 to-white">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <blockquote className="text-2xl lg:text-3xl font-light text-gray-800 italic leading-relaxed animate-in fade-in slide-in-from-bottom duration-1000 relative">
-            <span className="text-6xl text-emerald-500/20 absolute -top-4 -left-4">"</span>
+          <blockquote className="text-xl md:text-2xl lg:text-3xl font-light text-gray-800 italic leading-relaxed animate-in fade-in slide-in-from-bottom duration-1000 relative">
+            <span className="text-4xl md:text-6xl text-emerald-500/20 absolute -top-2 md:-top-4 -left-2 md:-left-4">"</span>
             Music is a universal language – one that, with the right artists, can reveal a clear path forward.
-            <span className="text-6xl text-emerald-500/20 absolute -bottom-8 -right-4">"</span>
+            <span className="text-4xl md:text-6xl text-emerald-500/20 absolute -bottom-4 md:-bottom-8 -right-2 md:-right-4">"</span>
           </blockquote>
         </div>
       </section>
 
       {/* Enhanced Discover Our Music Section */}
-      <section className="py-20 bg-gray-50">
+      <section className="py-16 md:py-20 bg-gray-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-12 animate-in fade-in slide-in-from-left duration-1000">
+          <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold text-gray-900 mb-8 md:mb-12 animate-in fade-in slide-in-from-left duration-1000">
             Discover Our Music
           </h2>
           
-          <div className="relative bg-white rounded-3xl overflow-hidden shadow-xl group animate-in fade-in slide-in-from-right duration-1000 delay-300">
+          <div className="relative bg-white rounded-2xl md:rounded-3xl overflow-hidden shadow-xl group animate-in fade-in slide-in-from-right duration-1000 delay-300">
             <img 
               src="https://images.pexels.com/photos/1190297/pexels-photo-1190297.jpeg?auto=compress&cs=tinysrgb&w=800&h=500&dpr=2"
               alt="Band performing live"
-              className="w-full h-96 object-cover group-hover:scale-105 transition-transform duration-700"
+              className="w-full h-64 md:h-96 object-cover group-hover:scale-105 transition-transform duration-700"
             />
             <div className="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center group-hover:bg-opacity-30 transition-all duration-300">
-              <button className="bg-white bg-opacity-90 hover:bg-opacity-100 rounded-full p-6 transition-all duration-300 transform hover:scale-110 group-hover:scale-125 shadow-lg hover:shadow-xl">
-                <Play className="h-12 w-12 text-emerald-600 ml-1" />
+              <button className="bg-white bg-opacity-90 hover:bg-opacity-100 rounded-full p-4 md:p-6 transition-all duration-300 transform hover:scale-110 group-hover:scale-125 shadow-lg hover:shadow-xl">
+                <Play className="h-8 w-8 md:h-12 md:w-12 text-emerald-600 ml-1" />
               </button>
             </div>
             
             {/* Play Button Pulse Effect */}
             <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-              <div className="w-24 h-24 border-2 border-white/50 rounded-full animate-ping"></div>
+              <div className="w-16 h-16 md:w-24 md:h-24 border-2 border-white/50 rounded-full animate-ping"></div>
             </div>
           </div>
         </div>
       </section>
 
       {/* Enhanced About Section */}
-      <section id="about" className="py-20 bg-white">
+      <section id="about" className="py-16 md:py-20 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="lg:grid lg:grid-cols-2 lg:gap-12 items-center">
-            <div className="mb-12 lg:mb-0 animate-in fade-in slide-in-from-left duration-1000">
-              <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-6">About Svara Band</h2>
-              <p className="text-lg text-gray-600 mb-6 leading-relaxed">
+            <div className="mb-8 md:mb-12 lg:mb-0 animate-in fade-in slide-in-from-left duration-1000">
+              <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold text-gray-900 mb-4 md:mb-6">About Svara Band</h2>
+              <p className="text-base md:text-lg text-gray-600 mb-4 md:mb-6 leading-relaxed">
                 Founded in 2018 and present in 15+ cities across the region, Svara Band has been delivering exceptional musical experiences. We are formerly worked at the United Studios in New York and is the Director of the Academy of Musical Arts. Our diverse repertoire and personalized approach set us apart as skilled musicians, accomplished performers.
               </p>
               <button className="text-emerald-600 font-semibold hover:text-emerald-700 transition-colors flex items-center group">
@@ -470,11 +470,11 @@ function App() {
             </div>
             
             <div className="relative animate-in fade-in slide-in-from-right duration-1000 delay-300">
-              <div className="absolute -inset-4 bg-gradient-to-r from-emerald-500/20 to-green-500/20 rounded-3xl blur-lg"></div>
+              <div className="absolute -inset-4 bg-gradient-to-r from-emerald-500/20 to-green-500/20 rounded-2xl md:rounded-3xl blur-lg"></div>
               <img 
                 src="/src/assets/pexels-a-darmel-7715653.jpg"
                 alt="Svara Band performing live on stage"
-                className="relative w-full h-96 object-cover rounded-2xl shadow-lg hover:shadow-xl transition-shadow duration-300"
+                className="relative w-full h-64 md:h-96 object-cover rounded-xl md:rounded-2xl shadow-lg hover:shadow-xl transition-shadow duration-300"
               />
             </div>
           </div>
@@ -482,9 +482,9 @@ function App() {
       </section>
 
       {/* Enhanced Testimonials Section */}
-      <section id="testimonials" className="py-20 bg-gray-50">
+      <section id="testimonials" className="py-16 md:py-20 bg-gray-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-12 animate-in fade-in slide-in-from-top duration-1000">
+          <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold text-gray-900 mb-8 md:mb-12 animate-in fade-in slide-in-from-top duration-1000">
             What Our Clients Say
           </h2>
           
@@ -493,7 +493,7 @@ function App() {
               {testimonials.map((testimonial, index) => (
                 <div 
                   key={index}
-                  className={`bg-white p-8 rounded-2xl shadow-lg transition-all duration-500 hover:shadow-xl ${
+                  className={`bg-white p-6 md:p-8 rounded-xl md:rounded-2xl shadow-lg transition-all duration-500 hover:shadow-xl ${
                     index === currentTestimonial ? 'lg:scale-105 lg:shadow-xl ring-2 ring-emerald-500/20' : 'lg:opacity-75 hover:opacity-100'
                   } ${index !== currentTestimonial ? 'hidden lg:block' : ''}`}
                 >
@@ -502,33 +502,33 @@ function App() {
                       <img 
                         src={testimonial.avatar}
                         alt={testimonial.name}
-                        className="w-12 h-12 rounded-full object-cover mr-4 ring-2 ring-emerald-500/20"
+                        className="w-10 h-10 md:w-12 md:h-12 rounded-full object-cover mr-3 md:mr-4 ring-2 ring-emerald-500/20"
                       />
-                      <div className="absolute -bottom-1 -right-1 w-4 h-4 bg-green-500 rounded-full border-2 border-white"></div>
+                      <div className="absolute -bottom-1 -right-1 w-3 h-3 md:w-4 md:h-4 bg-green-500 rounded-full border-2 border-white"></div>
                     </div>
                     <div>
-                      <h4 className="font-semibold text-gray-900">{testimonial.name}</h4>
-                      <p className="text-sm text-gray-600">{testimonial.date}</p>
+                      <h4 className="font-semibold text-gray-900 text-sm md:text-base">{testimonial.name}</h4>
+                      <p className="text-xs md:text-sm text-gray-600">{testimonial.date}</p>
                     </div>
                   </div>
                   
                   <div className="flex mb-4">
                     {[...Array(testimonial.rating)].map((_, i) => (
-                      <Star key={i} className="h-5 w-5 text-yellow-400 fill-current" />
+                      <Star key={i} className="h-4 w-4 md:h-5 md:w-5 text-yellow-400 fill-current" />
                     ))}
                   </div>
                   
-                  <p className="text-gray-700 leading-relaxed">{testimonial.text}</p>
+                  <p className="text-sm md:text-base text-gray-700 leading-relaxed">{testimonial.text}</p>
                 </div>
               ))}
             </div>
             
-            <div className="flex justify-center items-center mt-8 space-x-4">
+            <div className="flex justify-center items-center mt-6 md:mt-8 space-x-4">
               <button 
                 onClick={prevTestimonial}
-                className="p-3 rounded-full border border-gray-300 hover:border-emerald-600 hover:text-emerald-600 transition-all duration-300 transform hover:scale-110"
+                className="p-2 md:p-3 rounded-full border border-gray-300 hover:border-emerald-600 hover:text-emerald-600 transition-all duration-300 transform hover:scale-110"
               >
-                <ChevronLeft className="h-5 w-5" />
+                <ChevronLeft className="h-4 w-4 md:h-5 md:w-5" />
               </button>
               
               <div className="flex space-x-2">
@@ -536,7 +536,7 @@ function App() {
                   <button
                     key={index}
                     onClick={() => setCurrentTestimonial(index)}
-                    className={`w-3 h-3 rounded-full transition-all duration-300 ${
+                    className={`w-2 h-2 md:w-3 md:h-3 rounded-full transition-all duration-300 ${
                       index === currentTestimonial ? 'bg-emerald-600 scale-125' : 'bg-gray-300 hover:bg-gray-400'
                     }`}
                   />
@@ -545,9 +545,9 @@ function App() {
               
               <button 
                 onClick={nextTestimonial}
-                className="p-3 rounded-full border border-gray-300 hover:border-emerald-600 hover:text-emerald-600 transition-all duration-300 transform hover:scale-110"
+                className="p-2 md:p-3 rounded-full border border-gray-300 hover:border-emerald-600 hover:text-emerald-600 transition-all duration-300 transform hover:scale-110"
               >
-                <ChevronRight className="h-5 w-5" />
+                <ChevronRight className="h-4 w-4 md:h-5 md:w-5" />
               </button>
             </div>
           </div>
@@ -555,20 +555,20 @@ function App() {
       </section>
 
       {/* Enhanced Contact/Booking Section */}
-      <section id="contact" className="py-20 bg-white">
+      <section id="contact" className="py-16 md:py-20 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-12 animate-in fade-in slide-in-from-top duration-1000">
+          <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold text-gray-900 mb-8 md:mb-12 animate-in fade-in slide-in-from-top duration-1000">
             Schedule a Performance
           </h2>
           
           <div className="lg:grid lg:grid-cols-2 lg:gap-12">
-            <div className="animate-in fade-in slide-in-from-left duration-1000">
-              <div className="space-y-8">
-                <div className="flex items-start space-x-4 p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors duration-300">
-                  <MapPin className="h-6 w-6 text-emerald-600 mt-1" />
+            <div className="animate-in fade-in slide-in-from-left duration-1000 mb-8 lg:mb-0">
+              <div className="space-y-6 md:space-y-8">
+                <div className="flex items-start space-x-3 md:space-x-4 p-3 md:p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors duration-300">
+                  <MapPin className="h-5 w-5 md:h-6 md:w-6 text-emerald-600 mt-1" />
                   <div>
-                    <h3 className="text-lg font-semibold text-gray-900 mb-2">Address</h3>
-                    <p className="text-gray-600">
+                    <h3 className="text-base md:text-lg font-semibold text-gray-900 mb-2">Address</h3>
+                    <p className="text-sm md:text-base text-gray-600">
                       Main Office of Svara Band<br />
                       1st Floor, B<br />
                       123 Music St<br />
@@ -577,21 +577,21 @@ function App() {
                   </div>
                 </div>
                 
-                <div className="flex items-start space-x-4 p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors duration-300">
-                  <Mail className="h-6 w-6 text-emerald-600 mt-1" />
+                <div className="flex items-start space-x-3 md:space-x-4 p-3 md:p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors duration-300">
+                  <Mail className="h-5 w-5 md:h-6 md:w-6 text-emerald-600 mt-1" />
                   <div>
-                    <h3 className="text-lg font-semibold text-gray-900 mb-2">Email</h3>
-                    <a href="mailto:booking@svaraband.com" className="text-gray-600 hover:text-emerald-600 transition-colors">
+                    <h3 className="text-base md:text-lg font-semibold text-gray-900 mb-2">Email</h3>
+                    <a href="mailto:booking@svaraband.com" className="text-sm md:text-base text-gray-600 hover:text-emerald-600 transition-colors">
                       booking@svaraband.com
                     </a>
                   </div>
                 </div>
                 
-                <div className="flex items-start space-x-4 p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors duration-300">
-                  <Phone className="h-6 w-6 text-emerald-600 mt-1" />
+                <div className="flex items-start space-x-3 md:space-x-4 p-3 md:p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors duration-300">
+                  <Phone className="h-5 w-5 md:h-6 md:w-6 text-emerald-600 mt-1" />
                   <div>
-                    <h3 className="text-lg font-semibold text-gray-900 mb-2">Phone</h3>
-                    <a href="tel:+14155677700" className="text-gray-600 hover:text-emerald-600 transition-colors">
+                    <h3 className="text-base md:text-lg font-semibold text-gray-900 mb-2">Phone</h3>
+                    <a href="tel:+14155677700" className="text-sm md:text-base text-gray-600 hover:text-emerald-600 transition-colors">
                       (415) 567-7700
                     </a>
                   </div>
@@ -599,9 +599,9 @@ function App() {
               </div>
             </div>
             
-            <div className="bg-gradient-to-br from-gray-50 to-gray-100 p-8 rounded-2xl shadow-lg animate-in fade-in slide-in-from-right duration-1000 delay-300">
-              <form onSubmit={handleSubmit} className="space-y-6">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="bg-gradient-to-br from-gray-50 to-gray-100 p-6 md:p-8 rounded-xl md:rounded-2xl shadow-lg animate-in fade-in slide-in-from-right duration-1000 delay-300">
+              <form onSubmit={handleSubmit} className="space-y-4 md:space-y-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">First Name</label>
                     <input 
@@ -609,7 +609,7 @@ function App() {
                       name="firstName"
                       value={formData.firstName}
                       onChange={handleInputChange}
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-all duration-300 hover:border-gray-400"
+                      className="w-full px-3 md:px-4 py-2 md:py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-all duration-300 hover:border-gray-400 text-sm md:text-base"
                       required
                     />
                   </div>
@@ -620,13 +620,13 @@ function App() {
                       name="lastName"
                       value={formData.lastName}
                       onChange={handleInputChange}
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-all duration-300 hover:border-gray-400"
+                      className="w-full px-3 md:px-4 py-2 md:py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-all duration-300 hover:border-gray-400 text-sm md:text-base"
                       required
                     />
                   </div>
                 </div>
                 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">Email</label>
                     <input 
@@ -634,7 +634,7 @@ function App() {
                       name="email"
                       value={formData.email}
                       onChange={handleInputChange}
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-all duration-300 hover:border-gray-400"
+                      className="w-full px-3 md:px-4 py-2 md:py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-all duration-300 hover:border-gray-400 text-sm md:text-base"
                       required
                     />
                   </div>
@@ -645,7 +645,7 @@ function App() {
                       name="phone"
                       value={formData.phone}
                       onChange={handleInputChange}
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-all duration-300 hover:border-gray-400"
+                      className="w-full px-3 md:px-4 py-2 md:py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-all duration-300 hover:border-gray-400 text-sm md:text-base"
                       required
                     />
                   </div>
@@ -659,7 +659,7 @@ function App() {
                     value={formData.eventDetails}
                     onChange={handleInputChange}
                     placeholder="Tell us about your event, date, and musical preferences..."
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-all duration-300 hover:border-gray-400 resize-none"
+                    className="w-full px-3 md:px-4 py-2 md:py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-all duration-300 hover:border-gray-400 resize-none text-sm md:text-base"
                     required
                   ></textarea>
                 </div>
@@ -667,11 +667,11 @@ function App() {
                 <button 
                   type="submit"
                   disabled={isSubmitting}
-                  className="w-full bg-gray-900 text-white py-4 rounded-lg font-semibold hover:bg-gray-800 transition-all duration-300 transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none flex items-center justify-center space-x-2"
+                  className="w-full bg-gray-900 text-white py-3 md:py-4 rounded-lg font-semibold hover:bg-gray-800 transition-all duration-300 transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none flex items-center justify-center space-x-2 text-sm md:text-base"
                 >
                   {isSubmitting ? (
                     <>
-                      <div className="w-5 h-5 border-2 border-white/20 border-t-white rounded-full animate-spin"></div>
+                      <div className="w-4 h-4 md:w-5 md:h-5 border-2 border-white/20 border-t-white rounded-full animate-spin"></div>
                       <span>Sending...</span>
                     </>
                   ) : (
@@ -685,17 +685,17 @@ function App() {
       </section>
 
       {/* Enhanced Footer */}
-      <footer className="bg-gray-900 text-white py-12">
+      <footer className="bg-gray-900 text-white py-8 md:py-12">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex flex-col items-center mb-8">
-            <div className="flex items-center space-x-2 mb-4">
-              <Music className="h-6 w-6 text-emerald-500" />
-              <span className="text-xl font-bold">SVARA BAND</span>
+          <div className="flex flex-col items-center mb-6 md:mb-8">
+            <div className="flex items-center space-x-2 mb-3 md:mb-4">
+              <Music className="h-5 w-5 md:h-6 md:w-6 text-emerald-500" />
+              <span className="text-lg md:text-xl font-bold">SVARA BAND</span>
             </div>
-            <p className="text-gray-400 text-center">Creating unforgettable musical experiences</p>
+            <p className="text-gray-400 text-center text-sm md:text-base">Creating unforgettable musical experiences</p>
           </div>
           
-          <div className="flex flex-wrap justify-center space-x-8 mb-8">
+          <div className="flex flex-wrap justify-center space-x-4 md:space-x-8 mb-6 md:mb-8">
             {[
               { id: 'about', label: 'About' },
               { id: 'music', label: 'Music' },
@@ -705,14 +705,14 @@ function App() {
               <button
                 key={item.id}
                 onClick={() => scrollToSection(item.id)}
-                className="text-gray-400 hover:text-white transition-colors duration-300 hover:underline"
+                className="text-gray-400 hover:text-white transition-colors duration-300 hover:underline text-sm md:text-base"
               >
                 {item.label}
               </button>
             ))}
           </div>
           
-          <div className="flex justify-center space-x-6 mb-8">
+          <div className="flex justify-center space-x-4 md:space-x-6 mb-6 md:mb-8">
             {[
               { icon: Facebook, href: '#' },
               { icon: Instagram, href: '#' },
@@ -723,12 +723,12 @@ function App() {
                 href={social.href} 
                 className="text-gray-400 hover:text-white transition-all duration-300 transform hover:scale-110 hover:-translate-y-1"
               >
-                <social.icon className="h-6 w-6" />
+                <social.icon className="h-5 w-5 md:h-6 md:w-6" />
               </a>
             ))}
           </div>
           
-          <div className="text-center text-gray-400 text-sm border-t border-gray-800 pt-8">
+          <div className="text-center text-gray-400 text-xs md:text-sm border-t border-gray-800 pt-6 md:pt-8">
             <p>&copy; 2024 Svara Band. All rights reserved. | Designed with ♪ for music lovers</p>
           </div>
         </div>
