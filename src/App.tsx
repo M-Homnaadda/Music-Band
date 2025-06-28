@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Play, Users, Calendar, Star, ChevronLeft, ChevronRight, Menu, X, ArrowDown, Facebook, Instagram, Twitter, Music, Volume2, Heart, MapPin, Clock, Phone, Mail } from 'lucide-react';
+import { Play, Users, Calendar, Star, ChevronLeft, ChevronRight, Menu, X, ArrowDown, Facebook, Instagram, Twitter, Music, Volume2, Heart, MapPin, Clock, Phone, Mail, ShoppingCart, ArrowRight } from 'lucide-react';
 
 function App() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -29,7 +29,7 @@ function App() {
       setIsScrolled(window.scrollY > 50);
       
       // Update active section based on scroll position
-      const sections = ['home', 'about', 'music', 'testimonials', 'contact'];
+      const sections = ['home', 'about', 'products', 'music', 'testimonials', 'contact'];
       const scrollPosition = window.scrollY + 100;
       
       for (const section of sections) {
@@ -101,6 +101,33 @@ function App() {
       description: "Intimate acoustic sets featuring storytelling through music, perfect for creating warm, personal connections with audiences.",
       image: "https://images.pexels.com/photos/1047930/pexels-photo-1047930.jpeg?auto=compress&cs=tinysrgb&w=400&h=400&dpr=2",
       icon: <Heart className="h-6 w-6" />
+    }
+  ];
+
+  const featuredProducts = [
+    {
+      id: 1,
+      title: "Latest Album",
+      subtitle: "Available in all stores",
+      price: "$19.99",
+      image: "https://images.pexels.com/photos/167092/pexels-photo-167092.jpeg?auto=compress&cs=tinysrgb&w=400&h=400&dpr=2",
+      bgColor: "bg-gradient-to-br from-gray-200 to-gray-300"
+    },
+    {
+      id: 2,
+      title: "Band T-Shirt",
+      subtitle: "Available online only",
+      price: "$24.99",
+      image: "https://images.pexels.com/photos/8532616/pexels-photo-8532616.jpeg?auto=compress&cs=tinysrgb&w=400&h=400&dpr=2",
+      bgColor: "bg-gradient-to-br from-pink-200 via-purple-200 to-blue-200"
+    },
+    {
+      id: 3,
+      title: "Signed Poster",
+      subtitle: "Available online only",
+      price: "$14.99",
+      image: "https://images.pexels.com/photos/1763075/pexels-photo-1763075.jpeg?auto=compress&cs=tinysrgb&w=400&h=400&dpr=2",
+      bgColor: "bg-gradient-to-br from-blue-200 to-blue-300"
     }
   ];
 
@@ -186,6 +213,7 @@ function App() {
               {[
                 { id: 'home', label: 'Home' },
                 { id: 'about', label: 'About us' },
+                { id: 'products', label: 'Store' },
                 { id: 'music', label: 'Music' },
                 { id: 'testimonials', label: 'Reviews' },
                 { id: 'contact', label: 'Contact' }
@@ -227,6 +255,7 @@ function App() {
               {[
                 { id: 'home', label: 'Home' },
                 { id: 'about', label: 'About us' },
+                { id: 'products', label: 'Store' },
                 { id: 'music', label: 'Music' },
                 { id: 'testimonials', label: 'Reviews' },
                 { id: 'contact', label: 'Contact' }
@@ -481,8 +510,91 @@ function App() {
         </div>
       </section>
 
+      {/* Featured Products Section */}
+      <section id="products" className="py-16 md:py-20 bg-gray-50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          {/* Section Header */}
+          <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-8 md:mb-12 animate-in fade-in slide-in-from-top duration-1000">
+            <div>
+              <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold text-gray-900 mb-2 md:mb-3">
+                Featured Products
+              </h2>
+              <p className="text-base md:text-lg text-gray-600">
+                Browse our latest music offerings
+              </p>
+            </div>
+            <button className="mt-4 md:mt-0 bg-black text-white px-6 md:px-8 py-3 md:py-4 rounded-full font-semibold hover:bg-gray-800 transition-all duration-300 transform hover:scale-105 flex items-center space-x-2 group">
+              <span>Explore all</span>
+              <ArrowRight className="h-4 w-4 md:h-5 md:w-5 group-hover:translate-x-1 transition-transform" />
+            </button>
+          </div>
+
+          {/* Products Grid */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
+            {featuredProducts.map((product, index) => (
+              <div 
+                key={product.id}
+                className={`relative rounded-2xl md:rounded-3xl overflow-hidden shadow-lg hover:shadow-xl transition-all duration-500 transform hover:scale-105 group animate-in fade-in slide-in-from-bottom duration-1000 ${product.bgColor}`}
+                style={{ animationDelay: `${300 + index * 200}ms` }}
+              >
+                {/* Product Image Container */}
+                <div className="relative h-64 md:h-80 lg:h-96 p-6 md:p-8 flex items-center justify-center">
+                  <img 
+                    src={product.image}
+                    alt={product.title}
+                    className="w-full h-full object-cover rounded-xl md:rounded-2xl shadow-md group-hover:scale-105 transition-transform duration-500"
+                  />
+                  
+                  {/* Hover Overlay */}
+                  <div className="absolute inset-6 md:inset-8 bg-black/20 rounded-xl md:rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+                    <button className="bg-white/90 backdrop-blur-sm text-black px-4 md:px-6 py-2 md:py-3 rounded-full font-semibold hover:bg-white transition-all duration-300 transform hover:scale-110 flex items-center space-x-2">
+                      <ShoppingCart className="h-4 w-4 md:h-5 md:w-5" />
+                      <span className="text-sm md:text-base">Add to Cart</span>
+                    </button>
+                  </div>
+                </div>
+
+                {/* Product Info */}
+                <div className="bg-white p-4 md:p-6 rounded-t-xl md:rounded-t-2xl">
+                  <h3 className="text-lg md:text-xl font-bold text-gray-900 mb-1 md:mb-2 group-hover:text-emerald-600 transition-colors duration-300">
+                    {product.title}
+                  </h3>
+                  <p className="text-sm md:text-base text-gray-600 mb-2 md:mb-3">
+                    {product.subtitle}
+                  </p>
+                  <div className="flex items-center justify-between">
+                    <span className="text-lg md:text-xl font-bold text-gray-900">
+                      {product.price}
+                    </span>
+                    <button className="text-emerald-600 hover:text-emerald-700 transition-colors duration-300 font-semibold text-sm md:text-base">
+                      View Details
+                    </button>
+                  </div>
+                </div>
+
+                {/* Decorative Elements */}
+                <div className="absolute top-3 right-3 md:top-4 md:right-4 w-8 h-8 md:w-10 md:h-10 bg-white/20 backdrop-blur-sm rounded-full opacity-0 group-hover:opacity-100 transition-all duration-300 flex items-center justify-center">
+                  <Heart className="h-4 w-4 md:h-5 md:w-5 text-white hover:text-red-500 transition-colors cursor-pointer" />
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {/* Additional Products Preview */}
+          <div className="mt-8 md:mt-12 text-center animate-in fade-in slide-in-from-bottom duration-1000 delay-800">
+            <p className="text-sm md:text-base text-gray-600 mb-4">
+              Discover more exclusive merchandise, limited edition albums, and signed memorabilia
+            </p>
+            <button className="text-emerald-600 hover:text-emerald-700 font-semibold transition-colors duration-300 flex items-center space-x-2 mx-auto group">
+              <span>View Full Store</span>
+              <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
+            </button>
+          </div>
+        </div>
+      </section>
+
       {/* Enhanced Testimonials Section */}
-      <section id="testimonials" className="py-16 md:py-20 bg-gray-50">
+      <section id="testimonials" className="py-16 md:py-20 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold text-gray-900 mb-8 md:mb-12 animate-in fade-in slide-in-from-top duration-1000">
             What Our Clients Say
@@ -493,7 +605,7 @@ function App() {
               {testimonials.map((testimonial, index) => (
                 <div 
                   key={index}
-                  className={`bg-white p-6 md:p-8 rounded-xl md:rounded-2xl shadow-lg transition-all duration-500 hover:shadow-xl ${
+                  className={`bg-gray-50 p-6 md:p-8 rounded-xl md:rounded-2xl shadow-lg transition-all duration-500 hover:shadow-xl ${
                     index === currentTestimonial ? 'lg:scale-105 lg:shadow-xl ring-2 ring-emerald-500/20' : 'lg:opacity-75 hover:opacity-100'
                   } ${index !== currentTestimonial ? 'hidden lg:block' : ''}`}
                 >
@@ -555,7 +667,7 @@ function App() {
       </section>
 
       {/* Enhanced Contact/Booking Section */}
-      <section id="contact" className="py-16 md:py-20 bg-white">
+      <section id="contact" className="py-16 md:py-20 bg-gray-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold text-gray-900 mb-8 md:mb-12 animate-in fade-in slide-in-from-top duration-1000">
             Schedule a Performance
@@ -564,7 +676,7 @@ function App() {
           <div className="lg:grid lg:grid-cols-2 lg:gap-12">
             <div className="animate-in fade-in slide-in-from-left duration-1000 mb-8 lg:mb-0">
               <div className="space-y-6 md:space-y-8">
-                <div className="flex items-start space-x-3 md:space-x-4 p-3 md:p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors duration-300">
+                <div className="flex items-start space-x-3 md:space-x-4 p-3 md:p-4 bg-white rounded-lg hover:bg-gray-50 transition-colors duration-300">
                   <MapPin className="h-5 w-5 md:h-6 md:w-6 text-emerald-600 mt-1" />
                   <div>
                     <h3 className="text-base md:text-lg font-semibold text-gray-900 mb-2">Address</h3>
@@ -577,7 +689,7 @@ function App() {
                   </div>
                 </div>
                 
-                <div className="flex items-start space-x-3 md:space-x-4 p-3 md:p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors duration-300">
+                <div className="flex items-start space-x-3 md:space-x-4 p-3 md:p-4 bg-white rounded-lg hover:bg-gray-50 transition-colors duration-300">
                   <Mail className="h-5 w-5 md:h-6 md:w-6 text-emerald-600 mt-1" />
                   <div>
                     <h3 className="text-base md:text-lg font-semibold text-gray-900 mb-2">Email</h3>
@@ -587,7 +699,7 @@ function App() {
                   </div>
                 </div>
                 
-                <div className="flex items-start space-x-3 md:space-x-4 p-3 md:p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors duration-300">
+                <div className="flex items-start space-x-3 md:space-x-4 p-3 md:p-4 bg-white rounded-lg hover:bg-gray-50 transition-colors duration-300">
                   <Phone className="h-5 w-5 md:h-6 md:w-6 text-emerald-600 mt-1" />
                   <div>
                     <h3 className="text-base md:text-lg font-semibold text-gray-900 mb-2">Phone</h3>
@@ -599,7 +711,7 @@ function App() {
               </div>
             </div>
             
-            <div className="bg-gradient-to-br from-gray-50 to-gray-100 p-6 md:p-8 rounded-xl md:rounded-2xl shadow-lg animate-in fade-in slide-in-from-right duration-1000 delay-300">
+            <div className="bg-gradient-to-br from-white to-gray-50 p-6 md:p-8 rounded-xl md:rounded-2xl shadow-lg animate-in fade-in slide-in-from-right duration-1000 delay-300">
               <form onSubmit={handleSubmit} className="space-y-4 md:space-y-6">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
                   <div>
@@ -698,6 +810,7 @@ function App() {
           <div className="flex flex-wrap justify-center space-x-4 md:space-x-8 mb-6 md:mb-8">
             {[
               { id: 'about', label: 'About' },
+              { id: 'products', label: 'Store' },
               { id: 'music', label: 'Music' },
               { id: 'testimonials', label: 'Reviews' },
               { id: 'contact', label: 'Contact' }
