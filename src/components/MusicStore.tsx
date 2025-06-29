@@ -11,7 +11,18 @@ import {
   ChevronDown,
   Grid,
   List,
-  SortAsc
+  SortAsc,
+  Zap,
+  TrendingUp,
+  Award,
+  Shield,
+  Truck,
+  HeadphonesIcon,
+  Music,
+  Volume2,
+  Play,
+  Eye,
+  Share2
 } from 'lucide-react';
 import AuthModal from './AuthModal';
 import UserMenu from './UserMenu';
@@ -61,29 +72,28 @@ const MusicStore: React.FC<MusicStoreProps> = ({ onBackToHome }) => {
   const [authMode, setAuthMode] = useState<'signin' | 'signup'>('signin');
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
   const [showCart, setShowCart] = useState(false);
+  const [showFilters, setShowFilters] = useState(false);
 
   const categories = [
-    { id: 'all', name: 'All Categories', icon: '🎵' },
-    { id: 'electric-guitar', name: 'Electric Guitar', icon: '🎸' },
-    { id: 'acoustic-guitar', name: 'Acoustic Guitar', icon: '🎸' },
-    { id: 'bass', name: 'Bass', icon: '🎸' },
-    { id: 'keyboard', name: 'Keyboard & Piano', icon: '🎹' },
-    { id: 'drums', name: 'Drum & Percussion', icon: '🥁' },
-    { id: 'microphone', name: 'Microphone', icon: '🎤' },
-    { id: 'studio', name: 'Studio & Recording', icon: '🎚️' },
-    { id: 'pedal', name: 'Pedal & Pedal Board', icon: '🎛️' },
-    { id: 'amplifier', name: 'Amplifier', icon: '🔊' }
+    { id: 'all', name: 'All Categories', icon: '🎵', count: 156 },
+    { id: 'electric-guitar', name: 'Electric Guitar', icon: '🎸', count: 45 },
+    { id: 'acoustic-guitar', name: 'Acoustic Guitar', icon: '🎸', count: 32 },
+    { id: 'bass', name: 'Bass', icon: '🎸', count: 18 },
+    { id: 'keyboard', name: 'Keyboard & Piano', icon: '🎹', count: 28 },
+    { id: 'drums', name: 'Drum & Percussion', icon: '🥁', count: 22 },
+    { id: 'microphone', name: 'Microphone', icon: '🎤', count: 15 },
+    { id: 'studio', name: 'Studio & Recording', icon: '🎚️', count: 35 },
+    { id: 'pedal', name: 'Pedal & Effects', icon: '🎛️', count: 42 },
+    { id: 'amplifier', name: 'Amplifier', icon: '🔊', count: 19 }
   ];
 
   const topBrands = [
-    { name: 'Fender', logo: 'https://images.pexels.com/photos/1407322/pexels-photo-1407322.jpeg?auto=compress&cs=tinysrgb&w=100&h=50&dpr=2' },
-    { name: 'Gibson', logo: 'https://images.pexels.com/photos/1047930/pexels-photo-1047930.jpeg?auto=compress&cs=tinysrgb&w=100&h=50&dpr=2' },
-    { name: 'PRS', logo: 'https://images.pexels.com/photos/1190297/pexels-photo-1190297.jpeg?auto=compress&cs=tinysrgb&w=100&h=50&dpr=2' },
-    { name: 'Roland', logo: 'https://images.pexels.com/photos/164821/pexels-photo-164821.jpeg?auto=compress&cs=tinysrgb&w=100&h=50&dpr=2' },
-    { name: 'Marshall', logo: 'https://images.pexels.com/photos/1751731/pexels-photo-1751731.jpeg?auto=compress&cs=tinysrgb&w=100&h=50&dpr=2' },
-    { name: 'Yamaha', logo: 'https://images.pexels.com/photos/1407322/pexels-photo-1407322.jpeg?auto=compress&cs=tinysrgb&w=100&h=50&dpr=2' },
-    { name: 'Casio', logo: 'https://images.pexels.com/photos/1407322/pexels-photo-1407322.jpeg?auto=compress&cs=tinysrgb&w=100&h=50&dpr=2' },
-    { name: 'Korg', logo: 'https://images.pexels.com/photos/1407322/pexels-photo-1407322.jpeg?auto=compress&cs=tinysrgb&w=100&h=50&dpr=2' }
+    { name: 'Fender', logo: 'https://images.pexels.com/photos/1407322/pexels-photo-1407322.jpeg?auto=compress&cs=tinysrgb&w=100&h=50&dpr=2', products: 45 },
+    { name: 'Gibson', logo: 'https://images.pexels.com/photos/1047930/pexels-photo-1047930.jpeg?auto=compress&cs=tinysrgb&w=100&h=50&dpr=2', products: 32 },
+    { name: 'PRS', logo: 'https://images.pexels.com/photos/1190297/pexels-photo-1190297.jpeg?auto=compress&cs=tinysrgb&w=100&h=50&dpr=2', products: 28 },
+    { name: 'Roland', logo: 'https://images.pexels.com/photos/164821/pexels-photo-164821.jpeg?auto=compress&cs=tinysrgb&w=100&h=50&dpr=2', products: 38 },
+    { name: 'Marshall', logo: 'https://images.pexels.com/photos/1751731/pexels-photo-1751731.jpeg?auto=compress&cs=tinysrgb&w=100&h=50&dpr=2', products: 25 },
+    { name: 'Yamaha', logo: 'https://images.pexels.com/photos/1407322/pexels-photo-1407322.jpeg?auto=compress&cs=tinysrgb&w=100&h=50&dpr=2', products: 52 }
   ];
 
   const featuredProducts: Product[] = [
@@ -277,19 +287,6 @@ const MusicStore: React.FC<MusicStoreProps> = ({ onBackToHome }) => {
       image: 'https://images.pexels.com/photos/1047930/pexels-photo-1047930.jpeg?auto=compress&cs=tinysrgb&w=400&h=300&dpr=2',
       category: 'studio',
       isHot: true
-    },
-    {
-      id: 11,
-      name: 'FP-30X Digital Piano',
-      brand: 'Roland',
-      price: 53609,
-      originalPrice: 65999,
-      discount: 19,
-      rating: 4.5,
-      reviews: 76,
-      image: 'https://images.pexels.com/photos/1751731/pexels-photo-1751731.jpeg?auto=compress&cs=tinysrgb&w=400&h=300&dpr=2',
-      category: 'keyboard',
-      isHot: true
     }
   ];
 
@@ -378,77 +375,113 @@ const MusicStore: React.FC<MusicStoreProps> = ({ onBackToHome }) => {
   };
 
   const ProductCard: React.FC<{ product: Product; isHotDeal?: boolean }> = ({ product, isHotDeal = false }) => (
-    <div className="bg-white rounded-lg shadow-md hover:shadow-xl transition-all duration-300 transform hover:scale-105 group relative overflow-hidden">
-      {/* Badges */}
-      <div className="absolute top-3 left-3 z-10 flex flex-col space-y-1">
-        {product.isNew && (
-          <span className="bg-green-500 text-white text-xs px-2 py-1 rounded-full font-semibold">NEW</span>
-        )}
-        {product.isHot && (
-          <span className="bg-red-500 text-white text-xs px-2 py-1 rounded-full font-semibold">HOT</span>
-        )}
-        {product.discount && (
-          <span className="bg-orange-500 text-white text-xs px-2 py-1 rounded-full font-semibold">
-            -{product.discount}%
-          </span>
-        )}
-      </div>
-
-      {/* Wishlist Button */}
-      <button
-        onClick={() => toggleWishlist(product.id)}
-        className="absolute top-3 right-3 z-10 p-2 bg-white/80 backdrop-blur-sm rounded-full opacity-0 group-hover:opacity-100 transition-all duration-300 hover:bg-white"
-      >
-        <Heart 
-          className={`h-4 w-4 transition-colors ${
-            wishlist.includes(product.id) ? 'text-red-500 fill-current' : 'text-gray-600'
-          }`} 
-        />
-      </button>
-
-      {/* Product Image */}
-      <div className="relative overflow-hidden">
-        <img 
-          src={product.image} 
-          alt={product.name}
-          className="w-full h-48 object-cover group-hover:scale-110 transition-transform duration-500"
-        />
-        <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-300"></div>
-      </div>
-
-      {/* Product Info */}
-      <div className="p-4">
-        <div className="text-sm text-gray-500 mb-1">{product.brand}</div>
-        <h3 className="font-semibold text-gray-900 mb-2 line-clamp-2 group-hover:text-blue-600 transition-colors">
-          {product.name}
-        </h3>
-        
-        {/* Rating */}
-        <div className="flex items-center space-x-1 mb-2">
-          <div className="flex space-x-1">
-            {renderStars(product.rating)}
-          </div>
-          <span className="text-sm text-gray-500">({product.reviews})</span>
-        </div>
-
-        {/* Price */}
-        <div className="flex items-center space-x-2 mb-3">
-          <span className="text-lg font-bold text-gray-900">₹{product.price.toLocaleString('en-IN')}</span>
-          {product.originalPrice && (
-            <span className="text-sm text-gray-500 line-through">₹{product.originalPrice.toLocaleString('en-IN')}</span>
+    <div className="group bg-white rounded-2xl shadow-sm hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2 overflow-hidden border border-gray-100">
+      {/* Product Image Container */}
+      <div className="relative overflow-hidden bg-gradient-to-br from-gray-50 to-gray-100">
+        {/* Badges */}
+        <div className="absolute top-4 left-4 z-20 flex flex-col space-y-2">
+          {product.isNew && (
+            <span className="bg-gradient-to-r from-green-500 to-emerald-500 text-white text-xs px-3 py-1 rounded-full font-bold shadow-lg">
+              NEW
+            </span>
+          )}
+          {product.isHot && (
+            <span className="bg-gradient-to-r from-red-500 to-pink-500 text-white text-xs px-3 py-1 rounded-full font-bold shadow-lg animate-pulse">
+              🔥 HOT
+            </span>
+          )}
+          {product.discount && (
+            <span className="bg-gradient-to-r from-orange-500 to-amber-500 text-white text-xs px-3 py-1 rounded-full font-bold shadow-lg">
+              -{product.discount}% OFF
+            </span>
           )}
         </div>
 
         {/* Action Buttons */}
-        <div className="flex space-x-2">
+        <div className="absolute top-4 right-4 z-20 flex flex-col space-y-2 opacity-0 group-hover:opacity-100 transition-all duration-300">
+          <button
+            onClick={() => toggleWishlist(product.id)}
+            className="p-2 bg-white/90 backdrop-blur-sm rounded-full shadow-lg hover:bg-white hover:scale-110 transition-all duration-200"
+          >
+            <Heart 
+              className={`h-4 w-4 transition-colors ${
+                wishlist.includes(product.id) ? 'text-red-500 fill-current' : 'text-gray-600'
+              }`} 
+            />
+          </button>
+          <button className="p-2 bg-white/90 backdrop-blur-sm rounded-full shadow-lg hover:bg-white hover:scale-110 transition-all duration-200">
+            <Eye className="h-4 w-4 text-gray-600" />
+          </button>
+          <button className="p-2 bg-white/90 backdrop-blur-sm rounded-full shadow-lg hover:bg-white hover:scale-110 transition-all duration-200">
+            <Share2 className="h-4 w-4 text-gray-600" />
+          </button>
+        </div>
+
+        {/* Product Image */}
+        <div className="aspect-square p-6">
+          <img 
+            src={product.image} 
+            alt={product.name}
+            className="w-full h-full object-cover rounded-xl group-hover:scale-110 transition-transform duration-700"
+          />
+        </div>
+
+        {/* Quick Add Overlay */}
+        <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-all duration-300 flex items-center justify-center">
           <button 
             onClick={() => handleAddToCart(product.id)}
-            className="flex-1 bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 transition-colors font-semibold"
+            className="bg-white text-gray-900 px-6 py-3 rounded-full font-bold shadow-xl opacity-0 group-hover:opacity-100 transform translate-y-4 group-hover:translate-y-0 transition-all duration-300 hover:bg-gray-100 hover:scale-105"
+          >
+            Quick Add to Cart
+          </button>
+        </div>
+      </div>
+
+      {/* Product Info */}
+      <div className="p-6">
+        {/* Brand & Category */}
+        <div className="flex items-center justify-between mb-2">
+          <span className="text-sm font-semibold text-blue-600 bg-blue-50 px-2 py-1 rounded-full">
+            {product.brand}
+          </span>
+          <div className="flex items-center space-x-1">
+            <div className="flex space-x-1">
+              {renderStars(product.rating)}
+            </div>
+            <span className="text-sm text-gray-500 ml-1">({product.reviews})</span>
+          </div>
+        </div>
+        
+        {/* Product Name */}
+        <h3 className="font-bold text-gray-900 mb-3 line-clamp-2 group-hover:text-blue-600 transition-colors text-lg leading-tight">
+          {product.name}
+        </h3>
+
+        {/* Price */}
+        <div className="flex items-center justify-between mb-4">
+          <div className="flex items-center space-x-2">
+            <span className="text-2xl font-bold text-gray-900">₹{product.price.toLocaleString('en-IN')}</span>
+            {product.originalPrice && (
+              <span className="text-sm text-gray-500 line-through">₹{product.originalPrice.toLocaleString('en-IN')}</span>
+            )}
+          </div>
+          {product.discount && (
+            <span className="text-sm text-green-600 font-bold bg-green-50 px-2 py-1 rounded-full">
+              Save ₹{((product.originalPrice || 0) - product.price).toLocaleString('en-IN')}
+            </span>
+          )}
+        </div>
+
+        {/* Action Buttons */}
+        <div className="flex space-x-3">
+          <button 
+            onClick={() => handleAddToCart(product.id)}
+            className="flex-1 bg-gradient-to-r from-blue-600 to-blue-700 text-white py-3 px-4 rounded-xl font-bold hover:from-blue-700 hover:to-blue-800 transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl"
           >
             Add to Cart
           </button>
-          <button className="px-3 py-2 border border-gray-300 rounded-lg hover:border-blue-600 hover:text-blue-600 transition-colors">
-            <Search className="h-4 w-4" />
+          <button className="px-4 py-3 border-2 border-gray-200 rounded-xl hover:border-blue-600 hover:text-blue-600 transition-all duration-300 hover:bg-blue-50">
+            <Music className="h-5 w-5" />
           </button>
         </div>
       </div>
@@ -468,35 +501,50 @@ const MusicStore: React.FC<MusicStoreProps> = ({ onBackToHome }) => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      {/* Header */}
-      <header className="bg-white shadow-sm border-b">
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-blue-50">
+      {/* Enhanced Header */}
+      <header className="bg-white/80 backdrop-blur-md shadow-sm border-b border-gray-200/50 sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-16">
+          <div className="flex items-center justify-between h-20">
             {/* Logo and Back Button */}
-            <div className="flex items-center space-x-4">
+            <div className="flex items-center space-x-6">
               <button
                 onClick={onBackToHome}
-                className="flex items-center space-x-2 text-gray-600 hover:text-blue-600 transition-colors"
+                className="flex items-center space-x-3 text-gray-600 hover:text-blue-600 transition-all duration-300 group"
               >
-                <ArrowLeft className="h-5 w-5" />
-                <span className="hidden sm:inline">Back to Home</span>
+                <div className="p-2 rounded-full bg-gray-100 group-hover:bg-blue-100 transition-colors">
+                  <ArrowLeft className="h-5 w-5" />
+                </div>
+                <span className="hidden sm:inline font-medium">Back to Home</span>
               </button>
-              <div className="h-6 w-px bg-gray-300 hidden sm:block"></div>
-              <h1 className="text-xl font-bold text-blue-600">MusicStore</h1>
+              <div className="h-8 w-px bg-gray-300 hidden sm:block"></div>
+              <div className="flex items-center space-x-3">
+                <div className="w-10 h-10 bg-gradient-to-r from-blue-600 to-purple-600 rounded-xl flex items-center justify-center">
+                  <Music className="h-6 w-6 text-white" />
+                </div>
+                <div>
+                  <h1 className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+                    MusicStore
+                  </h1>
+                  <p className="text-xs text-gray-500">Premium Instruments</p>
+                </div>
+              </div>
             </div>
 
-            {/* Search Bar */}
-            <div className="flex-1 max-w-lg mx-8">
-              <div className="relative">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
+            {/* Enhanced Search Bar */}
+            <div className="flex-1 max-w-2xl mx-8">
+              <div className="relative group">
+                <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5 group-focus-within:text-blue-600 transition-colors" />
                 <input
                   type="text"
-                  placeholder="Search instruments, brands, or accessories"
+                  placeholder="Search for instruments, brands, or accessories..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  className="w-full pl-12 pr-6 py-4 border-2 border-gray-200 rounded-2xl focus:ring-4 focus:ring-blue-500/20 focus:border-blue-500 transition-all duration-300 bg-white/50 backdrop-blur-sm text-lg placeholder-gray-400"
                 />
+                <div className="absolute right-4 top-1/2 transform -translate-y-1/2 flex items-center space-x-2">
+                  <kbd className="px-2 py-1 text-xs font-semibold text-gray-500 bg-gray-100 border border-gray-200 rounded">⌘K</kbd>
+                </div>
               </div>
             </div>
 
@@ -505,11 +553,11 @@ const MusicStore: React.FC<MusicStoreProps> = ({ onBackToHome }) => {
               <UserMenu onSignInClick={handleUserIconClick} />
               <button 
                 onClick={handleCartClick}
-                className="relative text-gray-600 hover:text-blue-600 transition-colors"
+                className="relative p-3 text-gray-600 hover:text-blue-600 transition-all duration-300 hover:bg-blue-50 rounded-xl group"
               >
                 <ShoppingCart className="h-6 w-6" />
                 {cartItems.length > 0 && (
-                  <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
+                  <span className="absolute -top-1 -right-1 bg-gradient-to-r from-red-500 to-pink-500 text-white text-xs rounded-full h-6 w-6 flex items-center justify-center font-bold animate-pulse">
                     {cartItems.reduce((sum, item) => sum + item.quantity, 0)}
                   </span>
                 )}
@@ -519,230 +567,330 @@ const MusicStore: React.FC<MusicStoreProps> = ({ onBackToHome }) => {
         </div>
       </header>
 
-      {/* Navigation */}
-      <nav className="bg-white border-b">
+      {/* Enhanced Navigation */}
+      <nav className="bg-white border-b border-gray-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-12">
+          <div className="flex items-center justify-between h-16">
             <div className="flex items-center space-x-8">
-              <button className="flex items-center space-x-1 text-gray-700 hover:text-blue-600 transition-colors">
-                <Menu className="h-4 w-4" />
-                <span>Categories</span>
+              <button 
+                onClick={() => setShowFilters(!showFilters)}
+                className="flex items-center space-x-2 text-gray-700 hover:text-blue-600 transition-colors font-medium"
+              >
+                <Filter className="h-4 w-4" />
+                <span>Filters</span>
+                <ChevronDown className={`h-4 w-4 transition-transform ${showFilters ? 'rotate-180' : ''}`} />
               </button>
-              <a href="#" className="text-gray-700 hover:text-blue-600 transition-colors">Brands</a>
-              <a href="#" className="text-gray-700 hover:text-blue-600 transition-colors">Hot Deals</a>
-              <a href="#" className="text-gray-700 hover:text-blue-600 transition-colors">Shop by Role</a>
-              <a href="#" className="text-gray-700 hover:text-blue-600 transition-colors">Accessories</a>
+              <div className="hidden md:flex items-center space-x-6">
+                <a href="#" className="text-gray-700 hover:text-blue-600 transition-colors font-medium">Brands</a>
+                <a href="#" className="text-gray-700 hover:text-blue-600 transition-colors font-medium flex items-center space-x-1">
+                  <Zap className="h-4 w-4" />
+                  <span>Hot Deals</span>
+                </a>
+                <a href="#" className="text-gray-700 hover:text-blue-600 transition-colors font-medium">New Arrivals</a>
+                <a href="#" className="text-gray-700 hover:text-blue-600 transition-colors font-medium">Accessories</a>
+              </div>
             </div>
-            <div className="flex items-center space-x-4">
-              <span className="text-gray-700">Blog</span>
-              <span className="text-gray-700">Customer Services</span>
+            <div className="flex items-center space-x-6">
+              <div className="flex items-center space-x-2 text-sm text-gray-600">
+                <Shield className="h-4 w-4 text-green-500" />
+                <span>Secure Shopping</span>
+              </div>
+              <div className="flex items-center space-x-2 text-sm text-gray-600">
+                <Truck className="h-4 w-4 text-blue-500" />
+                <span>Free Shipping ₹2000+</span>
+              </div>
             </div>
           </div>
         </div>
       </nav>
 
-      {/* Hero Section */}
-      <section className="bg-gradient-to-r from-blue-50 to-indigo-100 py-12">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
-            <div>
-              <h2 className="text-4xl font-bold text-gray-900 mb-4">
-                Roland FP-30X Digital Piano
-              </h2>
-              <p className="text-lg text-gray-600 mb-6">
-                Experience premium piano performance with authentic sound and responsive touch in a portable design.
-              </p>
-              <button 
-                onClick={() => handleAddToCart(12)}
-                className="bg-blue-600 text-white px-8 py-3 rounded-lg font-semibold hover:bg-blue-700 transition-colors"
-              >
-                Buy Now
-              </button>
+      {/* Enhanced Hero Section */}
+      <section className="relative py-16 bg-gradient-to-r from-blue-600 via-purple-600 to-indigo-700 overflow-hidden">
+        {/* Background Pattern */}
+        <div className="absolute inset-0 opacity-10">
+          <div className="absolute top-0 left-0 w-96 h-96 bg-white rounded-full blur-3xl -translate-x-48 -translate-y-48"></div>
+          <div className="absolute bottom-0 right-0 w-96 h-96 bg-white rounded-full blur-3xl translate-x-48 translate-y-48"></div>
+        </div>
+        
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+            <div className="text-white space-y-8">
+              <div className="space-y-4">
+                <div className="flex items-center space-x-2">
+                  <Award className="h-6 w-6 text-yellow-400" />
+                  <span className="text-yellow-400 font-semibold">Premium Quality Guaranteed</span>
+                </div>
+                <h2 className="text-5xl font-bold leading-tight">
+                  Roland FP-30X
+                  <span className="block text-3xl text-blue-200">Digital Piano</span>
+                </h2>
+                <p className="text-xl text-blue-100 leading-relaxed">
+                  Experience premium piano performance with authentic sound and responsive touch in a sleek, portable design perfect for any musician.
+                </p>
+              </div>
+              
+              <div className="flex items-center space-x-6">
+                <div className="text-center">
+                  <div className="text-3xl font-bold">4.8</div>
+                  <div className="flex items-center justify-center space-x-1 mt-1">
+                    {renderStars(4.8)}
+                  </div>
+                  <div className="text-sm text-blue-200">156 Reviews</div>
+                </div>
+                <div className="w-px h-16 bg-blue-400"></div>
+                <div className="text-center">
+                  <div className="text-3xl font-bold">₹53,609</div>
+                  <div className="text-sm text-blue-200 line-through">₹65,999</div>
+                  <div className="text-sm text-yellow-400 font-semibold">Save 19%</div>
+                </div>
+              </div>
+
+              <div className="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4">
+                <button 
+                  onClick={() => handleAddToCart(12)}
+                  className="bg-white text-blue-600 px-8 py-4 rounded-2xl font-bold text-lg hover:bg-gray-100 transition-all duration-300 transform hover:scale-105 shadow-xl flex items-center justify-center space-x-2"
+                >
+                  <ShoppingCart className="h-5 w-5" />
+                  <span>Add to Cart</span>
+                </button>
+                <button className="border-2 border-white text-white px-8 py-4 rounded-2xl font-bold text-lg hover:bg-white hover:text-blue-600 transition-all duration-300 flex items-center justify-center space-x-2">
+                  <Play className="h-5 w-5" />
+                  <span>Listen Demo</span>
+                </button>
+              </div>
             </div>
+            
             <div className="relative">
+              <div className="absolute inset-0 bg-gradient-to-r from-white/20 to-transparent rounded-3xl blur-xl"></div>
               <img 
                 src="https://images.pexels.com/photos/164821/pexels-photo-164821.jpeg?auto=compress&cs=tinysrgb&w=600&h=400&dpr=2"
                 alt="Roland FP-30X Digital Piano"
-                className="w-full h-80 object-cover rounded-lg shadow-lg"
+                className="relative w-full h-96 object-cover rounded-3xl shadow-2xl transform hover:scale-105 transition-transform duration-500"
               />
-              <div className="absolute top-4 right-4 bg-white/90 backdrop-blur-sm px-3 py-1 rounded-full">
-                <span className="text-sm font-semibold text-gray-900">Roland</span>
+              <div className="absolute top-6 right-6 bg-white/90 backdrop-blur-sm px-4 py-2 rounded-full">
+                <span className="text-sm font-bold text-gray-900">Roland</span>
+              </div>
+              <div className="absolute bottom-6 left-6 bg-gradient-to-r from-green-500 to-emerald-500 text-white px-4 py-2 rounded-full">
+                <span className="text-sm font-bold">NEW ARRIVAL</span>
               </div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Top Brands */}
-      <section className="py-8 bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h3 className="text-center text-lg font-semibold text-gray-900 mb-6">Top Brands</h3>
-          <div className="flex items-center justify-center space-x-8 overflow-x-auto">
-            {topBrands.map((brand, index) => (
-              <div key={index} className="flex-shrink-0 grayscale hover:grayscale-0 transition-all duration-300 cursor-pointer">
-                <div className="w-20 h-12 bg-gray-100 rounded-lg flex items-center justify-center">
-                  <span className="text-sm font-semibold text-gray-700">{brand.name}</span>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Shop by Categories */}
-      <section className="py-12 bg-gray-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h3 className="text-2xl font-bold text-gray-900 mb-8 text-center">Shop by Categories</h3>
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
-            {categories.slice(1).map((category) => (
-              <div 
-                key={category.id}
-                className="bg-white rounded-lg shadow-md hover:shadow-lg transition-all duration-300 cursor-pointer group overflow-hidden"
-              >
-                <div className="aspect-square bg-gradient-to-br from-gray-800 to-gray-900 flex items-center justify-center text-white text-2xl group-hover:scale-105 transition-transform duration-300">
-                  {category.icon}
-                </div>
-                <div className="p-3 text-center">
-                  <h4 className="font-semibold text-gray-900 text-sm group-hover:text-blue-600 transition-colors">
-                    {category.name}
-                  </h4>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Featured Keyboards & Pianos */}
+      {/* Enhanced Top Brands */}
       <section className="py-12 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between mb-8">
-            <h3 className="text-2xl font-bold text-gray-900">Featured Keyboards & Pianos</h3>
+          <div className="text-center mb-8">
+            <h3 className="text-2xl font-bold text-gray-900 mb-2">Trusted by Musicians Worldwide</h3>
+            <p className="text-gray-600">Premium brands, exceptional quality</p>
+          </div>
+          <div className="grid grid-cols-3 md:grid-cols-6 gap-6">
+            {topBrands.map((brand, index) => (
+              <div key={index} className="group cursor-pointer">
+                <div className="bg-gray-50 rounded-2xl p-6 hover:bg-white hover:shadow-lg transition-all duration-300 border border-gray-100 hover:border-blue-200">
+                  <div className="text-center">
+                    <div className="w-16 h-16 bg-gradient-to-br from-gray-100 to-gray-200 rounded-xl flex items-center justify-center mx-auto mb-3 group-hover:from-blue-50 group-hover:to-blue-100 transition-colors">
+                      <span className="text-lg font-bold text-gray-700 group-hover:text-blue-600">{brand.name.charAt(0)}</span>
+                    </div>
+                    <h4 className="font-semibold text-gray-900 group-hover:text-blue-600 transition-colors">{brand.name}</h4>
+                    <p className="text-sm text-gray-500">{brand.products} products</p>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Enhanced Shop by Categories */}
+      <section className="py-16 bg-gradient-to-br from-gray-50 to-blue-50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-12">
+            <h3 className="text-3xl font-bold text-gray-900 mb-4">Shop by Categories</h3>
+            <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+              Discover our extensive collection of musical instruments and accessories, carefully curated for musicians of all levels.
+            </p>
+          </div>
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6">
+            {categories.slice(1).map((category, index) => (
+              <div 
+                key={category.id}
+                className="group cursor-pointer"
+                style={{ animationDelay: `${index * 100}ms` }}
+              >
+                <div className="bg-white rounded-2xl shadow-sm hover:shadow-xl transition-all duration-500 overflow-hidden border border-gray-100 hover:border-blue-200 transform hover:-translate-y-2">
+                  <div className="aspect-square bg-gradient-to-br from-gray-800 via-gray-900 to-black flex items-center justify-center text-white text-4xl group-hover:scale-110 transition-transform duration-500 relative overflow-hidden">
+                    <div className="absolute inset-0 bg-gradient-to-br from-blue-600/20 to-purple-600/20 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                    <span className="relative z-10">{category.icon}</span>
+                  </div>
+                  <div className="p-4 text-center">
+                    <h4 className="font-bold text-gray-900 text-sm group-hover:text-blue-600 transition-colors mb-1">
+                      {category.name}
+                    </h4>
+                    <p className="text-xs text-gray-500">{category.count} items</p>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Enhanced Featured Keyboards & Pianos */}
+      <section className="py-16 bg-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex items-center justify-between mb-12">
+            <div>
+              <h3 className="text-3xl font-bold text-gray-900 mb-2">Featured Keyboards & Pianos</h3>
+              <p className="text-gray-600">Professional instruments for every musician</p>
+            </div>
             <div className="flex items-center space-x-4">
-              <button className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors">
-                View All
+              <button className="bg-gradient-to-r from-blue-600 to-blue-700 text-white px-6 py-3 rounded-xl font-semibold hover:from-blue-700 hover:to-blue-800 transition-all duration-300 shadow-lg hover:shadow-xl">
+                View All Keyboards
               </button>
               <div className="flex items-center space-x-2">
                 <button 
                   onClick={() => setViewMode('grid')}
-                  className={`p-2 rounded ${viewMode === 'grid' ? 'bg-blue-100 text-blue-600' : 'text-gray-400'}`}
+                  className={`p-3 rounded-xl transition-all duration-300 ${viewMode === 'grid' ? 'bg-blue-100 text-blue-600' : 'text-gray-400 hover:text-gray-600'}`}
                 >
-                  <Grid className="h-4 w-4" />
+                  <Grid className="h-5 w-5" />
                 </button>
                 <button 
                   onClick={() => setViewMode('list')}
-                  className={`p-2 rounded ${viewMode === 'list' ? 'bg-blue-100 text-blue-600' : 'text-gray-400'}`}
+                  className={`p-3 rounded-xl transition-all duration-300 ${viewMode === 'list' ? 'bg-blue-100 text-blue-600' : 'text-gray-400 hover:text-gray-600'}`}
                 >
-                  <List className="h-4 w-4" />
+                  <List className="h-5 w-5" />
                 </button>
               </div>
             </div>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {keyboardProducts.map((product) => (
-              <ProductCard key={product.id} product={product} />
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {keyboardProducts.map((product, index) => (
+              <div key={product.id} style={{ animationDelay: `${index * 150}ms` }}>
+                <ProductCard product={product} />
+              </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* Featured Guitars */}
-      <section className="py-12 bg-gray-50">
+      {/* Enhanced Hot Deals */}
+      <section className="py-16 bg-gradient-to-r from-red-50 via-pink-50 to-orange-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between mb-8">
-            <h3 className="text-2xl font-bold text-gray-900">Featured Guitars</h3>
-            <div className="flex items-center space-x-4">
-              <button className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors">
-                View All
-              </button>
+          <div className="text-center mb-12">
+            <div className="flex items-center justify-center space-x-3 mb-4">
+              <Zap className="h-8 w-8 text-red-500" />
+              <h3 className="text-3xl font-bold text-gray-900">Hot Deals</h3>
+              <div className="bg-gradient-to-r from-red-500 to-pink-500 text-white text-sm px-4 py-2 rounded-full font-bold animate-pulse">
+                🔥 Limited Time Only
+              </div>
             </div>
+            <p className="text-lg text-gray-600">Incredible savings on premium instruments</p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {featuredProducts.map((product) => (
-              <ProductCard key={product.id} product={product} />
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {hotDeals.map((product, index) => (
+              <div key={product.id} style={{ animationDelay: `${index * 100}ms` }}>
+                <ProductCard product={product} isHotDeal={true} />
+              </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* Hot Deals */}
-      <section className="py-12 bg-red-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between mb-8">
-            <div className="flex items-center space-x-3">
-              <h3 className="text-2xl font-bold text-gray-900">Hot Deals</h3>
-              <span className="bg-red-500 text-white text-sm px-3 py-1 rounded-full font-semibold animate-pulse">
-                🔥 Limited Time
-              </span>
-            </div>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-6">
-            {hotDeals.map((product) => (
-              <ProductCard key={product.id} product={product} isHotDeal={true} />
-            ))}
-          </div>
+      {/* Enhanced Newsletter */}
+      <section className="py-16 bg-gradient-to-r from-gray-900 via-blue-900 to-purple-900 text-white relative overflow-hidden">
+        <div className="absolute inset-0 opacity-10">
+          <div className="absolute top-0 left-0 w-96 h-96 bg-white rounded-full blur-3xl -translate-x-48 -translate-y-48"></div>
+          <div className="absolute bottom-0 right-0 w-96 h-96 bg-white rounded-full blur-3xl translate-x-48 translate-y-48"></div>
         </div>
-      </section>
-
-      {/* Newsletter */}
-      <section className="py-12 bg-gray-900 text-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h3 className="text-2xl font-bold mb-4">Stay in Tune with Our Latest Offers</h3>
-          <p className="text-gray-300 mb-6">Get exclusive deals, new product announcements, and music tips delivered to your inbox.</p>
-          <div className="flex flex-col sm:flex-row max-w-md mx-auto space-y-3 sm:space-y-0 sm:space-x-3">
+        
+        <div className="relative max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <div className="mb-8">
+            <HeadphonesIcon className="h-16 w-16 text-blue-400 mx-auto mb-4" />
+            <h3 className="text-4xl font-bold mb-4">Stay in Tune with Our Latest Offers</h3>
+            <p className="text-xl text-gray-300 leading-relaxed">
+              Get exclusive deals, new product announcements, and music tips delivered to your inbox. Join over 50,000 musicians worldwide.
+            </p>
+          </div>
+          
+          <div className="flex flex-col sm:flex-row max-w-lg mx-auto space-y-4 sm:space-y-0 sm:space-x-4">
             <input
               type="email"
-              placeholder="Enter your email"
-              className="flex-1 px-4 py-3 rounded-lg text-gray-900 focus:ring-2 focus:ring-blue-500"
+              placeholder="Enter your email address"
+              className="flex-1 px-6 py-4 rounded-2xl text-gray-900 focus:ring-4 focus:ring-blue-500/50 border-0 text-lg placeholder-gray-500"
             />
-            <button className="bg-blue-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-blue-700 transition-colors">
-              Subscribe
+            <button className="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-8 py-4 rounded-2xl font-bold text-lg hover:from-blue-700 hover:to-purple-700 transition-all duration-300 transform hover:scale-105 shadow-xl">
+              Subscribe Now
             </button>
+          </div>
+          
+          <div className="flex items-center justify-center space-x-8 mt-8 text-sm text-gray-400">
+            <div className="flex items-center space-x-2">
+              <Shield className="h-4 w-4" />
+              <span>No spam, ever</span>
+            </div>
+            <div className="flex items-center space-x-2">
+              <TrendingUp className="h-4 w-4" />
+              <span>Weekly deals</span>
+            </div>
+            <div className="flex items-center space-x-2">
+              <Award className="h-4 w-4" />
+              <span>Exclusive access</span>
+            </div>
           </div>
         </div>
       </section>
 
-      {/* Footer */}
-      <footer className="bg-gray-800 text-white py-8">
+      {/* Enhanced Footer */}
+      <footer className="bg-gray-900 text-white py-12">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
             <div>
-              <h4 className="text-lg font-bold mb-4">MusicStore</h4>
-              <p className="text-gray-300 text-sm">Your one-stop destination for all musical instruments and accessories.</p>
+              <div className="flex items-center space-x-3 mb-4">
+                <div className="w-10 h-10 bg-gradient-to-r from-blue-600 to-purple-600 rounded-xl flex items-center justify-center">
+                  <Music className="h-6 w-6 text-white" />
+                </div>
+                <h4 className="text-xl font-bold">MusicStore</h4>
+              </div>
+              <p className="text-gray-400 text-sm leading-relaxed">
+                Your premier destination for professional musical instruments and accessories. Trusted by musicians worldwide since 2010.
+              </p>
             </div>
             <div>
-              <h5 className="font-semibold mb-3">Categories</h5>
-              <ul className="space-y-2 text-sm text-gray-300">
-                <li><a href="#" className="hover:text-white transition-colors">Guitars</a></li>
-                <li><a href="#" className="hover:text-white transition-colors">Keyboards</a></li>
-                <li><a href="#" className="hover:text-white transition-colors">Drums</a></li>
-                <li><a href="#" className="hover:text-white transition-colors">Audio Equipment</a></li>
+              <h5 className="font-bold mb-4 text-lg">Categories</h5>
+              <ul className="space-y-3 text-sm text-gray-400">
+                <li><a href="#" className="hover:text-white transition-colors hover:underline">Electric Guitars</a></li>
+                <li><a href="#" className="hover:text-white transition-colors hover:underline">Keyboards & Pianos</a></li>
+                <li><a href="#" className="hover:text-white transition-colors hover:underline">Drums & Percussion</a></li>
+                <li><a href="#" className="hover:text-white transition-colors hover:underline">Audio Equipment</a></li>
               </ul>
             </div>
             <div>
-              <h5 className="font-semibold mb-3">Support</h5>
-              <ul className="space-y-2 text-sm text-gray-300">
-                <li><a href="#" className="hover:text-white transition-colors">Contact Us</a></li>
-                <li><a href="#" className="hover:text-white transition-colors">Shipping Info</a></li>
-                <li><a href="#" className="hover:text-white transition-colors">Returns</a></li>
-                <li><a href="#" className="hover:text-white transition-colors">FAQ</a></li>
+              <h5 className="font-bold mb-4 text-lg">Support</h5>
+              <ul className="space-y-3 text-sm text-gray-400">
+                <li><a href="#" className="hover:text-white transition-colors hover:underline">Contact Us</a></li>
+                <li><a href="#" className="hover:text-white transition-colors hover:underline">Shipping Info</a></li>
+                <li><a href="#" className="hover:text-white transition-colors hover:underline">Returns & Exchanges</a></li>
+                <li><a href="#" className="hover:text-white transition-colors hover:underline">FAQ</a></li>
               </ul>
             </div>
             <div>
-              <h5 className="font-semibold mb-3">Connect</h5>
-              <ul className="space-y-2 text-sm text-gray-300">
-                <li><a href="#" className="hover:text-white transition-colors">Facebook</a></li>
-                <li><a href="#" className="hover:text-white transition-colors">Instagram</a></li>
-                <li><a href="#" className="hover:text-white transition-colors">YouTube</a></li>
-                <li><a href="#" className="hover:text-white transition-colors">Twitter</a></li>
+              <h5 className="font-bold mb-4 text-lg">Connect</h5>
+              <ul className="space-y-3 text-sm text-gray-400">
+                <li><a href="#" className="hover:text-white transition-colors hover:underline">Facebook</a></li>
+                <li><a href="#" className="hover:text-white transition-colors hover:underline">Instagram</a></li>
+                <li><a href="#" className="hover:text-white transition-colors hover:underline">YouTube</a></li>
+                <li><a href="#" className="hover:text-white transition-colors hover:underline">Twitter</a></li>
               </ul>
             </div>
           </div>
-          <div className="border-t border-gray-700 mt-8 pt-8 text-center text-sm text-gray-300">
-            <p>&copy; 2024 MusicStore. All rights reserved.</p>
+          <div className="border-t border-gray-800 pt-8 text-center">
+            <p className="text-sm text-gray-400">
+              &copy; 2024 MusicStore. All rights reserved. | Designed with ♪ for music lovers worldwide
+            </p>
           </div>
         </div>
       </footer>
