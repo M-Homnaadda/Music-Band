@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Play, Users, Calendar, Star, ChevronLeft, ChevronRight, Menu, X, ArrowDown, Facebook, Instagram, Twitter, Music, Volume2, Heart, MapPin, Clock, Phone, Mail, ShoppingCart, ArrowRight } from 'lucide-react';
+import { Play, Users, Calendar, Star, ChevronLeft, ChevronRight, Menu, X, ArrowDown, Facebook, Instagram, Twitter, Music, Volume2, Heart, MapPin, Clock, Phone, Mail, ShoppingCart, ArrowRight, Search } from 'lucide-react';
 import MusicStore from './components/MusicStore';
 
 function App() {
