@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { 
   Search, 
   ShoppingCart, 
@@ -78,6 +78,11 @@ const MusicStore: React.FC<MusicStoreProps> = ({ onBackToHome }) => {
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
   const [showCart, setShowCart] = useState(false);
   const [showFilters, setShowFilters] = useState(false);
+
+  // Scroll to top when component mounts
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }, []);
 
   const categories = [
     { id: 'all', name: 'All Categories', icon: '🎵', count: 156 },
