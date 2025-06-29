@@ -25,6 +25,18 @@ import CartPage from './CartPage';
 import { useAuth } from '../hooks/useAuth';
 import { useCart } from '../hooks/useCart';
 
+// Import local images
+import electricGuitarHero from '../assets/electric-guitar-still-life (1).jpg';
+import electricGuitar1 from '../assets/products/electric-guitar/guitar-background-upz2txx3cz5k6irg.jpg';
+import electricGuitar2 from '../assets/products/electric-guitar/photo-1516924962500-2b4b3b99ea02.jpg';
+import electricGuitar3 from '../assets/products/electric-guitar/pexels-oskelaq-2016810.jpg';
+import electricGuitar4 from '../assets/products/electric-guitar/881331.jpg';
+import keyboardPiano1 from '../assets/products/keyboard-piano/Yamaha-P-225B-Digital-Piano-Black-Front_large.webp';
+import keyboardPiano2 from '../assets/products/keyboard-piano/CVP-909GP_a_0001_a0388f6bdfd18943c6b62f8e1ad13801.jpg';
+import keyboardPiano3 from '../assets/products/keyboard-piano/rp107_angle_left_gal.jpg';
+import keyboardPiano4 from '../assets/products/keyboard-piano/up_product_u3_po-ebo_163832c6df3b2719f401bc7985f36ead.jpg';
+import keyboardPiano5 from '../assets/products/keyboard-piano/ps500-18761795201896_l.jpg';
+
 interface Product {
   id: number;
   name: string;
@@ -99,7 +111,7 @@ const MusicStore: React.FC<MusicStoreProps> = ({ onBackToHome }) => {
       price: 181499,
       rating: 4.8,
       reviews: 124,
-      image: 'https://images.pexels.com/photos/1407322/pexels-photo-1407322.jpeg?auto=compress&cs=tinysrgb&w=400&h=400&dpr=2',
+      image: electricGuitar1,
       category: 'electric-guitar',
       isNew: true,
       model: 'AMULTRA2-STRAT'
@@ -111,7 +123,7 @@ const MusicStore: React.FC<MusicStoreProps> = ({ onBackToHome }) => {
       price: 68499,
       rating: 4.6,
       reviews: 89,
-      image: 'https://images.pexels.com/photos/1047930/pexels-photo-1047930.jpeg?auto=compress&cs=tinysrgb&w=400&h=400&dpr=2',
+      image: electricGuitar2,
       category: 'electric-guitar',
       model: 'PLAYER2-STRAT-HSS'
     },
@@ -122,7 +134,7 @@ const MusicStore: React.FC<MusicStoreProps> = ({ onBackToHome }) => {
       price: 230999,
       rating: 4.9,
       reviews: 156,
-      image: 'https://images.pexels.com/photos/1190297/pexels-photo-1190297.jpeg?auto=compress&cs=tinysrgb&w=400&h=400&dpr=2',
+      image: electricGuitar3,
       category: 'electric-guitar',
       model: 'LP-STD-60S-HCS'
     },
@@ -133,7 +145,7 @@ const MusicStore: React.FC<MusicStoreProps> = ({ onBackToHome }) => {
       price: 75899,
       rating: 4.7,
       reviews: 73,
-      image: 'https://images.pexels.com/photos/164821/pexels-photo-164821.jpeg?auto=compress&cs=tinysrgb&w=400&h=400&dpr=2',
+      image: electricGuitar4,
       category: 'electric-guitar',
       model: 'SE-CUSTOM24-JADE'
     },
@@ -145,7 +157,7 @@ const MusicStore: React.FC<MusicStoreProps> = ({ onBackToHome }) => {
       price: 44499,
       rating: 4.5,
       reviews: 92,
-      image: 'https://images.pexels.com/photos/1751731/pexels-photo-1751731.jpeg?auto=compress&cs=tinysrgb&w=400&h=400&dpr=2',
+      image: keyboardPiano1,
       category: 'keyboard',
       model: 'P-225B'
     },
@@ -156,7 +168,7 @@ const MusicStore: React.FC<MusicStoreProps> = ({ onBackToHome }) => {
       price: 899999,
       rating: 4.9,
       reviews: 45,
-      image: 'https://images.pexels.com/photos/1407322/pexels-photo-1407322.jpeg?auto=compress&cs=tinysrgb&w=400&h=400&dpr=2',
+      image: keyboardPiano2,
       category: 'keyboard',
       isHot: true,
       model: 'CVP-909GP'
@@ -170,7 +182,7 @@ const MusicStore: React.FC<MusicStoreProps> = ({ onBackToHome }) => {
       discount: 18,
       rating: 4.4,
       reviews: 67,
-      image: 'https://images.pexels.com/photos/1047930/pexels-photo-1047930.jpeg?auto=compress&cs=tinysrgb&w=400&h=400&dpr=2',
+      image: keyboardPiano3,
       category: 'keyboard',
       model: 'RP107'
     },
@@ -181,7 +193,7 @@ const MusicStore: React.FC<MusicStoreProps> = ({ onBackToHome }) => {
       price: 449999,
       rating: 4.8,
       reviews: 23,
-      image: 'https://images.pexels.com/photos/1751731/pexels-photo-1751731.jpeg?auto=compress&cs=tinysrgb&w=400&h=400&dpr=2',
+      image: keyboardPiano4,
       category: 'keyboard',
       model: 'U3-EBO'
     },
@@ -194,7 +206,7 @@ const MusicStore: React.FC<MusicStoreProps> = ({ onBackToHome }) => {
       discount: 19,
       rating: 4.2,
       reviews: 134,
-      image: 'https://images.pexels.com/photos/1407322/pexels-photo-1407322.jpeg?auto=compress&cs=tinysrgb&w=400&h=400&dpr=2',
+      image: keyboardPiano5,
       category: 'keyboard',
       isNew: true,
       model: 'PSR-500'
@@ -542,7 +554,7 @@ const MusicStore: React.FC<MusicStoreProps> = ({ onBackToHome }) => {
         )}
       </header>
 
-      {/* Enhanced Hero Section */}
+      {/* Enhanced Hero Section with Local Image */}
       <section className="relative bg-gradient-to-r from-amber-50 via-orange-50 to-yellow-50 overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-r from-black/20 to-transparent"></div>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-16">
@@ -587,8 +599,8 @@ const MusicStore: React.FC<MusicStoreProps> = ({ onBackToHome }) => {
             <div className="relative">
               <div className="absolute -inset-4 bg-gradient-to-r from-amber-400/20 to-orange-400/20 rounded-3xl blur-2xl"></div>
               <img 
-                src="https://images.pexels.com/photos/1190297/pexels-photo-1190297.jpeg?auto=compress&cs=tinysrgb&w=600&h=400&dpr=2"
-                alt="Gibson Les Paul Standard 60s"
+                src={electricGuitarHero}
+                alt="Electric Guitar Still Life"
                 className="relative w-full h-48 md:h-96 object-cover rounded-2xl shadow-2xl"
               />
               <div className="absolute top-4 right-4 bg-white/90 backdrop-blur-sm px-3 py-1 md:px-4 md:py-2 rounded-full">
