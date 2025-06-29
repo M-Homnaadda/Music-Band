@@ -96,66 +96,76 @@ const MusicStore: React.FC<MusicStoreProps> = ({ onBackToHome }) => {
     { name: 'Yamaha', logo: 'https://images.pexels.com/photos/1407322/pexels-photo-1407322.jpeg?auto=compress&cs=tinysrgb&w=100&h=50&dpr=2', products: 52 }
   ];
 
-  const featuredProducts: Product[] = [
+  // Updated Electric Guitar Products with actual uploaded images
+  const electricGuitarProducts: Product[] = [
     {
       id: 1,
-      name: 'American Ultra II Stratocaster',
-      brand: 'Fender',
+      name: 'Les Paul Studio - Ebony',
+      brand: 'Gibson',
       price: 181599,
-      rating: 4.8,
+      originalPrice: 219999,
+      rating: 4.9,
       reviews: 124,
-      image: 'https://images.pexels.com/photos/1407322/pexels-photo-1407322.jpeg?auto=compress&cs=tinysrgb&w=400&h=400&dpr=2',
+      image: '/src/assets/products/electric-guitar/guitar-background-upz2txx3cz5k6irg.jpg',
       category: 'electric-guitar',
-      isNew: true
+      isNew: true,
+      discount: 17
     },
     {
       id: 2,
-      name: 'Player II Stratocaster HSS',
+      name: 'Stratocaster Player Series',
       brand: 'Fender',
       price: 68579,
-      rating: 4.6,
-      reviews: 89,
-      image: 'https://images.pexels.com/photos/1047930/pexels-photo-1047930.jpeg?auto=compress&cs=tinysrgb&w=400&h=400&dpr=2',
-      category: 'electric-guitar'
+      rating: 4.7,
+      reviews: 189,
+      image: '/src/assets/products/electric-guitar/photo-1516924962500-2b4b3b99ea02.jpg',
+      category: 'electric-guitar',
+      isHot: true
     },
     {
       id: 3,
-      name: 'Les Paul Standard 60s Heritage Cherry Sunburst',
-      brand: 'Gibson',
+      name: 'American Professional II Stratocaster',
+      brand: 'Fender',
       price: 231099,
-      rating: 4.9,
+      originalPrice: 279999,
+      rating: 4.8,
       reviews: 156,
-      image: 'https://images.pexels.com/photos/1190297/pexels-photo-1190297.jpeg?auto=compress&cs=tinysrgb&w=400&h=400&dpr=2',
-      category: 'electric-guitar'
+      image: '/src/assets/products/electric-guitar/pexels-oskelaq-2016810.jpg',
+      category: 'electric-guitar',
+      discount: 17,
+      isNew: true
     },
     {
       id: 4,
-      name: 'SE Custom 24 - Jade',
-      brand: 'PRS',
-      price: 75869,
-      rating: 4.7,
+      name: 'Custom Electric Guitar - Neon Series',
+      brand: 'Tom Anderson',
+      price: 375869,
+      rating: 4.9,
       reviews: 73,
-      image: 'https://images.pexels.com/photos/164821/pexels-photo-164821.jpeg?auto=compress&cs=tinysrgb&w=400&h=400&dpr=2',
-      category: 'electric-guitar'
+      image: '/src/assets/products/electric-guitar/881331.jpg',
+      category: 'electric-guitar',
+      isHot: true
     },
     {
       id: 5,
-      name: 'Pacifica PAC 612V II',
-      brand: 'Yamaha',
-      price: 44519,
-      rating: 4.5,
+      name: 'SE Custom 24 - Vintage Sunburst',
+      brand: 'PRS',
+      price: 94519,
+      originalPrice: 115999,
+      rating: 4.6,
       reviews: 92,
-      image: 'https://images.pexels.com/photos/1751731/pexels-photo-1751731.jpeg?auto=compress&cs=tinysrgb&w=400&h=400&dpr=2',
-      category: 'electric-guitar'
+      image: '/src/assets/products/electric-guitar/guitar-background-upz2txx3cz5k6irg.jpg',
+      category: 'electric-guitar',
+      discount: 19
     },
     {
       id: 6,
-      name: 'RG550 Genesis',
+      name: 'RG550 Genesis Collection',
       brand: 'Ibanez',
       price: 74259,
-      rating: 4.6,
+      rating: 4.5,
       reviews: 67,
-      image: 'https://images.pexels.com/photos/1407322/pexels-photo-1407322.jpeg?auto=compress&cs=tinysrgb&w=400&h=400&dpr=2',
+      image: '/src/assets/products/electric-guitar/photo-1516924962500-2b4b3b99ea02.jpg',
       category: 'electric-guitar'
     }
   ];
@@ -222,17 +232,6 @@ const MusicStore: React.FC<MusicStoreProps> = ({ onBackToHome }) => {
       category: 'keyboard',
       discount: 18,
       isHot: true
-    },
-    {
-      id: 17,
-      name: 'FP-30X Digital Piano',
-      brand: 'Roland',
-      price: 165999,
-      rating: 4.8,
-      reviews: 92,
-      image: '/src/assets/products/keyboard-piano/rp107_angle_left_gal.jpg',
-      category: 'keyboard',
-      isNew: true
     }
   ];
 
@@ -291,7 +290,7 @@ const MusicStore: React.FC<MusicStoreProps> = ({ onBackToHome }) => {
     }
   ];
 
-  const allProducts = [...featuredProducts, ...keyboardProducts, ...hotDeals];
+  const allProducts = [...electricGuitarProducts, ...keyboardProducts, ...hotDeals];
 
   const toggleWishlist = (productId: number) => {
     setWishlist(prev => 
@@ -605,8 +604,8 @@ const MusicStore: React.FC<MusicStoreProps> = ({ onBackToHome }) => {
         </div>
       </nav>
 
-      {/* Enhanced Hero Section - Featuring Yamaha P-225B */}
-      <section className="relative py-16 bg-gradient-to-r from-blue-600 via-purple-600 to-indigo-700 overflow-hidden">
+      {/* Enhanced Hero Section - Featuring Gibson Les Paul Studio */}
+      <section className="relative py-16 bg-gradient-to-r from-gray-900 via-black to-gray-800 overflow-hidden">
         {/* Background Pattern */}
         <div className="absolute inset-0 opacity-10">
           <div className="absolute top-0 left-0 w-96 h-96 bg-white rounded-full blur-3xl -translate-x-48 -translate-y-48"></div>
@@ -619,42 +618,42 @@ const MusicStore: React.FC<MusicStoreProps> = ({ onBackToHome }) => {
               <div className="space-y-4">
                 <div className="flex items-center space-x-2">
                   <Award className="h-6 w-6 text-yellow-400" />
-                  <span className="text-yellow-400 font-semibold">Premium Quality Guaranteed</span>
+                  <span className="text-yellow-400 font-semibold">Professional Grade</span>
                 </div>
                 <h2 className="text-5xl font-bold leading-tight">
-                  Yamaha P-225B
-                  <span className="block text-3xl text-blue-200">Digital Piano</span>
+                  Gibson Les Paul
+                  <span className="block text-3xl text-gray-300">Studio - Ebony</span>
                 </h2>
-                <p className="text-xl text-blue-100 leading-relaxed">
-                  Experience authentic piano performance with the P-225B's weighted keys and premium sound quality. Perfect for both beginners and professionals.
+                <p className="text-xl text-gray-300 leading-relaxed">
+                  Experience the legendary Gibson tone with the Les Paul Studio. Featuring premium mahogany body and maple cap for that classic rock sound that defined generations.
                 </p>
               </div>
               
               <div className="flex items-center space-x-6">
                 <div className="text-center">
-                  <div className="text-3xl font-bold">4.7</div>
+                  <div className="text-3xl font-bold">4.9</div>
                   <div className="flex items-center justify-center space-x-1 mt-1">
-                    {renderStars(4.7)}
+                    {renderStars(4.9)}
                   </div>
-                  <div className="text-sm text-blue-200">203 Reviews</div>
+                  <div className="text-sm text-gray-400">124 Reviews</div>
                 </div>
-                <div className="w-px h-16 bg-blue-400"></div>
+                <div className="w-px h-16 bg-gray-600"></div>
                 <div className="text-center">
-                  <div className="text-3xl font-bold">₹41,299</div>
-                  <div className="text-sm text-blue-200">Best Price</div>
-                  <div className="text-sm text-yellow-400 font-semibold">🔥 Hot Deal</div>
+                  <div className="text-3xl font-bold">₹1,81,599</div>
+                  <div className="text-sm line-through text-gray-500">₹2,19,999</div>
+                  <div className="text-sm text-orange-400 font-semibold">17% OFF</div>
                 </div>
               </div>
 
               <div className="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4">
                 <button 
-                  onClick={() => handleAddToCart(13)}
-                  className="bg-white text-blue-600 px-8 py-4 rounded-2xl font-bold text-lg hover:bg-gray-100 transition-all duration-300 transform hover:scale-105 shadow-xl flex items-center justify-center space-x-2"
+                  onClick={() => handleAddToCart(1)}
+                  className="bg-white text-black px-8 py-4 rounded-2xl font-bold text-lg hover:bg-gray-100 transition-all duration-300 transform hover:scale-105 shadow-xl flex items-center justify-center space-x-2"
                 >
                   <ShoppingCart className="h-5 w-5" />
                   <span>Add to Cart</span>
                 </button>
-                <button className="border-2 border-white text-white px-8 py-4 rounded-2xl font-bold text-lg hover:bg-white hover:text-blue-600 transition-all duration-300 flex items-center justify-center space-x-2">
+                <button className="border-2 border-white text-white px-8 py-4 rounded-2xl font-bold text-lg hover:bg-white hover:text-black transition-all duration-300 flex items-center justify-center space-x-2">
                   <Play className="h-5 w-5" />
                   <span>Listen Demo</span>
                 </button>
@@ -662,17 +661,17 @@ const MusicStore: React.FC<MusicStoreProps> = ({ onBackToHome }) => {
             </div>
             
             <div className="relative">
-              <div className="absolute inset-0 bg-gradient-to-r from-white/20 to-transparent rounded-3xl blur-xl"></div>
+              <div className="absolute inset-0 bg-gradient-to-r from-white/10 to-transparent rounded-3xl blur-xl"></div>
               <img 
-                src="/src/assets/products/keyboard-piano/Yamaha-P-225B-Digital-Piano-Black-Front_large.webp"
-                alt="Yamaha P-225B Digital Piano"
-                className="relative w-full h-96 object-contain rounded-3xl shadow-2xl transform hover:scale-105 transition-transform duration-500 bg-white/10 backdrop-blur-sm p-4"
+                src="/src/assets/products/electric-guitar/guitar-background-upz2txx3cz5k6irg.jpg"
+                alt="Gibson Les Paul Studio - Ebony"
+                className="relative w-full h-96 object-cover rounded-3xl shadow-2xl transform hover:scale-105 transition-transform duration-500"
               />
               <div className="absolute top-6 right-6 bg-white/90 backdrop-blur-sm px-4 py-2 rounded-full">
-                <span className="text-sm font-bold text-gray-900">Yamaha</span>
+                <span className="text-sm font-bold text-gray-900">Gibson</span>
               </div>
-              <div className="absolute bottom-6 left-6 bg-gradient-to-r from-red-500 to-pink-500 text-white px-4 py-2 rounded-full">
-                <span className="text-sm font-bold">🔥 HOT DEAL</span>
+              <div className="absolute bottom-6 left-6 bg-gradient-to-r from-green-500 to-emerald-500 text-white px-4 py-2 rounded-full">
+                <span className="text-sm font-bold">NEW ARRIVAL</span>
               </div>
             </div>
           </div>
@@ -738,17 +737,17 @@ const MusicStore: React.FC<MusicStoreProps> = ({ onBackToHome }) => {
         </div>
       </section>
 
-      {/* Enhanced Featured Keyboards & Pianos */}
+      {/* Enhanced Featured Electric Guitars */}
       <section className="py-16 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between mb-12">
             <div>
-              <h3 className="text-3xl font-bold text-gray-900 mb-2">Featured Keyboards & Pianos</h3>
-              <p className="text-gray-600">Professional instruments for every musician</p>
+              <h3 className="text-3xl font-bold text-gray-900 mb-2">Featured Electric Guitars</h3>
+              <p className="text-gray-600">Professional instruments for every guitarist</p>
             </div>
             <div className="flex items-center space-x-4">
               <button className="bg-gradient-to-r from-blue-600 to-blue-700 text-white px-6 py-3 rounded-xl font-semibold hover:from-blue-700 hover:to-blue-800 transition-all duration-300 shadow-lg hover:shadow-xl">
-                View All Keyboards
+                View All Guitars
               </button>
               <div className="flex items-center space-x-2">
                 <button 
@@ -768,7 +767,32 @@ const MusicStore: React.FC<MusicStoreProps> = ({ onBackToHome }) => {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {keyboardProducts.map((product, index) => (
+            {electricGuitarProducts.map((product, index) => (
+              <div key={product.id} style={{ animationDelay: `${index * 150}ms` }}>
+                <ProductCard product={product} />
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Enhanced Featured Keyboards & Pianos */}
+      <section className="py-16 bg-gradient-to-br from-blue-50 to-indigo-50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex items-center justify-between mb-12">
+            <div>
+              <h3 className="text-3xl font-bold text-gray-900 mb-2">Featured Keyboards & Pianos</h3>
+              <p className="text-gray-600">Professional instruments for every musician</p>
+            </div>
+            <div className="flex items-center space-x-4">
+              <button className="bg-gradient-to-r from-purple-600 to-indigo-700 text-white px-6 py-3 rounded-xl font-semibold hover:from-purple-700 hover:to-indigo-800 transition-all duration-300 shadow-lg hover:shadow-xl">
+                View All Keyboards
+              </button>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {keyboardProducts.slice(0, 3).map((product, index) => (
               <div key={product.id} style={{ animationDelay: `${index * 150}ms` }}>
                 <ProductCard product={product} />
               </div>
