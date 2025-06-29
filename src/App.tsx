@@ -1,8 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { Play, Users, Calendar, Star, ChevronLeft, ChevronRight, Menu, X, ArrowDown, Facebook, Instagram, Twitter, Music, Volume2, Heart, MapPin, Clock, Phone, Mail, ShoppingCart, ArrowRight, Search } from 'lucide-react';
 import MusicStore from './components/MusicStore';
+import AuthModal from './components/AuthModal';
+import UserMenu from './components/UserMenu';
+import { useAuth } from './hooks/useAuth';
 
 function App() {
+  const { isAuthenticated } = useAuth();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [currentTestimonial, setCurrentTestimonial] = useState(0);
   const [isScrolled, setIsScrolled] = useState(false);
@@ -10,6 +14,8 @@ function App() {
   const [isLoading, setIsLoading] = useState(true);
   const [likedCards, setLikedCards] = useState<number[]>([]);
   const [showMusicStore, setShowMusicStore] = useState(false);
+  const [showAuthModal, setShowAuthModal] = useState(false);
+  const [authMode, setAuthMode] = useState<'signin' | 'signup'>('signin');
   const [formData, setFormData] = useState({
     firstName: '',
     lastName: '',
@@ -226,6 +232,23 @@ function App() {
     setShowMusicStore(false);
   };
 
+  const handleAddToCart = (productId: number) => {
+    if (!isAuthenticated) {
+      setAuthMode('signin');
+      setShowAuthModal(true);
+      return;
+    }
+    // Handle add to cart logic here
+    console.log('Added to cart:', productId);
+  };
+
+  const handleUserIconClick = () => {
+    if (!isAuthenticated) {
+      setAuthMode('signin');
+      setShowAuthModal(true);
+    }
+  };
+
   // Show Music Store if requested
   if (showMusicStore) {
     return <MusicStore onBackToHome={handleBackToHome} />;
@@ -286,9 +309,12 @@ function App() {
               ))}
             </nav>
 
-            <button className="hidden md:flex items-center space-x-2 border border-white/30 text-white px-6 py-2 rounded-full hover:bg-white/10 transition-all duration-300 font-medium transform hover:scale-105">
-              <span>Book Now</span>
-            </button>
+            <div className="hidden md:flex items-center space-x-4">
+              <UserMenu onSignInClick={handleUserIconClick} />
+              <button className="border border-white/30 text-white px-6 py-2 rounded-full hover:bg-white/10 transition-all duration-300 font-medium transform hover:scale-105">
+                <span>Book Now</span>
+              </button>
+            </div>
 
             <button 
               className="md:hidden text-white"
@@ -620,7 +646,10 @@ function App() {
                   
                   {/* Hover Overlay */}
                   <div className="absolute inset-4 md:inset-6 bg-black/20 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
-                    <button className="bg-white/90 backdrop-blur-sm text-black px-3 md:px-4 py-2 rounded-full font-semibold hover:bg-white transition-all duration-300 transform hover:scale-110 flex items-center space-x-2">
+                    <button 
+                      onClick={() => handleAddToCart(product.id)}
+                      className="bg-white/90 backdrop-blur-sm text-black px-3 md:px-4 py-2 rounded-full font-semibold hover:bg-white transition-all duration-300 transform hover:scale-110 flex items-center space-x-2"
+                    >
                       <ShoppingCart className="h-4 w-4" />
                       <span className="text-sm">Quick Buy</span>
                     </button>
@@ -664,7 +693,10 @@ function App() {
 
                   {/* Action Buttons */}
                   <div className="flex space-x-2">
-                    <button className="flex-1 bg-gray-900 text-white py-2 px-3 rounded-lg hover:bg-gray-800 transition-colors font-semibold text-sm">
+                    <button 
+                      onClick={() => handleAddToCart(product.id)}
+                      className="flex-1 bg-gray-900 text-white py-2 px-3 rounded-lg hover:bg-gray-800 transition-colors font-semibold text-sm"
+                    >
                       Add to Cart
                     </button>
                     <button className="px-3 py-2 border border-gray-300 rounded-lg hover:border-gray-900 hover:text-gray-900 transition-colors">
@@ -948,6 +980,13 @@ function App() {
           </div>
         </div>
       </footer>
+
+      {/* Auth Modal */}
+      <AuthModal 
+        isOpen={showAuthModal}
+        onClose={() => setShowAuthModal(false)}
+        initialMode={authMode}
+      />
     </div>
   );
 }

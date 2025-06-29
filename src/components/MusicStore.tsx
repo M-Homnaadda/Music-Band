@@ -13,6 +13,9 @@ import {
   List,
   SortAsc
 } from 'lucide-react';
+import AuthModal from './AuthModal';
+import UserMenu from './UserMenu';
+import { useAuth } from '../hooks/useAuth';
 
 interface Product {
   id: number;
@@ -34,11 +37,15 @@ interface MusicStoreProps {
 }
 
 const MusicStore: React.FC<MusicStoreProps> = ({ onBackToHome }) => {
+  const { isAuthenticated } = useAuth();
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
   const [sortBy, setSortBy] = useState('featured');
   const [wishlist, setWishlist] = useState<number[]>([]);
+  const [showAuthModal, setShowAuthModal] = useState(false);
+  const [authMode, setAuthMode] = useState<'signin' | 'signup'>('signin');
+  const [cartItems, setCartItems] = useState<number[]>([]);
 
   const categories = [
     { id: 'all', name: 'All Categories', icon: '🎵' },
@@ -202,6 +209,25 @@ const MusicStore: React.FC<MusicStoreProps> = ({ onBackToHome }) => {
     );
   };
 
+  const handleAddToCart = (productId: number) => {
+    if (!isAuthenticated) {
+      setAuthMode('signin');
+      setShowAuthModal(true);
+      return;
+    }
+    
+    setCartItems(prev => [...prev, productId]);
+    // Here you would typically make an API call to add the item to the cart
+    console.log('Added to cart:', productId);
+  };
+
+  const handleUserIconClick = () => {
+    if (!isAuthenticated) {
+      setAuthMode('signin');
+      setShowAuthModal(true);
+    }
+  };
+
   const renderStars = (rating: number) => {
     return Array.from({ length: 5 }, (_, i) => (
       <Star 
@@ -275,7 +301,10 @@ const MusicStore: React.FC<MusicStoreProps> = ({ onBackToHome }) => {
 
         {/* Action Buttons */}
         <div className="flex space-x-2">
-          <button className="flex-1 bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 transition-colors font-semibold">
+          <button 
+            onClick={() => handleAddToCart(product.id)}
+            className="flex-1 bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 transition-colors font-semibold"
+          >
             Add to Cart
           </button>
           <button className="px-3 py-2 border border-gray-300 rounded-lg hover:border-blue-600 hover:text-blue-600 transition-colors">
@@ -321,14 +350,14 @@ const MusicStore: React.FC<MusicStoreProps> = ({ onBackToHome }) => {
 
             {/* Right Actions */}
             <div className="flex items-center space-x-4">
-              <button className="text-gray-600 hover:text-blue-600 transition-colors">
-                <User className="h-6 w-6" />
-              </button>
+              <UserMenu onSignInClick={handleUserIconClick} />
               <button className="relative text-gray-600 hover:text-blue-600 transition-colors">
                 <ShoppingCart className="h-6 w-6" />
-                <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
-                  3
-                </span>
+                {cartItems.length > 0 && (
+                  <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
+                    {cartItems.length}
+                  </span>
+                )}
               </button>
             </div>
           </div>
@@ -368,7 +397,10 @@ const MusicStore: React.FC<MusicStoreProps> = ({ onBackToHome }) => {
               <p className="text-lg text-gray-600 mb-6">
                 Experience the pinnacle of electric guitar craftsmanship with the latest American Ultra II series.
               </p>
-              <button className="bg-blue-600 text-white px-8 py-3 rounded-lg font-semibold hover:bg-blue-700 transition-colors">
+              <button 
+                onClick={() => handleAddToCart(1)}
+                className="bg-blue-600 text-white px-8 py-3 rounded-lg font-semibold hover:bg-blue-700 transition-colors"
+              >
                 Buy Now
               </button>
             </div>
@@ -539,6 +571,13 @@ const MusicStore: React.FC<MusicStoreProps> = ({ onBackToHome }) => {
           </div>
         </div>
       </footer>
+
+      {/* Auth Modal */}
+      <AuthModal 
+        isOpen={showAuthModal}
+        onClose={() => setShowAuthModal(false)}
+        initialMode={authMode}
+      />
     </div>
   );
 };
