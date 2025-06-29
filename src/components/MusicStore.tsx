@@ -27,7 +27,13 @@ import {
   ArrowRight,
   CheckCircle,
   Clock,
-  Flame
+  Flame,
+  Sliders,
+  DollarSign,
+  Package,
+  Sparkles,
+  Tag,
+  FilterX
 } from 'lucide-react';
 import AuthModal from './AuthModal';
 import UserMenu from './UserMenu';
@@ -70,6 +76,11 @@ const MusicStore: React.FC<MusicStoreProps> = ({ onBackToHome }) => {
   const { isAuthenticated } = useAuth();
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('all');
+  const [selectedBrands, setSelectedBrands] = useState<string[]>([]);
+  const [priceRange, setPriceRange] = useState<[number, number]>([0, 500000]);
+  const [selectedRating, setSelectedRating] = useState(0);
+  const [showOnlyDiscounted, setShowOnlyDiscounted] = useState(false);
+  const [showOnlyInStock, setShowOnlyInStock] = useState(false);
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
   const [sortBy, setSortBy] = useState('featured');
   const [wishlist, setWishlist] = useState<number[]>([]);
@@ -103,7 +114,11 @@ const MusicStore: React.FC<MusicStoreProps> = ({ onBackToHome }) => {
     { name: 'PRS', logo: 'https://images.pexels.com/photos/1190297/pexels-photo-1190297.jpeg?auto=compress&cs=tinysrgb&w=100&h=50&dpr=2', products: 28 },
     { name: 'Roland', logo: 'https://images.pexels.com/photos/164821/pexels-photo-164821.jpeg?auto=compress&cs=tinysrgb&w=100&h=50&dpr=2', products: 38 },
     { name: 'Marshall', logo: 'https://images.pexels.com/photos/1751731/pexels-photo-1751731.jpeg?auto=compress&cs=tinysrgb&w=100&h=50&dpr=2', products: 25 },
-    { name: 'Yamaha', logo: 'https://images.pexels.com/photos/1407322/pexels-photo-1407322.jpeg?auto=compress&cs=tinysrgb&w=100&h=50&dpr=2', products: 52 }
+    { name: 'Yamaha', logo: 'https://images.pexels.com/photos/1407322/pexels-photo-1407322.jpeg?auto=compress&cs=tinysrgb&w=100&h=50&dpr=2', products: 52 },
+    { name: 'Ibanez', logo: 'https://images.pexels.com/photos/1407322/pexels-photo-1407322.jpeg?auto=compress&cs=tinysrgb&w=100&h=50&dpr=2', products: 28 },
+    { name: 'Shure', logo: 'https://images.pexels.com/photos/164821/pexels-photo-164821.jpeg?auto=compress&cs=tinysrgb&w=100&h=50&dpr=2', products: 15 },
+    { name: 'Audio-Technica', logo: 'https://images.pexels.com/photos/1047930/pexels-photo-1047930.jpeg?auto=compress&cs=tinysrgb&w=100&h=50&dpr=2', products: 22 },
+    { name: 'Kawai', logo: 'https://images.pexels.com/photos/1751731/pexels-photo-1751731.jpeg?auto=compress&cs=tinysrgb&w=100&h=50&dpr=2', products: 18 }
   ];
 
   // Updated Electric Guitar Products with actual uploaded images
@@ -382,13 +397,33 @@ const MusicStore: React.FC<MusicStoreProps> = ({ onBackToHome }) => {
     ...studioProducts
   ];
 
-  // Filter products based on selected category and search query
+  // Enhanced filter logic
   const filteredProducts = useMemo(() => {
     let filtered = allProducts;
 
     // Filter by category
     if (selectedCategory !== 'all') {
       filtered = filtered.filter(product => product.category === selectedCategory);
+    }
+
+    // Filter by brands
+    if (selectedBrands.length > 0) {
+      filtered = filtered.filter(product => selectedBrands.includes(product.brand));
+    }
+
+    // Filter by price range
+    filtered = filtered.filter(product => 
+      product.price >= priceRange[0] && product.price <= priceRange[1]
+    );
+
+    // Filter by rating
+    if (selectedRating > 0) {
+      filtered = filtered.filter(product => product.rating >= selectedRating);
+    }
+
+    // Filter by discount
+    if (showOnlyDiscounted) {
+      filtered = filtered.filter(product => product.discount && product.discount > 0);
     }
 
     // Filter by search query
@@ -415,13 +450,16 @@ const MusicStore: React.FC<MusicStoreProps> = ({ onBackToHome }) => {
       case 'newest':
         filtered.sort((a, b) => (b.isNew ? 1 : 0) - (a.isNew ? 1 : 0));
         break;
+      case 'discount':
+        filtered.sort((a, b) => (b.discount || 0) - (a.discount || 0));
+        break;
       default:
         // Keep original order for 'featured'
         break;
     }
 
     return filtered;
-  }, [selectedCategory, searchQuery, sortBy, allProducts]);
+  }, [selectedCategory, selectedBrands, priceRange, selectedRating, showOnlyDiscounted, searchQuery, sortBy, allProducts]);
 
   const toggleWishlist = (productId: number) => {
     setWishlist(prev => 
@@ -501,10 +539,35 @@ const MusicStore: React.FC<MusicStoreProps> = ({ onBackToHome }) => {
     setSearchQuery(''); // Clear search when selecting category
   };
 
+  const handleBrandToggle = (brand: string) => {
+    setSelectedBrands(prev => 
+      prev.includes(brand) 
+        ? prev.filter(b => b !== brand)
+        : [...prev, brand]
+    );
+  };
+
   const clearFilters = () => {
     setSelectedCategory('all');
+    setSelectedBrands([]);
+    setPriceRange([0, 500000]);
+    setSelectedRating(0);
+    setShowOnlyDiscounted(false);
+    setShowOnlyInStock(false);
     setSearchQuery('');
     setSortBy('featured');
+  };
+
+  const getActiveFiltersCount = () => {
+    let count = 0;
+    if (selectedCategory !== 'all') count++;
+    if (selectedBrands.length > 0) count += selectedBrands.length;
+    if (priceRange[0] > 0 || priceRange[1] < 500000) count++;
+    if (selectedRating > 0) count++;
+    if (showOnlyDiscounted) count++;
+    if (showOnlyInStock) count++;
+    if (searchQuery.trim()) count++;
+    return count;
   };
 
   const renderStars = (rating: number) => {
@@ -643,6 +706,7 @@ const MusicStore: React.FC<MusicStoreProps> = ({ onBackToHome }) => {
   }
 
   const selectedCategoryInfo = categories.find(cat => cat.id === selectedCategory);
+  const activeFiltersCount = getActiveFiltersCount();
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-blue-50">
@@ -895,149 +959,364 @@ const MusicStore: React.FC<MusicStoreProps> = ({ onBackToHome }) => {
         </div>
       </section>
 
-      {/* Enhanced Navigation with Filters */}
-      <nav className="bg-white border-b border-gray-200">
+      {/* Enhanced Filters & Navigation Section */}
+      <section className="bg-white border-b border-gray-200 sticky top-20 z-40">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-16">
-            <div className="flex items-center space-x-8">
+          {/* Main Filter Bar */}
+          <div className="flex items-center justify-between py-4">
+            <div className="flex items-center space-x-6">
+              {/* Filter Toggle */}
               <button 
                 onClick={() => setShowFilters(!showFilters)}
-                className="flex items-center space-x-2 text-gray-700 hover:text-blue-600 transition-colors font-medium"
+                className="flex items-center space-x-3 bg-gradient-to-r from-blue-50 to-indigo-50 hover:from-blue-100 hover:to-indigo-100 border border-blue-200 text-blue-700 px-6 py-3 rounded-xl font-semibold transition-all duration-300 transform hover:scale-105 shadow-sm hover:shadow-md"
               >
-                <Filter className="h-4 w-4" />
+                <Sliders className="h-5 w-5" />
                 <span>Filters</span>
-                <ChevronDown className={`h-4 w-4 transition-transform ${showFilters ? 'rotate-180' : ''}`} />
+                {activeFiltersCount > 0 && (
+                  <span className="bg-blue-600 text-white text-xs px-2 py-1 rounded-full font-bold">
+                    {activeFiltersCount}
+                  </span>
+                )}
+                <ChevronDown className={`h-4 w-4 transition-transform duration-300 ${showFilters ? 'rotate-180' : ''}`} />
               </button>
-              
-              {/* Active Filters */}
-              {(selectedCategory !== 'all' || searchQuery) && (
-                <div className="flex items-center space-x-2">
-                  {selectedCategory !== 'all' && (
-                    <div className="flex items-center space-x-1 bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm">
-                      <span>{selectedCategoryInfo?.name}</span>
-                      <button
-                        onClick={() => setSelectedCategory('all')}
-                        className="hover:bg-blue-200 rounded-full p-1"
-                      >
-                        <X className="h-3 w-3" />
-                      </button>
-                    </div>
-                  )}
-                  {searchQuery && (
-                    <div className="flex items-center space-x-1 bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm">
-                      <span>"{searchQuery}"</span>
-                      <button
-                        onClick={() => setSearchQuery('')}
-                        className="hover:bg-green-200 rounded-full p-1"
-                      >
-                        <X className="h-3 w-3" />
-                      </button>
-                    </div>
-                  )}
+
+              {/* Quick Category Filters */}
+              <div className="hidden lg:flex items-center space-x-2">
+                {categories.slice(0, 5).map((category) => (
                   <button
-                    onClick={clearFilters}
-                    className="text-gray-500 hover:text-gray-700 text-sm underline"
+                    key={category.id}
+                    onClick={() => handleCategorySelect(category.id)}
+                    className={`flex items-center space-x-2 px-4 py-2 rounded-xl text-sm font-medium transition-all duration-300 ${
+                      selectedCategory === category.id
+                        ? 'bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-lg'
+                        : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                    }`}
                   >
-                    Clear all
+                    <span>{category.icon}</span>
+                    <span>{category.name}</span>
                   </button>
-                </div>
-              )}
+                ))}
+              </div>
             </div>
             
+            {/* Right Side Controls */}
             <div className="flex items-center space-x-6">
               {/* Sort Dropdown */}
               <div className="relative">
                 <select
                   value={sortBy}
                   onChange={(e) => setSortBy(e.target.value)}
-                  className="appearance-none bg-white border border-gray-300 rounded-lg px-4 py-2 pr-8 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  className="appearance-none bg-white border-2 border-gray-200 rounded-xl px-4 py-3 pr-10 text-sm font-medium focus:ring-4 focus:ring-blue-500/20 focus:border-blue-500 transition-all duration-300"
                 >
-                  <option value="featured">Featured</option>
-                  <option value="price-low">Price: Low to High</option>
-                  <option value="price-high">Price: High to Low</option>
-                  <option value="rating">Highest Rated</option>
-                  <option value="newest">Newest First</option>
+                  <option value="featured">✨ Featured</option>
+                  <option value="newest">🆕 Newest First</option>
+                  <option value="price-low">💰 Price: Low to High</option>
+                  <option value="price-high">💎 Price: High to Low</option>
+                  <option value="rating">⭐ Highest Rated</option>
+                  <option value="discount">🔥 Best Deals</option>
                 </select>
-                <ChevronDown className="absolute right-2 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400 pointer-events-none" />
+                <ChevronDown className="absolute right-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400 pointer-events-none" />
               </div>
               
-              <div className="flex items-center space-x-2 text-sm text-gray-600">
-                <Shield className="h-4 w-4 text-green-500" />
-                <span>Secure Shopping</span>
+              {/* Trust Indicators */}
+              <div className="hidden md:flex items-center space-x-6 text-sm">
+                <div className="flex items-center space-x-2 text-green-600">
+                  <Shield className="h-4 w-4" />
+                  <span className="font-medium">Secure Shopping</span>
+                </div>
+                <div className="flex items-center space-x-2 text-blue-600">
+                  <Truck className="h-4 w-4" />
+                  <span className="font-medium">Free Shipping ₹2000+</span>
+                </div>
               </div>
-              <div className="flex items-center space-x-2 text-sm text-gray-600">
-                <Truck className="h-4 w-4 text-blue-500" />
-                <span>Free Shipping ₹2000+</span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </nav>
 
-      {/* Category Filter Bar */}
-      {showFilters && (
-        <div className="bg-gray-50 border-b border-gray-200 py-4">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="flex items-center space-x-4 overflow-x-auto">
-              <span className="text-sm font-medium text-gray-700 whitespace-nowrap">Categories:</span>
-              {categories.map((category) => (
-                <button
-                  key={category.id}
-                  onClick={() => handleCategorySelect(category.id)}
-                  className={`flex items-center space-x-2 px-4 py-2 rounded-full text-sm font-medium whitespace-nowrap transition-all duration-300 ${
-                    selectedCategory === category.id
-                      ? 'bg-blue-600 text-white shadow-lg'
-                      : 'bg-white text-gray-700 hover:bg-blue-50 hover:text-blue-600 border border-gray-200'
-                  }`}
-                >
-                  <span>{category.icon}</span>
-                  <span>{category.name}</span>
-                  <span className={`text-xs px-2 py-1 rounded-full ${
-                    selectedCategory === category.id
-                      ? 'bg-white/20 text-white'
-                      : 'bg-gray-100 text-gray-500'
-                  }`}>
-                    {category.count}
-                  </span>
-                </button>
-              ))}
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* Results Header */}
-      <div className="bg-white border-b border-gray-200">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-          <div className="flex items-center justify-between">
-            <div>
-              <h2 className="text-2xl font-bold text-gray-900">
-                {selectedCategory === 'all' ? 'All Products' : selectedCategoryInfo?.name}
-              </h2>
-              <p className="text-gray-600">
-                {filteredProducts.length} product{filteredProducts.length !== 1 ? 's' : ''} found
-                {searchQuery && ` for "${searchQuery}"`}
-              </p>
-            </div>
-            <div className="flex items-center space-x-4">
-              <div className="flex items-center space-x-2">
+              {/* View Mode Toggle */}
+              <div className="flex items-center space-x-2 bg-gray-100 rounded-xl p-1">
                 <button 
                   onClick={() => setViewMode('grid')}
-                  className={`p-3 rounded-xl transition-all duration-300 ${viewMode === 'grid' ? 'bg-blue-100 text-blue-600' : 'text-gray-400 hover:text-gray-600'}`}
+                  className={`p-2 rounded-lg transition-all duration-300 ${
+                    viewMode === 'grid' 
+                      ? 'bg-white text-blue-600 shadow-sm' 
+                      : 'text-gray-400 hover:text-gray-600'
+                  }`}
                 >
-                  <Grid className="h-5 w-5" />
+                  <Grid className="h-4 w-4" />
                 </button>
                 <button 
                   onClick={() => setViewMode('list')}
-                  className={`p-3 rounded-xl transition-all duration-300 ${viewMode === 'list' ? 'bg-blue-100 text-blue-600' : 'text-gray-400 hover:text-gray-600'}`}
+                  className={`p-2 rounded-lg transition-all duration-300 ${
+                    viewMode === 'list' 
+                      ? 'bg-white text-blue-600 shadow-sm' 
+                      : 'text-gray-400 hover:text-gray-600'
+                  }`}
                 >
-                  <List className="h-5 w-5" />
+                  <List className="h-4 w-4" />
                 </button>
               </div>
             </div>
           </div>
+
+          {/* Advanced Filters Panel */}
+          {showFilters && (
+            <div className="border-t border-gray-200 py-6 animate-in slide-in-from-top duration-300">
+              <div className="grid grid-cols-1 lg:grid-cols-5 gap-6">
+                {/* Categories */}
+                <div className="space-y-3">
+                  <h3 className="text-sm font-bold text-gray-900 uppercase tracking-wider flex items-center space-x-2">
+                    <Package className="h-4 w-4" />
+                    <span>Categories</span>
+                  </h3>
+                  <div className="space-y-2 max-h-48 overflow-y-auto">
+                    {categories.map((category) => (
+                      <label key={category.id} className="flex items-center space-x-3 cursor-pointer group">
+                        <input
+                          type="radio"
+                          name="category"
+                          value={category.id}
+                          checked={selectedCategory === category.id}
+                          onChange={() => handleCategorySelect(category.id)}
+                          className="w-4 h-4 text-blue-600 border-gray-300 focus:ring-blue-500"
+                        />
+                        <span className="text-sm text-gray-700 group-hover:text-blue-600 transition-colors flex items-center space-x-2">
+                          <span>{category.icon}</span>
+                          <span>{category.name}</span>
+                          <span className="text-xs text-gray-400">({category.count})</span>
+                        </span>
+                      </label>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Brands */}
+                <div className="space-y-3">
+                  <h3 className="text-sm font-bold text-gray-900 uppercase tracking-wider flex items-center space-x-2">
+                    <Tag className="h-4 w-4" />
+                    <span>Brands</span>
+                  </h3>
+                  <div className="space-y-2 max-h-48 overflow-y-auto">
+                    {topBrands.slice(0, 8).map((brand) => (
+                      <label key={brand.name} className="flex items-center space-x-3 cursor-pointer group">
+                        <input
+                          type="checkbox"
+                          checked={selectedBrands.includes(brand.name)}
+                          onChange={() => handleBrandToggle(brand.name)}
+                          className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+                        />
+                        <span className="text-sm text-gray-700 group-hover:text-blue-600 transition-colors flex items-center justify-between w-full">
+                          <span>{brand.name}</span>
+                          <span className="text-xs text-gray-400">({brand.products})</span>
+                        </span>
+                      </label>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Price Range */}
+                <div className="space-y-3">
+                  <h3 className="text-sm font-bold text-gray-900 uppercase tracking-wider flex items-center space-x-2">
+                    <DollarSign className="h-4 w-4" />
+                    <span>Price Range</span>
+                  </h3>
+                  <div className="space-y-4">
+                    <div className="flex items-center space-x-3">
+                      <input
+                        type="number"
+                        placeholder="Min"
+                        value={priceRange[0]}
+                        onChange={(e) => setPriceRange([parseInt(e.target.value) || 0, priceRange[1]])}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                      />
+                      <span className="text-gray-400">to</span>
+                      <input
+                        type="number"
+                        placeholder="Max"
+                        value={priceRange[1]}
+                        onChange={(e) => setPriceRange([priceRange[0], parseInt(e.target.value) || 500000])}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      {[
+                        { label: 'Under ₹25,000', min: 0, max: 25000 },
+                        { label: '₹25,000 - ₹75,000', min: 25000, max: 75000 },
+                        { label: '₹75,000 - ₹2,00,000', min: 75000, max: 200000 },
+                        { label: 'Above ₹2,00,000', min: 200000, max: 500000 }
+                      ].map((range) => (
+                        <button
+                          key={range.label}
+                          onClick={() => setPriceRange([range.min, range.max])}
+                          className="block w-full text-left text-sm text-gray-600 hover:text-blue-600 transition-colors"
+                        >
+                          {range.label}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+
+                {/* Rating */}
+                <div className="space-y-3">
+                  <h3 className="text-sm font-bold text-gray-900 uppercase tracking-wider flex items-center space-x-2">
+                    <Star className="h-4 w-4" />
+                    <span>Rating</span>
+                  </h3>
+                  <div className="space-y-2">
+                    {[4, 3, 2, 1].map((rating) => (
+                      <label key={rating} className="flex items-center space-x-3 cursor-pointer group">
+                        <input
+                          type="radio"
+                          name="rating"
+                          value={rating}
+                          checked={selectedRating === rating}
+                          onChange={() => setSelectedRating(rating)}
+                          className="w-4 h-4 text-blue-600 border-gray-300 focus:ring-blue-500"
+                        />
+                        <div className="flex items-center space-x-2">
+                          <div className="flex space-x-1">
+                            {Array.from({ length: 5 }, (_, i) => (
+                              <Star 
+                                key={i} 
+                                className={`h-4 w-4 ${i < rating ? 'text-yellow-400 fill-current' : 'text-gray-300'}`} 
+                              />
+                            ))}
+                          </div>
+                          <span className="text-sm text-gray-600">& up</span>
+                        </div>
+                      </label>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Special Filters */}
+                <div className="space-y-3">
+                  <h3 className="text-sm font-bold text-gray-900 uppercase tracking-wider flex items-center space-x-2">
+                    <Sparkles className="h-4 w-4" />
+                    <span>Special</span>
+                  </h3>
+                  <div className="space-y-3">
+                    <label className="flex items-center space-x-3 cursor-pointer group">
+                      <input
+                        type="checkbox"
+                        checked={showOnlyDiscounted}
+                        onChange={(e) => setShowOnlyDiscounted(e.target.checked)}
+                        className="w-4 h-4 text-red-600 border-gray-300 rounded focus:ring-red-500"
+                      />
+                      <span className="text-sm text-gray-700 group-hover:text-red-600 transition-colors flex items-center space-x-2">
+                        <Flame className="h-4 w-4 text-red-500" />
+                        <span>On Sale</span>
+                      </span>
+                    </label>
+                    <label className="flex items-center space-x-3 cursor-pointer group">
+                      <input
+                        type="checkbox"
+                        checked={showOnlyInStock}
+                        onChange={(e) => setShowOnlyInStock(e.target.checked)}
+                        className="w-4 h-4 text-green-600 border-gray-300 rounded focus:ring-green-500"
+                      />
+                      <span className="text-sm text-gray-700 group-hover:text-green-600 transition-colors flex items-center space-x-2">
+                        <CheckCircle className="h-4 w-4 text-green-500" />
+                        <span>In Stock</span>
+                      </span>
+                    </label>
+                  </div>
+                </div>
+              </div>
+
+              {/* Filter Actions */}
+              <div className="flex items-center justify-between mt-6 pt-6 border-t border-gray-200">
+                <div className="text-sm text-gray-600">
+                  {filteredProducts.length} product{filteredProducts.length !== 1 ? 's' : ''} found
+                </div>
+                <div className="flex items-center space-x-3">
+                  <button
+                    onClick={clearFilters}
+                    className="flex items-center space-x-2 text-gray-600 hover:text-red-600 transition-colors"
+                  >
+                    <FilterX className="h-4 w-4" />
+                    <span>Clear All</span>
+                  </button>
+                  <button
+                    onClick={() => setShowFilters(false)}
+                    className="bg-blue-600 text-white px-6 py-2 rounded-lg font-semibold hover:bg-blue-700 transition-colors"
+                  >
+                    Apply Filters
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Active Filters Display */}
+          {activeFiltersCount > 0 && !showFilters && (
+            <div className="py-3 border-t border-gray-200">
+              <div className="flex items-center space-x-3 flex-wrap">
+                <span className="text-sm font-medium text-gray-700">Active filters:</span>
+                {selectedCategory !== 'all' && (
+                  <span className="inline-flex items-center space-x-1 bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm">
+                    <span>{selectedCategoryInfo?.name}</span>
+                    <button
+                      onClick={() => setSelectedCategory('all')}
+                      className="hover:bg-blue-200 rounded-full p-1"
+                    >
+                      <X className="h-3 w-3" />
+                    </button>
+                  </span>
+                )}
+                {selectedBrands.map((brand) => (
+                  <span key={brand} className="inline-flex items-center space-x-1 bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm">
+                    <span>{brand}</span>
+                    <button
+                      onClick={() => handleBrandToggle(brand)}
+                      className="hover:bg-green-200 rounded-full p-1"
+                    >
+                      <X className="h-3 w-3" />
+                    </button>
+                  </span>
+                ))}
+                {(priceRange[0] > 0 || priceRange[1] < 500000) && (
+                  <span className="inline-flex items-center space-x-1 bg-purple-100 text-purple-800 px-3 py-1 rounded-full text-sm">
+                    <span>₹{priceRange[0].toLocaleString()} - ₹{priceRange[1].toLocaleString()}</span>
+                    <button
+                      onClick={() => setPriceRange([0, 500000])}
+                      className="hover:bg-purple-200 rounded-full p-1"
+                    >
+                      <X className="h-3 w-3" />
+                    </button>
+                  </span>
+                )}
+                {selectedRating > 0 && (
+                  <span className="inline-flex items-center space-x-1 bg-yellow-100 text-yellow-800 px-3 py-1 rounded-full text-sm">
+                    <span>{selectedRating}+ stars</span>
+                    <button
+                      onClick={() => setSelectedRating(0)}
+                      className="hover:bg-yellow-200 rounded-full p-1"
+                    >
+                      <X className="h-3 w-3" />
+                    </button>
+                  </span>
+                )}
+                {showOnlyDiscounted && (
+                  <span className="inline-flex items-center space-x-1 bg-red-100 text-red-800 px-3 py-1 rounded-full text-sm">
+                    <span>On Sale</span>
+                    <button
+                      onClick={() => setShowOnlyDiscounted(false)}
+                      className="hover:bg-red-200 rounded-full p-1"
+                    >
+                      <X className="h-3 w-3" />
+                    </button>
+                  </span>
+                )}
+                <button
+                  onClick={clearFilters}
+                  className="text-gray-500 hover:text-red-600 text-sm underline transition-colors"
+                >
+                  Clear all
+                </button>
+              </div>
+            </div>
+          )}
         </div>
-      </div>
+      </section>
 
       {/* Products Grid */}
       <section className="py-12">
