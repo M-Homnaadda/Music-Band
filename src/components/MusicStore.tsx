@@ -150,7 +150,7 @@ const MusicStore: React.FC<MusicStoreProps> = ({ onBackToHome }) => {
     }
   ];
 
-  // New Keyboard & Piano Products
+  // New Keyboard & Piano Products with proper Pexels images
   const keyboardProducts: Product[] = [
     {
       id: 12,
@@ -160,7 +160,7 @@ const MusicStore: React.FC<MusicStoreProps> = ({ onBackToHome }) => {
       originalPrice: 65999,
       rating: 4.8,
       reviews: 156,
-      image: 'https://images.app.goo.gl/ht6NKG79zQqueYZ19',
+      image: 'https://images.pexels.com/photos/164821/pexels-photo-164821.jpeg?auto=compress&cs=tinysrgb&w=400&h=400&dpr=2',
       category: 'keyboard',
       isNew: true,
       discount: 19
@@ -172,7 +172,7 @@ const MusicStore: React.FC<MusicStoreProps> = ({ onBackToHome }) => {
       price: 41299,
       rating: 4.7,
       reviews: 203,
-      image: 'https://images.app.goo.gl/3TvY5Pnojv3HYuHa7',
+      image: 'https://images.pexels.com/photos/1751731/pexels-photo-1751731.jpeg?auto=compress&cs=tinysrgb&w=400&h=400&dpr=2',
       category: 'keyboard',
       isHot: true
     },
@@ -184,7 +184,7 @@ const MusicStore: React.FC<MusicStoreProps> = ({ onBackToHome }) => {
       originalPrice: 29999,
       rating: 4.5,
       reviews: 89,
-      image: 'https://images.app.goo.gl/ekxspY2tW6sEfACL9',
+      image: 'https://images.pexels.com/photos/1407322/pexels-photo-1407322.jpeg?auto=compress&cs=tinysrgb&w=400&h=400&dpr=2',
       category: 'keyboard',
       discount: 17
     },
@@ -195,7 +195,7 @@ const MusicStore: React.FC<MusicStoreProps> = ({ onBackToHome }) => {
       price: 123999,
       rating: 4.9,
       reviews: 67,
-      image: 'https://images.app.goo.gl/AtdMFi6HMVqeEaJF7',
+      image: 'https://images.pexels.com/photos/1047930/pexels-photo-1047930.jpeg?auto=compress&cs=tinysrgb&w=400&h=400&dpr=2',
       category: 'keyboard',
       isNew: true
     },
@@ -207,7 +207,7 @@ const MusicStore: React.FC<MusicStoreProps> = ({ onBackToHome }) => {
       originalPrice: 99999,
       rating: 4.6,
       reviews: 134,
-      image: 'https://images.app.goo.gl/YPWJQ5jV8hemC7pY8',
+      image: 'https://images.pexels.com/photos/1190297/pexels-photo-1190297.jpeg?auto=compress&cs=tinysrgb&w=400&h=400&dpr=2',
       category: 'keyboard',
       discount: 18,
       isHot: true
@@ -219,7 +219,7 @@ const MusicStore: React.FC<MusicStoreProps> = ({ onBackToHome }) => {
       price: 165999,
       rating: 4.8,
       reviews: 92,
-      image: 'https://images.app.goo.gl/TYBa6EbMjPet5oDf8',
+      image: 'https://images.pexels.com/photos/164821/pexels-photo-164821.jpeg?auto=compress&cs=tinysrgb&w=400&h=400&dpr=2',
       category: 'keyboard',
       isNew: true
     }
@@ -561,7 +561,7 @@ const MusicStore: React.FC<MusicStoreProps> = ({ onBackToHome }) => {
             </div>
             <div className="relative">
               <img 
-                src="https://images.app.goo.gl/ht6NKG79zQqueYZ19"
+                src="https://images.pexels.com/photos/164821/pexels-photo-164821.jpeg?auto=compress&cs=tinysrgb&w=600&h=400&dpr=2"
                 alt="Roland FP-30X Digital Piano"
                 className="w-full h-80 object-cover rounded-lg shadow-lg"
               />
