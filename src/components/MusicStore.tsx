@@ -23,7 +23,11 @@ import {
   Play,
   Eye,
   Share2,
-  X
+  X,
+  ArrowRight,
+  CheckCircle,
+  Clock,
+  Flame
 } from 'lucide-react';
 import AuthModal from './AuthModal';
 import UserMenu from './UserMenu';
@@ -701,6 +705,190 @@ const MusicStore: React.FC<MusicStoreProps> = ({ onBackToHome }) => {
           </div>
         </div>
       </header>
+
+      {/* Premium Hero Section */}
+      <section className="relative min-h-[80vh] bg-gradient-to-br from-amber-50 via-orange-50 to-red-50 overflow-hidden">
+        {/* Background Pattern */}
+        <div className="absolute inset-0 opacity-5">
+          <div className="absolute top-0 left-0 w-96 h-96 bg-gradient-to-br from-amber-600 to-orange-600 rounded-full blur-3xl -translate-x-48 -translate-y-48"></div>
+          <div className="absolute bottom-0 right-0 w-96 h-96 bg-gradient-to-br from-red-600 to-pink-600 rounded-full blur-3xl translate-x-48 translate-y-48"></div>
+        </div>
+
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center min-h-[60vh]">
+            {/* Left Content */}
+            <div className="space-y-8 animate-in fade-in slide-in-from-left duration-1000">
+              {/* Premium Badge */}
+              <div className="inline-flex items-center space-x-2 bg-gradient-to-r from-amber-100 to-orange-100 border border-amber-200 rounded-full px-4 py-2">
+                <Award className="h-4 w-4 text-amber-600" />
+                <span className="text-sm font-semibold text-amber-800">PREMIUM COLLECTION</span>
+              </div>
+
+              {/* Main Heading */}
+              <div className="space-y-4">
+                <h1 className="text-5xl lg:text-7xl font-bold leading-tight">
+                  <span className="bg-gradient-to-r from-gray-900 via-amber-800 to-orange-800 bg-clip-text text-transparent">
+                    GIBSON
+                  </span>
+                  <br />
+                  <span className="text-gray-900 text-3xl lg:text-4xl font-medium">
+                    Les Paul Studio
+                  </span>
+                </h1>
+                <p className="text-xl text-gray-600 leading-relaxed max-w-lg">
+                  Experience the legendary tone and craftsmanship of the iconic Gibson Les Paul Studio. 
+                  Handcrafted with premium mahogany body and maple cap for unparalleled sustain and resonance.
+                </p>
+              </div>
+
+              {/* Features */}
+              <div className="grid grid-cols-2 gap-4">
+                <div className="flex items-center space-x-3">
+                  <div className="w-10 h-10 bg-gradient-to-r from-green-500 to-emerald-500 rounded-full flex items-center justify-center">
+                    <CheckCircle className="h-5 w-5 text-white" />
+                  </div>
+                  <div>
+                    <p className="font-semibold text-gray-900">Premium Mahogany</p>
+                    <p className="text-sm text-gray-600">Body & Neck</p>
+                  </div>
+                </div>
+                <div className="flex items-center space-x-3">
+                  <div className="w-10 h-10 bg-gradient-to-r from-blue-500 to-cyan-500 rounded-full flex items-center justify-center">
+                    <Zap className="h-5 w-5 text-white" />
+                  </div>
+                  <div>
+                    <p className="font-semibold text-gray-900">490R & 498T</p>
+                    <p className="text-sm text-gray-600">Humbuckers</p>
+                  </div>
+                </div>
+                <div className="flex items-center space-x-3">
+                  <div className="w-10 h-10 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full flex items-center justify-center">
+                    <Star className="h-5 w-5 text-white" />
+                  </div>
+                  <div>
+                    <p className="font-semibold text-gray-900">Lifetime Warranty</p>
+                    <p className="text-sm text-gray-600">Guaranteed Quality</p>
+                  </div>
+                </div>
+                <div className="flex items-center space-x-3">
+                  <div className="w-10 h-10 bg-gradient-to-r from-orange-500 to-red-500 rounded-full flex items-center justify-center">
+                    <Clock className="h-5 w-5 text-white" />
+                  </div>
+                  <div>
+                    <p className="font-semibold text-gray-900">Limited Edition</p>
+                    <p className="text-sm text-gray-600">Only 50 Left</p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Pricing */}
+              <div className="space-y-4">
+                <div className="flex items-center space-x-4">
+                  <span className="text-4xl font-bold text-gray-900">₹1,81,599</span>
+                  <span className="text-2xl text-gray-500 line-through">₹2,19,999</span>
+                  <span className="bg-gradient-to-r from-red-500 to-pink-500 text-white px-4 py-2 rounded-full font-bold text-lg animate-pulse">
+                    17% OFF
+                  </span>
+                </div>
+                <div className="flex items-center space-x-2 text-green-600">
+                  <Flame className="h-5 w-5" />
+                  <span className="font-semibold">Save ₹38,400 • Limited Time Offer</span>
+                </div>
+              </div>
+
+              {/* Action Buttons */}
+              <div className="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-6">
+                <button 
+                  onClick={() => handleAddToCart(1)}
+                  className="bg-gradient-to-r from-amber-600 to-orange-600 text-white px-8 py-4 rounded-2xl font-bold text-lg hover:from-amber-700 hover:to-orange-700 transition-all duration-300 transform hover:scale-105 shadow-xl hover:shadow-2xl flex items-center justify-center space-x-2"
+                >
+                  <ShoppingCart className="h-5 w-5" />
+                  <span>Add to Cart</span>
+                </button>
+                <button className="border-2 border-gray-300 text-gray-700 px-8 py-4 rounded-2xl font-bold text-lg hover:border-amber-600 hover:text-amber-600 transition-all duration-300 hover:bg-amber-50 flex items-center justify-center space-x-2">
+                  <Play className="h-5 w-5" />
+                  <span>Listen Demo</span>
+                </button>
+              </div>
+
+              {/* Trust Indicators */}
+              <div className="flex items-center space-x-8 pt-4">
+                <div className="flex items-center space-x-2 text-gray-600">
+                  <Shield className="h-5 w-5 text-green-500" />
+                  <span className="text-sm font-medium">Secure Payment</span>
+                </div>
+                <div className="flex items-center space-x-2 text-gray-600">
+                  <Truck className="h-5 w-5 text-blue-500" />
+                  <span className="text-sm font-medium">Free Shipping</span>
+                </div>
+                <div className="flex items-center space-x-2 text-gray-600">
+                  <Award className="h-5 w-5 text-purple-500" />
+                  <span className="text-sm font-medium">Authentic Guarantee</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Right Image */}
+            <div className="relative animate-in fade-in slide-in-from-right duration-1000 delay-300">
+              {/* Decorative Elements */}
+              <div className="absolute -inset-8 bg-gradient-to-r from-amber-200/30 to-orange-200/30 rounded-3xl blur-2xl"></div>
+              <div className="absolute top-8 right-8 w-32 h-32 bg-gradient-to-br from-amber-400/20 to-orange-400/20 rounded-full blur-xl"></div>
+              <div className="absolute bottom-8 left-8 w-24 h-24 bg-gradient-to-br from-red-400/20 to-pink-400/20 rounded-full blur-lg"></div>
+
+              {/* Main Product Image */}
+              <div className="relative bg-gradient-to-br from-amber-900 via-orange-900 to-red-900 rounded-3xl overflow-hidden shadow-2xl">
+                <img 
+                  src="/src/assets/electric-guitar-still-life (1).jpg"
+                  alt="Gibson Les Paul Studio - Premium Electric Guitar"
+                  className="w-full h-[600px] object-cover"
+                />
+                
+                {/* Overlay Gradient */}
+                <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent"></div>
+                
+                {/* Floating Elements */}
+                <div className="absolute top-6 left-6 bg-white/90 backdrop-blur-sm rounded-2xl p-4 shadow-lg">
+                  <div className="flex items-center space-x-2">
+                    <div className="flex space-x-1">
+                      {[...Array(5)].map((_, i) => (
+                        <Star key={i} className="h-4 w-4 text-yellow-400 fill-current" />
+                      ))}
+                    </div>
+                    <span className="text-sm font-semibold text-gray-900">4.9 (124 reviews)</span>
+                  </div>
+                </div>
+
+                <div className="absolute bottom-6 right-6 bg-white/90 backdrop-blur-sm rounded-2xl p-4 shadow-lg">
+                  <div className="text-center">
+                    <p className="text-sm text-gray-600">In Stock</p>
+                    <p className="text-lg font-bold text-green-600">50 Available</p>
+                  </div>
+                </div>
+
+                {/* Wishlist Button */}
+                <button
+                  onClick={() => toggleWishlist(1)}
+                  className="absolute top-6 right-6 p-3 bg-white/90 backdrop-blur-sm rounded-full shadow-lg hover:bg-white hover:scale-110 transition-all duration-300"
+                >
+                  <Heart 
+                    className={`h-6 w-6 transition-colors ${
+                      wishlist.includes(1) ? 'text-red-500 fill-current' : 'text-gray-600'
+                    }`} 
+                  />
+                </button>
+              </div>
+
+              {/* Floating Action Button */}
+              <div className="absolute -bottom-6 left-1/2 transform -translate-x-1/2">
+                <button className="bg-white text-gray-900 px-6 py-3 rounded-full font-bold shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:scale-110 flex items-center space-x-2">
+                  <ArrowRight className="h-5 w-5" />
+                  <span>View Details</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
 
       {/* Enhanced Navigation with Filters */}
       <nav className="bg-white border-b border-gray-200">
