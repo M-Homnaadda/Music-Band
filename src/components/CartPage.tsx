@@ -31,7 +31,7 @@ const CartPage: React.FC<CartPageProps> = ({
   const [isCheckingOut, setIsCheckingOut] = useState(false);
 
   const subtotal = cartItems.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-  const shippingCost = shippingMethod === 'pickup' ? 0 : 9.90;
+  const shippingCost = shippingMethod === 'pickup' ? 0 : 819; // ₹819 for delivery
   const total = subtotal + shippingCost;
 
   const handleQuantityChange = (id: number, change: number) => {
@@ -134,11 +134,11 @@ const CartPage: React.FC<CartPageProps> = ({
                 {/* Price */}
                 <div className="col-span-2 text-center">
                   <div className="text-lg font-semibold text-gray-900">
-                    ${item.price.toFixed(2)}
+                    ₹{item.price.toLocaleString('en-IN')}
                   </div>
                   {item.originalPrice && item.originalPrice > item.price && (
                     <div className="text-sm text-gray-500 line-through">
-                      ${item.originalPrice.toFixed(2)}
+                      ₹{item.originalPrice.toLocaleString('en-IN')}
                     </div>
                   )}
                 </div>
@@ -168,7 +168,7 @@ const CartPage: React.FC<CartPageProps> = ({
                 {/* Total */}
                 <div className="col-span-1 text-center">
                   <div className="text-lg font-bold text-gray-900">
-                    ${(item.price * item.quantity).toFixed(2)}
+                    ₹{(item.price * item.quantity).toLocaleString('en-IN')}
                   </div>
                 </div>
 
@@ -222,11 +222,11 @@ const CartPage: React.FC<CartPageProps> = ({
                   <div className="flex items-center space-x-2">
                     <Truck className="h-4 w-4 text-gray-600" />
                     <span className="font-medium text-gray-900">Delivery at home (Under 2 - 4 day)</span>
-                    <span className="text-gray-900 font-semibold">$9.90</span>
+                    <span className="text-gray-900 font-semibold">₹819</span>
                   </div>
                   <div className="flex items-center space-x-1 mt-1 ml-6">
                     <MapPin className="h-3 w-3 text-gray-500" />
-                    <span className="text-sm text-gray-500">At 45 Glenridge Ave, Brooklyn, NY 11220</span>
+                    <span className="text-sm text-gray-500">At 45 Glenridge Ave, Mumbai, MH 400001</span>
                   </div>
                 </div>
               </label>
@@ -240,18 +240,18 @@ const CartPage: React.FC<CartPageProps> = ({
                 <div className="space-y-3">
                   <div className="flex justify-between text-sm">
                     <span className="text-gray-600">SUBTOTAL TTC</span>
-                    <span className="font-semibold text-gray-900">${subtotal.toFixed(2)}</span>
+                    <span className="font-semibold text-gray-900">₹{subtotal.toLocaleString('en-IN')}</span>
                   </div>
                   <div className="flex justify-between text-sm">
                     <span className="text-gray-600">SHIPPING</span>
                     <span className="font-semibold text-gray-900">
-                      {shippingCost === 0 ? 'Free' : `$${shippingCost.toFixed(2)}`}
+                      {shippingCost === 0 ? 'Free' : `₹${shippingCost.toLocaleString('en-IN')}`}
                     </span>
                   </div>
                   <div className="border-t border-gray-300 pt-3">
                     <div className="flex justify-between text-lg font-bold">
                       <span className="text-gray-900">TOTAL</span>
-                      <span className="text-gray-900">${total.toFixed(2)}</span>
+                      <span className="text-gray-900">₹{total.toLocaleString('en-IN')}</span>
                     </div>
                   </div>
                 </div>
@@ -269,7 +269,7 @@ const CartPage: React.FC<CartPageProps> = ({
                   ) : (
                     <>
                       <span>Checkout</span>
-                      <span>${total.toFixed(2)}</span>
+                      <span>₹{total.toLocaleString('en-IN')}</span>
                     </>
                   )}
                 </button>
