@@ -160,76 +160,77 @@ const MusicStore: React.FC<MusicStoreProps> = ({ onBackToHome }) => {
     }
   ];
 
-  // New Keyboard & Piano Products with proper Pexels images
+  // Updated Keyboard & Piano Products with actual uploaded images
   const keyboardProducts: Product[] = [
     {
       id: 12,
-      name: 'FP-30X Digital Piano',
+      name: 'RP107 Digital Piano',
       brand: 'Roland',
       price: 53609,
       originalPrice: 65999,
       rating: 4.8,
       reviews: 156,
-      image: 'https://images.pexels.com/photos/164821/pexels-photo-164821.jpeg?auto=compress&cs=tinysrgb&w=400&h=400&dpr=2',
+      image: '/src/assets/products/keyboard-piano/rp107_angle_left_gal.jpg',
       category: 'keyboard',
       isNew: true,
       discount: 19
     },
     {
       id: 13,
-      name: 'P-125A Digital Piano',
+      name: 'P-225B Digital Piano',
       brand: 'Yamaha',
       price: 41299,
       rating: 4.7,
       reviews: 203,
-      image: 'https://images.pexels.com/photos/1751731/pexels-photo-1751731.jpeg?auto=compress&cs=tinysrgb&w=400&h=400&dpr=2',
+      image: '/src/assets/products/keyboard-piano/Yamaha-P-225B-Digital-Piano-Black-Front_large.webp',
       category: 'keyboard',
       isHot: true
     },
     {
       id: 14,
-      name: 'CT-X700 Keyboard',
-      brand: 'Casio',
-      price: 24799,
-      originalPrice: 29999,
-      rating: 4.5,
+      name: 'U3 Upright Piano',
+      brand: 'Yamaha',
+      price: 524799,
+      originalPrice: 599999,
+      rating: 4.9,
       reviews: 89,
-      image: 'https://images.pexels.com/photos/1407322/pexels-photo-1407322.jpeg?auto=compress&cs=tinysrgb&w=400&h=400&dpr=2',
+      image: '/src/assets/products/keyboard-piano/up_product_u3_po-ebo_163832c6df3b2719f401bc7985f36ead.jpg',
       category: 'keyboard',
-      discount: 17
+      discount: 13,
+      isNew: true
     },
     {
       id: 15,
-      name: 'MODX8 Synthesizer',
+      name: 'CVP-909GP Grand Piano',
       brand: 'Yamaha',
-      price: 123999,
+      price: 1249999,
       rating: 4.9,
       reviews: 67,
-      image: 'https://images.pexels.com/photos/1047930/pexels-photo-1047930.jpeg?auto=compress&cs=tinysrgb&w=400&h=400&dpr=2',
+      image: '/src/assets/products/keyboard-piano/CVP-909GP_a_0001_a0388f6bdfd18943c6b62f8e1ad13801.jpg',
       category: 'keyboard',
       isNew: true
     },
     {
       id: 16,
-      name: 'Krome EX 61-Key Workstation',
-      brand: 'Korg',
+      name: 'PS500 Digital Piano',
+      brand: 'Kawai',
       price: 82499,
       originalPrice: 99999,
       rating: 4.6,
       reviews: 134,
-      image: 'https://images.pexels.com/photos/1190297/pexels-photo-1190297.jpeg?auto=compress&cs=tinysrgb&w=400&h=400&dpr=2',
+      image: '/src/assets/products/keyboard-piano/ps500-18761795201896_l.jpg',
       category: 'keyboard',
       discount: 18,
       isHot: true
     },
     {
       id: 17,
-      name: 'RD-2000 Stage Piano',
+      name: 'FP-30X Digital Piano',
       brand: 'Roland',
       price: 165999,
       rating: 4.8,
       reviews: 92,
-      image: 'https://images.pexels.com/photos/164821/pexels-photo-164821.jpeg?auto=compress&cs=tinysrgb&w=400&h=400&dpr=2',
+      image: '/src/assets/products/keyboard-piano/rp107_angle_left_gal.jpg',
       category: 'keyboard',
       isNew: true
     }
@@ -604,7 +605,7 @@ const MusicStore: React.FC<MusicStoreProps> = ({ onBackToHome }) => {
         </div>
       </nav>
 
-      {/* Enhanced Hero Section */}
+      {/* Enhanced Hero Section - Featuring Yamaha P-225B */}
       <section className="relative py-16 bg-gradient-to-r from-blue-600 via-purple-600 to-indigo-700 overflow-hidden">
         {/* Background Pattern */}
         <div className="absolute inset-0 opacity-10">
@@ -621,33 +622,33 @@ const MusicStore: React.FC<MusicStoreProps> = ({ onBackToHome }) => {
                   <span className="text-yellow-400 font-semibold">Premium Quality Guaranteed</span>
                 </div>
                 <h2 className="text-5xl font-bold leading-tight">
-                  Roland FP-30X
+                  Yamaha P-225B
                   <span className="block text-3xl text-blue-200">Digital Piano</span>
                 </h2>
                 <p className="text-xl text-blue-100 leading-relaxed">
-                  Experience premium piano performance with authentic sound and responsive touch in a sleek, portable design perfect for any musician.
+                  Experience authentic piano performance with the P-225B's weighted keys and premium sound quality. Perfect for both beginners and professionals.
                 </p>
               </div>
               
               <div className="flex items-center space-x-6">
                 <div className="text-center">
-                  <div className="text-3xl font-bold">4.8</div>
+                  <div className="text-3xl font-bold">4.7</div>
                   <div className="flex items-center justify-center space-x-1 mt-1">
-                    {renderStars(4.8)}
+                    {renderStars(4.7)}
                   </div>
-                  <div className="text-sm text-blue-200">156 Reviews</div>
+                  <div className="text-sm text-blue-200">203 Reviews</div>
                 </div>
                 <div className="w-px h-16 bg-blue-400"></div>
                 <div className="text-center">
-                  <div className="text-3xl font-bold">₹53,609</div>
-                  <div className="text-sm text-blue-200 line-through">₹65,999</div>
-                  <div className="text-sm text-yellow-400 font-semibold">Save 19%</div>
+                  <div className="text-3xl font-bold">₹41,299</div>
+                  <div className="text-sm text-blue-200">Best Price</div>
+                  <div className="text-sm text-yellow-400 font-semibold">🔥 Hot Deal</div>
                 </div>
               </div>
 
               <div className="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4">
                 <button 
-                  onClick={() => handleAddToCart(12)}
+                  onClick={() => handleAddToCart(13)}
                   className="bg-white text-blue-600 px-8 py-4 rounded-2xl font-bold text-lg hover:bg-gray-100 transition-all duration-300 transform hover:scale-105 shadow-xl flex items-center justify-center space-x-2"
                 >
                   <ShoppingCart className="h-5 w-5" />
@@ -663,15 +664,15 @@ const MusicStore: React.FC<MusicStoreProps> = ({ onBackToHome }) => {
             <div className="relative">
               <div className="absolute inset-0 bg-gradient-to-r from-white/20 to-transparent rounded-3xl blur-xl"></div>
               <img 
-                src="https://images.pexels.com/photos/164821/pexels-photo-164821.jpeg?auto=compress&cs=tinysrgb&w=600&h=400&dpr=2"
-                alt="Roland FP-30X Digital Piano"
-                className="relative w-full h-96 object-cover rounded-3xl shadow-2xl transform hover:scale-105 transition-transform duration-500"
+                src="/src/assets/products/keyboard-piano/Yamaha-P-225B-Digital-Piano-Black-Front_large.webp"
+                alt="Yamaha P-225B Digital Piano"
+                className="relative w-full h-96 object-contain rounded-3xl shadow-2xl transform hover:scale-105 transition-transform duration-500 bg-white/10 backdrop-blur-sm p-4"
               />
               <div className="absolute top-6 right-6 bg-white/90 backdrop-blur-sm px-4 py-2 rounded-full">
-                <span className="text-sm font-bold text-gray-900">Roland</span>
+                <span className="text-sm font-bold text-gray-900">Yamaha</span>
               </div>
-              <div className="absolute bottom-6 left-6 bg-gradient-to-r from-green-500 to-emerald-500 text-white px-4 py-2 rounded-full">
-                <span className="text-sm font-bold">NEW ARRIVAL</span>
+              <div className="absolute bottom-6 left-6 bg-gradient-to-r from-red-500 to-pink-500 text-white px-4 py-2 rounded-full">
+                <span className="text-sm font-bold">🔥 HOT DEAL</span>
               </div>
             </div>
           </div>
