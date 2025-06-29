@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Play, Users, Calendar, Star, ChevronLeft, ChevronRight, Menu, X, ArrowDown, Facebook, Instagram, Twitter, Music, Volume2, Heart, MapPin, Clock, Phone, Mail, ShoppingCart, ArrowRight } from 'lucide-react';
+import { Play, Users, Calendar, Star, ChevronLeft, ChevronRight, Menu, X, ArrowDown, Facebook, Instagram, Twitter, Music, Volume2, Heart, MapPin, Clock, Phone, Mail, ShoppingCart, ArrowRight, Plus, Eye } from 'lucide-react';
 
 function App() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -8,6 +8,7 @@ function App() {
   const [activeSection, setActiveSection] = useState('home');
   const [isLoading, setIsLoading] = useState(true);
   const [likedCards, setLikedCards] = useState<number[]>([]);
+  const [hoveredProduct, setHoveredProduct] = useState<number | null>(null);
   const [formData, setFormData] = useState({
     firstName: '',
     lastName: '',
@@ -107,27 +108,63 @@ function App() {
   const featuredProducts = [
     {
       id: 1,
-      title: "Latest Album",
-      subtitle: "Available in all stores",
-      price: "$19.99",
-      image: "https://images.pexels.com/photos/167092/pexels-photo-167092.jpeg?auto=compress&cs=tinysrgb&w=400&h=400&dpr=2",
-      bgColor: "bg-gradient-to-br from-gray-200 to-gray-300"
+      title: "Echoes of Tomorrow",
+      subtitle: "Latest Studio Album",
+      price: "$24.99",
+      originalPrice: "$29.99",
+      image: "https://images.pexels.com/photos/167092/pexels-photo-167092.jpeg?auto=compress&cs=tinysrgb&w=600&h=600&dpr=2",
+      hoverImage: "https://images.pexels.com/photos/3721941/pexels-photo-3721941.jpeg?auto=compress&cs=tinysrgb&w=600&h=600&dpr=2",
+      badge: "New Release",
+      badgeColor: "bg-emerald-500",
+      category: "Music",
+      rating: 4.9,
+      reviews: 127,
+      description: "Our latest collection featuring 12 original tracks that blend rock, alternative, and acoustic elements."
     },
     {
       id: 2,
-      title: "Band T-Shirt",
-      subtitle: "Available online only",
-      price: "$24.99",
-      image: "https://images.pexels.com/photos/8532616/pexels-photo-8532616.jpeg?auto=compress&cs=tinysrgb&w=400&h=400&dpr=2",
-      bgColor: "bg-gradient-to-br from-pink-200 via-purple-200 to-blue-200"
+      title: "Svara Band Vintage Tee",
+      subtitle: "Premium Cotton Blend",
+      price: "$34.99",
+      originalPrice: "$39.99",
+      image: "https://images.pexels.com/photos/8532616/pexels-photo-8532616.jpeg?auto=compress&cs=tinysrgb&w=600&h=600&dpr=2",
+      hoverImage: "https://images.pexels.com/photos/5698853/pexels-photo-5698853.jpeg?auto=compress&cs=tinysrgb&w=600&h=600&dpr=2",
+      badge: "Best Seller",
+      badgeColor: "bg-orange-500",
+      category: "Apparel",
+      rating: 4.8,
+      reviews: 89,
+      description: "Comfortable vintage-style t-shirt featuring our iconic logo design. Available in multiple sizes and colors."
     },
     {
       id: 3,
-      title: "Signed Poster",
-      subtitle: "Available online only",
-      price: "$14.99",
-      image: "https://images.pexels.com/photos/1763075/pexels-photo-1763075.jpeg?auto=compress&cs=tinysrgb&w=400&h=400&dpr=2",
-      bgColor: "bg-gradient-to-br from-blue-200 to-blue-300"
+      title: "Limited Edition Poster",
+      subtitle: "Hand-Signed by Band",
+      price: "$49.99",
+      originalPrice: "$59.99",
+      image: "https://images.pexels.com/photos/1763075/pexels-photo-1763075.jpeg?auto=compress&cs=tinysrgb&w=600&h=600&dpr=2",
+      hoverImage: "https://images.pexels.com/photos/3721941/pexels-photo-3721941.jpeg?auto=compress&cs=tinysrgb&w=600&h=600&dpr=2",
+      badge: "Limited",
+      badgeColor: "bg-purple-500",
+      category: "Collectibles",
+      rating: 5.0,
+      reviews: 45,
+      description: "Exclusive concert poster from our 2024 tour, personally signed by all band members. Only 100 copies available."
+    },
+    {
+      id: 4,
+      title: "Acoustic Sessions EP",
+      subtitle: "Intimate Live Recordings",
+      price: "$18.99",
+      originalPrice: "$22.99",
+      image: "https://images.pexels.com/photos/1047930/pexels-photo-1047930.jpeg?auto=compress&cs=tinysrgb&w=600&h=600&dpr=2",
+      hoverImage: "https://images.pexels.com/photos/3721941/pexels-photo-3721941.jpeg?auto=compress&cs=tinysrgb&w=600&h=600&dpr=2",
+      badge: "Exclusive",
+      badgeColor: "bg-blue-500",
+      category: "Music",
+      rating: 4.7,
+      reviews: 73,
+      description: "Raw, intimate acoustic versions of our most popular songs recorded in a cozy studio setting."
     }
   ];
 
@@ -510,85 +547,174 @@ function App() {
         </div>
       </section>
 
-      {/* Featured Products Section */}
-      <section id="products" className="py-16 md:py-20 bg-gray-50">
+      {/* Enhanced Featured Products Section */}
+      <section id="products" className="py-16 md:py-20 bg-gradient-to-br from-gray-50 via-white to-gray-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           {/* Section Header */}
-          <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-8 md:mb-12 animate-in fade-in slide-in-from-top duration-1000">
-            <div>
-              <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold text-gray-900 mb-2 md:mb-3">
-                Featured Products
-              </h2>
-              <p className="text-base md:text-lg text-gray-600">
-                Browse our latest music offerings
-              </p>
+          <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-12 md:mb-16 animate-in fade-in slide-in-from-top duration-1000">
+            <div className="text-center md:text-left">
+              <div className="flex items-center justify-center md:justify-start mb-4">
+                <div className="w-12 h-12 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full flex items-center justify-center shadow-lg mr-4">
+                  <ShoppingCart className="h-6 w-6 text-white" />
+                </div>
+                <div>
+                  <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 mb-2">
+                    Featured Products
+                  </h2>
+                  <p className="text-lg text-gray-600">
+                    Exclusive merchandise from Svara Band
+                  </p>
+                </div>
+              </div>
             </div>
-            <button className="mt-4 md:mt-0 bg-black text-white px-6 md:px-8 py-3 md:py-4 rounded-full font-semibold hover:bg-gray-800 transition-all duration-300 transform hover:scale-105 flex items-center space-x-2 group">
-              <span>Explore all</span>
-              <ArrowRight className="h-4 w-4 md:h-5 md:w-5 group-hover:translate-x-1 transition-transform" />
+            <button className="mt-6 md:mt-0 bg-gradient-to-r from-purple-600 to-pink-600 text-white px-8 py-4 rounded-full font-semibold hover:from-purple-700 hover:to-pink-700 transition-all duration-300 transform hover:scale-105 flex items-center space-x-2 group shadow-lg hover:shadow-xl">
+              <span>Explore Store</span>
+              <ArrowRight className="h-5 w-5 group-hover:translate-x-1 transition-transform" />
             </button>
           </div>
 
           {/* Products Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8 mb-12">
             {featuredProducts.map((product, index) => (
               <div 
                 key={product.id}
-                className={`relative rounded-2xl md:rounded-3xl overflow-hidden shadow-lg hover:shadow-xl transition-all duration-500 transform hover:scale-105 group animate-in fade-in slide-in-from-bottom duration-1000 ${product.bgColor}`}
-                style={{ animationDelay: `${300 + index * 200}ms` }}
+                className="group relative bg-white rounded-3xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-500 transform hover:scale-105 animate-in fade-in slide-in-from-bottom duration-1000 border border-gray-100"
+                style={{ animationDelay: `${300 + index * 150}ms` }}
+                onMouseEnter={() => setHoveredProduct(product.id)}
+                onMouseLeave={() => setHoveredProduct(null)}
               >
+                {/* Product Badge */}
+                <div className={`absolute top-4 left-4 z-20 ${product.badgeColor} text-white px-3 py-1 rounded-full text-xs font-semibold shadow-lg`}>
+                  {product.badge}
+                </div>
+
+                {/* Wishlist Button */}
+                <button
+                  onClick={() => toggleLike(product.id)}
+                  className="absolute top-4 right-4 z-20 p-2 bg-white/90 backdrop-blur-sm rounded-full opacity-0 group-hover:opacity-100 transition-all duration-300 hover:bg-white transform hover:scale-110 shadow-lg"
+                >
+                  <Heart 
+                    className={`h-4 w-4 transition-colors duration-200 ${
+                      likedCards.includes(product.id) ? 'text-red-500 fill-current' : 'text-gray-600'
+                    }`} 
+                  />
+                </button>
+
                 {/* Product Image Container */}
-                <div className="relative h-64 md:h-80 lg:h-96 p-6 md:p-8 flex items-center justify-center">
+                <div className="relative h-64 overflow-hidden bg-gradient-to-br from-gray-100 to-gray-200">
                   <img 
-                    src={product.image}
+                    src={hoveredProduct === product.id ? product.hoverImage : product.image}
                     alt={product.title}
-                    className="w-full h-full object-cover rounded-xl md:rounded-2xl shadow-md group-hover:scale-105 transition-transform duration-500"
+                    className="w-full h-full object-cover transition-all duration-700 group-hover:scale-110"
                   />
                   
-                  {/* Hover Overlay */}
-                  <div className="absolute inset-6 md:inset-8 bg-black/20 rounded-xl md:rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
-                    <button className="bg-white/90 backdrop-blur-sm text-black px-4 md:px-6 py-2 md:py-3 rounded-full font-semibold hover:bg-white transition-all duration-300 transform hover:scale-110 flex items-center space-x-2">
-                      <ShoppingCart className="h-4 w-4 md:h-5 md:w-5" />
-                      <span className="text-sm md:text-base">Add to Cart</span>
+                  {/* Hover Overlay with Actions */}
+                  <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-all duration-300 flex items-center justify-center space-x-3">
+                    <button className="bg-white/90 backdrop-blur-sm text-gray-900 px-4 py-2 rounded-full font-semibold hover:bg-white transition-all duration-300 transform hover:scale-110 flex items-center space-x-2 shadow-lg">
+                      <Eye className="h-4 w-4" />
+                      <span className="text-sm">Quick View</span>
                     </button>
+                    <button className="bg-purple-600 text-white p-3 rounded-full hover:bg-purple-700 transition-all duration-300 transform hover:scale-110 shadow-lg">
+                      <Plus className="h-4 w-4" />
+                    </button>
+                  </div>
+
+                  {/* Category Tag */}
+                  <div className="absolute bottom-4 left-4 bg-white/90 backdrop-blur-sm text-gray-800 px-3 py-1 rounded-full text-xs font-medium">
+                    {product.category}
                   </div>
                 </div>
 
                 {/* Product Info */}
-                <div className="bg-white p-4 md:p-6 rounded-t-xl md:rounded-t-2xl">
-                  <h3 className="text-lg md:text-xl font-bold text-gray-900 mb-1 md:mb-2 group-hover:text-emerald-600 transition-colors duration-300">
+                <div className="p-6">
+                  {/* Rating */}
+                  <div className="flex items-center mb-3">
+                    <div className="flex items-center space-x-1">
+                      {[...Array(5)].map((_, i) => (
+                        <Star 
+                          key={i} 
+                          className={`h-3 w-3 ${
+                            i < Math.floor(product.rating) 
+                              ? 'text-yellow-400 fill-current' 
+                              : 'text-gray-300'
+                          }`} 
+                        />
+                      ))}
+                    </div>
+                    <span className="text-sm text-gray-600 ml-2">
+                      {product.rating} ({product.reviews})
+                    </span>
+                  </div>
+
+                  {/* Product Title */}
+                  <h3 className="text-lg font-bold text-gray-900 mb-2 group-hover:text-purple-600 transition-colors duration-300">
                     {product.title}
                   </h3>
-                  <p className="text-sm md:text-base text-gray-600 mb-2 md:mb-3">
+                  
+                  {/* Product Subtitle */}
+                  <p className="text-sm text-gray-600 mb-3">
                     {product.subtitle}
                   </p>
-                  <div className="flex items-center justify-between">
-                    <span className="text-lg md:text-xl font-bold text-gray-900">
-                      {product.price}
-                    </span>
-                    <button className="text-emerald-600 hover:text-emerald-700 transition-colors duration-300 font-semibold text-sm md:text-base">
-                      View Details
-                    </button>
+
+                  {/* Product Description */}
+                  <p className="text-xs text-gray-500 mb-4 line-clamp-2">
+                    {product.description}
+                  </p>
+
+                  {/* Price Section */}
+                  <div className="flex items-center justify-between mb-4">
+                    <div className="flex items-center space-x-2">
+                      <span className="text-xl font-bold text-gray-900">
+                        {product.price}
+                      </span>
+                      {product.originalPrice && (
+                        <span className="text-sm text-gray-500 line-through">
+                          {product.originalPrice}
+                        </span>
+                      )}
+                    </div>
+                    {product.originalPrice && (
+                      <div className="bg-green-100 text-green-800 px-2 py-1 rounded-full text-xs font-semibold">
+                        Save {Math.round(((parseFloat(product.originalPrice.slice(1)) - parseFloat(product.price.slice(1))) / parseFloat(product.originalPrice.slice(1))) * 100)}%
+                      </div>
+                    )}
                   </div>
+
+                  {/* Action Button */}
+                  <button className="w-full bg-gradient-to-r from-purple-600 to-pink-600 text-white py-3 rounded-full font-semibold hover:from-purple-700 hover:to-pink-700 transition-all duration-300 transform hover:scale-105 flex items-center justify-center space-x-2 shadow-lg group-hover:shadow-xl">
+                    <ShoppingCart className="h-4 w-4" />
+                    <span>Add to Cart</span>
+                  </button>
                 </div>
 
                 {/* Decorative Elements */}
-                <div className="absolute top-3 right-3 md:top-4 md:right-4 w-8 h-8 md:w-10 md:h-10 bg-white/20 backdrop-blur-sm rounded-full opacity-0 group-hover:opacity-100 transition-all duration-300 flex items-center justify-center">
-                  <Heart className="h-4 w-4 md:h-5 md:w-5 text-white hover:text-red-500 transition-colors cursor-pointer" />
-                </div>
+                <div className="absolute -top-2 -right-2 w-20 h-20 bg-gradient-to-br from-purple-400/20 to-pink-400/20 rounded-full blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                <div className="absolute -bottom-2 -left-2 w-16 h-16 bg-gradient-to-br from-blue-400/20 to-purple-400/20 rounded-full blur-lg opacity-0 group-hover:opacity-100 transition-opacity duration-700"></div>
               </div>
             ))}
           </div>
 
           {/* Additional Products Preview */}
-          <div className="mt-8 md:mt-12 text-center animate-in fade-in slide-in-from-bottom duration-1000 delay-800">
-            <p className="text-sm md:text-base text-gray-600 mb-4">
-              Discover more exclusive merchandise, limited edition albums, and signed memorabilia
-            </p>
-            <button className="text-emerald-600 hover:text-emerald-700 font-semibold transition-colors duration-300 flex items-center space-x-2 mx-auto group">
-              <span>View Full Store</span>
-              <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
-            </button>
+          <div className="text-center animate-in fade-in slide-in-from-bottom duration-1000 delay-800">
+            <div className="bg-white rounded-2xl p-8 shadow-lg border border-gray-100">
+              <h3 className="text-xl font-bold text-gray-900 mb-4">
+                Discover More Exclusive Items
+              </h3>
+              <p className="text-gray-600 mb-6 max-w-2xl mx-auto">
+                Explore our complete collection featuring limited edition albums, vintage merchandise, 
+                signed memorabilia, and exclusive concert recordings available only to our fans.
+              </p>
+              <div className="flex flex-col sm:flex-row items-center justify-center space-y-4 sm:space-y-0 sm:space-x-4">
+                <button className="bg-gray-900 text-white px-8 py-3 rounded-full font-semibold hover:bg-gray-800 transition-all duration-300 transform hover:scale-105 flex items-center space-x-2">
+                  <span>View Full Catalog</span>
+                  <ArrowRight className="h-4 w-4" />
+                </button>
+                <button className="text-purple-600 hover:text-purple-700 font-semibold transition-colors duration-300 flex items-center space-x-2">
+                  <span>Join VIP Club for Exclusive Access</span>
+                  <Star className="h-4 w-4" />
+                </button>
+              </div>
+            </div>
           </div>
         </div>
       </section>
