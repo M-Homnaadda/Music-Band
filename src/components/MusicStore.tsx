@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { 
   Search, 
   ShoppingCart, 
@@ -22,7 +22,8 @@ import {
   Volume2,
   Play,
   Eye,
-  Share2
+  Share2,
+  X
 } from 'lucide-react';
 import AuthModal from './AuthModal';
 import UserMenu from './UserMenu';
@@ -167,6 +168,29 @@ const MusicStore: React.FC<MusicStoreProps> = ({ onBackToHome }) => {
       reviews: 67,
       image: '/src/assets/products/electric-guitar/photo-1516924962500-2b4b3b99ea02.jpg',
       category: 'electric-guitar'
+    },
+    {
+      id: 21,
+      name: 'Telecaster American Standard',
+      brand: 'Fender',
+      price: 156799,
+      originalPrice: 189999,
+      rating: 4.8,
+      reviews: 203,
+      image: '/src/assets/products/electric-guitar/pexels-oskelaq-2016810.jpg',
+      category: 'electric-guitar',
+      discount: 17
+    },
+    {
+      id: 22,
+      name: 'SG Standard - Cherry Red',
+      brand: 'Gibson',
+      price: 198599,
+      rating: 4.7,
+      reviews: 145,
+      image: '/src/assets/products/electric-guitar/881331.jpg',
+      category: 'electric-guitar',
+      isNew: true
     }
   ];
 
@@ -235,7 +259,46 @@ const MusicStore: React.FC<MusicStoreProps> = ({ onBackToHome }) => {
     }
   ];
 
-  const hotDeals: Product[] = [
+  // Other category products
+  const acousticGuitarProducts: Product[] = [
+    {
+      id: 31,
+      name: 'CD-60S Acoustic Guitar',
+      brand: 'Fender',
+      price: 24999,
+      rating: 4.5,
+      reviews: 234,
+      image: 'https://images.pexels.com/photos/1047930/pexels-photo-1047930.jpeg?auto=compress&cs=tinysrgb&w=400&h=400&dpr=2',
+      category: 'acoustic-guitar'
+    },
+    {
+      id: 32,
+      name: 'FG830 Acoustic Guitar',
+      brand: 'Yamaha',
+      price: 32999,
+      originalPrice: 39999,
+      rating: 4.6,
+      reviews: 189,
+      image: 'https://images.pexels.com/photos/1407322/pexels-photo-1407322.jpeg?auto=compress&cs=tinysrgb&w=400&h=400&dpr=2',
+      category: 'acoustic-guitar',
+      discount: 18
+    }
+  ];
+
+  const bassProducts: Product[] = [
+    {
+      id: 41,
+      name: 'Player Jazz Bass',
+      brand: 'Fender',
+      price: 89999,
+      rating: 4.7,
+      reviews: 156,
+      image: 'https://images.pexels.com/photos/1190297/pexels-photo-1190297.jpeg?auto=compress&cs=tinysrgb&w=400&h=400&dpr=2',
+      category: 'bass'
+    }
+  ];
+
+  const drumProducts: Product[] = [
     {
       id: 7,
       name: 'DTX432K Electronic Drum Set',
@@ -248,7 +311,10 @@ const MusicStore: React.FC<MusicStoreProps> = ({ onBackToHome }) => {
       image: 'https://images.pexels.com/photos/1751731/pexels-photo-1751731.jpeg?auto=compress&cs=tinysrgb&w=400&h=300&dpr=2',
       category: 'drums',
       isHot: true
-    },
+    }
+  ];
+
+  const amplifierProducts: Product[] = [
     {
       id: 8,
       name: 'DSL40CR Tube Combo Amp',
@@ -261,7 +327,10 @@ const MusicStore: React.FC<MusicStoreProps> = ({ onBackToHome }) => {
       image: 'https://images.pexels.com/photos/1190297/pexels-photo-1190297.jpeg?auto=compress&cs=tinysrgb&w=400&h=300&dpr=2',
       category: 'amplifier',
       isHot: true
-    },
+    }
+  ];
+
+  const microphoneProducts: Product[] = [
     {
       id: 9,
       name: 'SM58 Vocal Microphone',
@@ -274,7 +343,10 @@ const MusicStore: React.FC<MusicStoreProps> = ({ onBackToHome }) => {
       image: 'https://images.pexels.com/photos/164821/pexels-photo-164821.jpeg?auto=compress&cs=tinysrgb&w=400&h=300&dpr=2',
       category: 'microphone',
       isHot: true
-    },
+    }
+  ];
+
+  const studioProducts: Product[] = [
     {
       id: 10,
       name: 'ATH-M50x Studio Headphones',
@@ -290,7 +362,57 @@ const MusicStore: React.FC<MusicStoreProps> = ({ onBackToHome }) => {
     }
   ];
 
-  const allProducts = [...electricGuitarProducts, ...keyboardProducts, ...hotDeals];
+  const allProducts = [
+    ...electricGuitarProducts, 
+    ...keyboardProducts, 
+    ...acousticGuitarProducts,
+    ...bassProducts,
+    ...drumProducts,
+    ...amplifierProducts,
+    ...microphoneProducts,
+    ...studioProducts
+  ];
+
+  // Filter products based on selected category and search query
+  const filteredProducts = useMemo(() => {
+    let filtered = allProducts;
+
+    // Filter by category
+    if (selectedCategory !== 'all') {
+      filtered = filtered.filter(product => product.category === selectedCategory);
+    }
+
+    // Filter by search query
+    if (searchQuery.trim()) {
+      const query = searchQuery.toLowerCase();
+      filtered = filtered.filter(product => 
+        product.name.toLowerCase().includes(query) ||
+        product.brand.toLowerCase().includes(query) ||
+        product.category.toLowerCase().includes(query)
+      );
+    }
+
+    // Sort products
+    switch (sortBy) {
+      case 'price-low':
+        filtered.sort((a, b) => a.price - b.price);
+        break;
+      case 'price-high':
+        filtered.sort((a, b) => b.price - a.price);
+        break;
+      case 'rating':
+        filtered.sort((a, b) => b.rating - a.rating);
+        break;
+      case 'newest':
+        filtered.sort((a, b) => (b.isNew ? 1 : 0) - (a.isNew ? 1 : 0));
+        break;
+      default:
+        // Keep original order for 'featured'
+        break;
+    }
+
+    return filtered;
+  }, [selectedCategory, searchQuery, sortBy, allProducts]);
 
   const toggleWishlist = (productId: number) => {
     setWishlist(prev => 
@@ -363,6 +485,17 @@ const MusicStore: React.FC<MusicStoreProps> = ({ onBackToHome }) => {
       return;
     }
     setShowCart(true);
+  };
+
+  const handleCategorySelect = (categoryId: string) => {
+    setSelectedCategory(categoryId);
+    setSearchQuery(''); // Clear search when selecting category
+  };
+
+  const clearFilters = () => {
+    setSelectedCategory('all');
+    setSearchQuery('');
+    setSortBy('featured');
   };
 
   const renderStars = (rating: number) => {
@@ -500,6 +633,8 @@ const MusicStore: React.FC<MusicStoreProps> = ({ onBackToHome }) => {
     );
   }
 
+  const selectedCategoryInfo = categories.find(cat => cat.id === selectedCategory);
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-blue-50">
       {/* Enhanced Header */}
@@ -567,7 +702,7 @@ const MusicStore: React.FC<MusicStoreProps> = ({ onBackToHome }) => {
         </div>
       </header>
 
-      {/* Enhanced Navigation */}
+      {/* Enhanced Navigation with Filters */}
       <nav className="bg-white border-b border-gray-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
@@ -580,17 +715,59 @@ const MusicStore: React.FC<MusicStoreProps> = ({ onBackToHome }) => {
                 <span>Filters</span>
                 <ChevronDown className={`h-4 w-4 transition-transform ${showFilters ? 'rotate-180' : ''}`} />
               </button>
-              <div className="hidden md:flex items-center space-x-6">
-                <a href="#" className="text-gray-700 hover:text-blue-600 transition-colors font-medium">Brands</a>
-                <a href="#" className="text-gray-700 hover:text-blue-600 transition-colors font-medium flex items-center space-x-1">
-                  <Zap className="h-4 w-4" />
-                  <span>Hot Deals</span>
-                </a>
-                <a href="#" className="text-gray-700 hover:text-blue-600 transition-colors font-medium">New Arrivals</a>
-                <a href="#" className="text-gray-700 hover:text-blue-600 transition-colors font-medium">Accessories</a>
-              </div>
+              
+              {/* Active Filters */}
+              {(selectedCategory !== 'all' || searchQuery) && (
+                <div className="flex items-center space-x-2">
+                  {selectedCategory !== 'all' && (
+                    <div className="flex items-center space-x-1 bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm">
+                      <span>{selectedCategoryInfo?.name}</span>
+                      <button
+                        onClick={() => setSelectedCategory('all')}
+                        className="hover:bg-blue-200 rounded-full p-1"
+                      >
+                        <X className="h-3 w-3" />
+                      </button>
+                    </div>
+                  )}
+                  {searchQuery && (
+                    <div className="flex items-center space-x-1 bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm">
+                      <span>"{searchQuery}"</span>
+                      <button
+                        onClick={() => setSearchQuery('')}
+                        className="hover:bg-green-200 rounded-full p-1"
+                      >
+                        <X className="h-3 w-3" />
+                      </button>
+                    </div>
+                  )}
+                  <button
+                    onClick={clearFilters}
+                    className="text-gray-500 hover:text-gray-700 text-sm underline"
+                  >
+                    Clear all
+                  </button>
+                </div>
+              )}
             </div>
+            
             <div className="flex items-center space-x-6">
+              {/* Sort Dropdown */}
+              <div className="relative">
+                <select
+                  value={sortBy}
+                  onChange={(e) => setSortBy(e.target.value)}
+                  className="appearance-none bg-white border border-gray-300 rounded-lg px-4 py-2 pr-8 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                >
+                  <option value="featured">Featured</option>
+                  <option value="price-low">Price: Low to High</option>
+                  <option value="price-high">Price: High to Low</option>
+                  <option value="rating">Highest Rated</option>
+                  <option value="newest">Newest First</option>
+                </select>
+                <ChevronDown className="absolute right-2 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400 pointer-events-none" />
+              </div>
+              
               <div className="flex items-center space-x-2 text-sm text-gray-600">
                 <Shield className="h-4 w-4 text-green-500" />
                 <span>Secure Shopping</span>
@@ -604,151 +781,52 @@ const MusicStore: React.FC<MusicStoreProps> = ({ onBackToHome }) => {
         </div>
       </nav>
 
-      {/* Enhanced Hero Section - Featuring Gibson Les Paul Studio */}
-      <section className="relative py-16 bg-gradient-to-r from-gray-900 via-black to-gray-800 overflow-hidden">
-        {/* Background Pattern */}
-        <div className="absolute inset-0 opacity-10">
-          <div className="absolute top-0 left-0 w-96 h-96 bg-white rounded-full blur-3xl -translate-x-48 -translate-y-48"></div>
-          <div className="absolute bottom-0 right-0 w-96 h-96 bg-white rounded-full blur-3xl translate-x-48 translate-y-48"></div>
-        </div>
-        
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-            <div className="text-white space-y-8">
-              <div className="space-y-4">
-                <div className="flex items-center space-x-2">
-                  <Award className="h-6 w-6 text-yellow-400" />
-                  <span className="text-yellow-400 font-semibold">Professional Grade</span>
-                </div>
-                <h2 className="text-5xl font-bold leading-tight">
-                  Gibson Les Paul
-                  <span className="block text-3xl text-gray-300">Studio - Ebony</span>
-                </h2>
-                <p className="text-xl text-gray-300 leading-relaxed">
-                  Experience the legendary Gibson tone with the Les Paul Studio. Featuring premium mahogany body and maple cap for that classic rock sound that defined generations.
-                </p>
-              </div>
-              
-              <div className="flex items-center space-x-6">
-                <div className="text-center">
-                  <div className="text-3xl font-bold">4.9</div>
-                  <div className="flex items-center justify-center space-x-1 mt-1">
-                    {renderStars(4.9)}
-                  </div>
-                  <div className="text-sm text-gray-400">124 Reviews</div>
-                </div>
-                <div className="w-px h-16 bg-gray-600"></div>
-                <div className="text-center">
-                  <div className="text-3xl font-bold">₹1,81,599</div>
-                  <div className="text-sm line-through text-gray-500">₹2,19,999</div>
-                  <div className="text-sm text-orange-400 font-semibold">17% OFF</div>
-                </div>
-              </div>
-
-              <div className="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4">
-                <button 
-                  onClick={() => handleAddToCart(1)}
-                  className="bg-white text-black px-8 py-4 rounded-2xl font-bold text-lg hover:bg-gray-100 transition-all duration-300 transform hover:scale-105 shadow-xl flex items-center justify-center space-x-2"
+      {/* Category Filter Bar */}
+      {showFilters && (
+        <div className="bg-gray-50 border-b border-gray-200 py-4">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="flex items-center space-x-4 overflow-x-auto">
+              <span className="text-sm font-medium text-gray-700 whitespace-nowrap">Categories:</span>
+              {categories.map((category) => (
+                <button
+                  key={category.id}
+                  onClick={() => handleCategorySelect(category.id)}
+                  className={`flex items-center space-x-2 px-4 py-2 rounded-full text-sm font-medium whitespace-nowrap transition-all duration-300 ${
+                    selectedCategory === category.id
+                      ? 'bg-blue-600 text-white shadow-lg'
+                      : 'bg-white text-gray-700 hover:bg-blue-50 hover:text-blue-600 border border-gray-200'
+                  }`}
                 >
-                  <ShoppingCart className="h-5 w-5" />
-                  <span>Add to Cart</span>
+                  <span>{category.icon}</span>
+                  <span>{category.name}</span>
+                  <span className={`text-xs px-2 py-1 rounded-full ${
+                    selectedCategory === category.id
+                      ? 'bg-white/20 text-white'
+                      : 'bg-gray-100 text-gray-500'
+                  }`}>
+                    {category.count}
+                  </span>
                 </button>
-                <button className="border-2 border-white text-white px-8 py-4 rounded-2xl font-bold text-lg hover:bg-white hover:text-black transition-all duration-300 flex items-center justify-center space-x-2">
-                  <Play className="h-5 w-5" />
-                  <span>Listen Demo</span>
-                </button>
-              </div>
-            </div>
-            
-            <div className="relative">
-              <div className="absolute inset-0 bg-gradient-to-r from-white/10 to-transparent rounded-3xl blur-xl"></div>
-              <img 
-                src="/src/assets/products/electric-guitar/guitar-background-upz2txx3cz5k6irg.jpg"
-                alt="Gibson Les Paul Studio - Ebony"
-                className="relative w-full h-96 object-cover rounded-3xl shadow-2xl transform hover:scale-105 transition-transform duration-500"
-              />
-              <div className="absolute top-6 right-6 bg-white/90 backdrop-blur-sm px-4 py-2 rounded-full">
-                <span className="text-sm font-bold text-gray-900">Gibson</span>
-              </div>
-              <div className="absolute bottom-6 left-6 bg-gradient-to-r from-green-500 to-emerald-500 text-white px-4 py-2 rounded-full">
-                <span className="text-sm font-bold">NEW ARRIVAL</span>
-              </div>
+              ))}
             </div>
           </div>
         </div>
-      </section>
+      )}
 
-      {/* Enhanced Top Brands */}
-      <section className="py-12 bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-8">
-            <h3 className="text-2xl font-bold text-gray-900 mb-2">Trusted by Musicians Worldwide</h3>
-            <p className="text-gray-600">Premium brands, exceptional quality</p>
-          </div>
-          <div className="grid grid-cols-3 md:grid-cols-6 gap-6">
-            {topBrands.map((brand, index) => (
-              <div key={index} className="group cursor-pointer">
-                <div className="bg-gray-50 rounded-2xl p-6 hover:bg-white hover:shadow-lg transition-all duration-300 border border-gray-100 hover:border-blue-200">
-                  <div className="text-center">
-                    <div className="w-16 h-16 bg-gradient-to-br from-gray-100 to-gray-200 rounded-xl flex items-center justify-center mx-auto mb-3 group-hover:from-blue-50 group-hover:to-blue-100 transition-colors">
-                      <span className="text-lg font-bold text-gray-700 group-hover:text-blue-600">{brand.name.charAt(0)}</span>
-                    </div>
-                    <h4 className="font-semibold text-gray-900 group-hover:text-blue-600 transition-colors">{brand.name}</h4>
-                    <p className="text-sm text-gray-500">{brand.products} products</p>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Enhanced Shop by Categories */}
-      <section className="py-16 bg-gradient-to-br from-gray-50 to-blue-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-12">
-            <h3 className="text-3xl font-bold text-gray-900 mb-4">Shop by Categories</h3>
-            <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-              Discover our extensive collection of musical instruments and accessories, carefully curated for musicians of all levels.
-            </p>
-          </div>
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6">
-            {categories.slice(1).map((category, index) => (
-              <div 
-                key={category.id}
-                className="group cursor-pointer"
-                style={{ animationDelay: `${index * 100}ms` }}
-              >
-                <div className="bg-white rounded-2xl shadow-sm hover:shadow-xl transition-all duration-500 overflow-hidden border border-gray-100 hover:border-blue-200 transform hover:-translate-y-2">
-                  <div className="aspect-square bg-gradient-to-br from-gray-800 via-gray-900 to-black flex items-center justify-center text-white text-4xl group-hover:scale-110 transition-transform duration-500 relative overflow-hidden">
-                    <div className="absolute inset-0 bg-gradient-to-br from-blue-600/20 to-purple-600/20 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-                    <span className="relative z-10">{category.icon}</span>
-                  </div>
-                  <div className="p-4 text-center">
-                    <h4 className="font-bold text-gray-900 text-sm group-hover:text-blue-600 transition-colors mb-1">
-                      {category.name}
-                    </h4>
-                    <p className="text-xs text-gray-500">{category.count} items</p>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Enhanced Featured Electric Guitars */}
-      <section className="py-16 bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between mb-12">
+      {/* Results Header */}
+      <div className="bg-white border-b border-gray-200">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+          <div className="flex items-center justify-between">
             <div>
-              <h3 className="text-3xl font-bold text-gray-900 mb-2">Featured Electric Guitars</h3>
-              <p className="text-gray-600">Professional instruments for every guitarist</p>
+              <h2 className="text-2xl font-bold text-gray-900">
+                {selectedCategory === 'all' ? 'All Products' : selectedCategoryInfo?.name}
+              </h2>
+              <p className="text-gray-600">
+                {filteredProducts.length} product{filteredProducts.length !== 1 ? 's' : ''} found
+                {searchQuery && ` for "${searchQuery}"`}
+              </p>
             </div>
             <div className="flex items-center space-x-4">
-              <button className="bg-gradient-to-r from-blue-600 to-blue-700 text-white px-6 py-3 rounded-xl font-semibold hover:from-blue-700 hover:to-blue-800 transition-all duration-300 shadow-lg hover:shadow-xl">
-                View All Guitars
-              </button>
               <div className="flex items-center space-x-2">
                 <button 
                   onClick={() => setViewMode('grid')}
@@ -765,63 +843,41 @@ const MusicStore: React.FC<MusicStoreProps> = ({ onBackToHome }) => {
               </div>
             </div>
           </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {electricGuitarProducts.map((product, index) => (
-              <div key={product.id} style={{ animationDelay: `${index * 150}ms` }}>
-                <ProductCard product={product} />
-              </div>
-            ))}
-          </div>
         </div>
-      </section>
+      </div>
 
-      {/* Enhanced Featured Keyboards & Pianos */}
-      <section className="py-16 bg-gradient-to-br from-blue-50 to-indigo-50">
+      {/* Products Grid */}
+      <section className="py-12">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between mb-12">
-            <div>
-              <h3 className="text-3xl font-bold text-gray-900 mb-2">Featured Keyboards & Pianos</h3>
-              <p className="text-gray-600">Professional instruments for every musician</p>
+          {filteredProducts.length > 0 ? (
+            <div className={`grid gap-8 ${
+              viewMode === 'grid' 
+                ? 'grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4' 
+                : 'grid-cols-1'
+            }`}>
+              {filteredProducts.map((product, index) => (
+                <div key={product.id} style={{ animationDelay: `${index * 100}ms` }}>
+                  <ProductCard product={product} />
+                </div>
+              ))}
             </div>
-            <div className="flex items-center space-x-4">
-              <button className="bg-gradient-to-r from-purple-600 to-indigo-700 text-white px-6 py-3 rounded-xl font-semibold hover:from-purple-700 hover:to-indigo-800 transition-all duration-300 shadow-lg hover:shadow-xl">
-                View All Keyboards
+          ) : (
+            <div className="text-center py-16">
+              <div className="w-24 h-24 bg-gray-200 rounded-full flex items-center justify-center mx-auto mb-4">
+                <Search className="h-12 w-12 text-gray-400" />
+              </div>
+              <h3 className="text-xl font-semibold text-gray-900 mb-2">No products found</h3>
+              <p className="text-gray-600 mb-6">
+                Try adjusting your search or filter criteria
+              </p>
+              <button
+                onClick={clearFilters}
+                className="bg-blue-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-blue-700 transition-colors"
+              >
+                Clear Filters
               </button>
             </div>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {keyboardProducts.slice(0, 3).map((product, index) => (
-              <div key={product.id} style={{ animationDelay: `${index * 150}ms` }}>
-                <ProductCard product={product} />
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Enhanced Hot Deals */}
-      <section className="py-16 bg-gradient-to-r from-red-50 via-pink-50 to-orange-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-12">
-            <div className="flex items-center justify-center space-x-3 mb-4">
-              <Zap className="h-8 w-8 text-red-500" />
-              <h3 className="text-3xl font-bold text-gray-900">Hot Deals</h3>
-              <div className="bg-gradient-to-r from-red-500 to-pink-500 text-white text-sm px-4 py-2 rounded-full font-bold animate-pulse">
-                🔥 Limited Time Only
-              </div>
-            </div>
-            <p className="text-lg text-gray-600">Incredible savings on premium instruments</p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {hotDeals.map((product, index) => (
-              <div key={product.id} style={{ animationDelay: `${index * 100}ms` }}>
-                <ProductCard product={product} isHotDeal={true} />
-              </div>
-            ))}
-          </div>
+          )}
         </div>
       </section>
 
