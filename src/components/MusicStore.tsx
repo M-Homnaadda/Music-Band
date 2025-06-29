@@ -81,7 +81,9 @@ const MusicStore: React.FC<MusicStoreProps> = ({ onBackToHome }) => {
     { name: 'PRS', logo: 'https://images.pexels.com/photos/1190297/pexels-photo-1190297.jpeg?auto=compress&cs=tinysrgb&w=100&h=50&dpr=2' },
     { name: 'Roland', logo: 'https://images.pexels.com/photos/164821/pexels-photo-164821.jpeg?auto=compress&cs=tinysrgb&w=100&h=50&dpr=2' },
     { name: 'Marshall', logo: 'https://images.pexels.com/photos/1751731/pexels-photo-1751731.jpeg?auto=compress&cs=tinysrgb&w=100&h=50&dpr=2' },
-    { name: 'Yamaha', logo: 'https://images.pexels.com/photos/1407322/pexels-photo-1407322.jpeg?auto=compress&cs=tinysrgb&w=100&h=50&dpr=2' }
+    { name: 'Yamaha', logo: 'https://images.pexels.com/photos/1407322/pexels-photo-1407322.jpeg?auto=compress&cs=tinysrgb&w=100&h=50&dpr=2' },
+    { name: 'Casio', logo: 'https://images.pexels.com/photos/1407322/pexels-photo-1407322.jpeg?auto=compress&cs=tinysrgb&w=100&h=50&dpr=2' },
+    { name: 'Korg', logo: 'https://images.pexels.com/photos/1407322/pexels-photo-1407322.jpeg?auto=compress&cs=tinysrgb&w=100&h=50&dpr=2' }
   ];
 
   const featuredProducts: Product[] = [
@@ -145,6 +147,81 @@ const MusicStore: React.FC<MusicStoreProps> = ({ onBackToHome }) => {
       reviews: 67,
       image: 'https://images.pexels.com/photos/1407322/pexels-photo-1407322.jpeg?auto=compress&cs=tinysrgb&w=400&h=400&dpr=2',
       category: 'electric-guitar'
+    }
+  ];
+
+  // New Keyboard & Piano Products
+  const keyboardProducts: Product[] = [
+    {
+      id: 12,
+      name: 'FP-30X Digital Piano',
+      brand: 'Roland',
+      price: 53609,
+      originalPrice: 65999,
+      rating: 4.8,
+      reviews: 156,
+      image: 'https://images.app.goo.gl/ht6NKG79zQqueYZ19',
+      category: 'keyboard',
+      isNew: true,
+      discount: 19
+    },
+    {
+      id: 13,
+      name: 'P-125A Digital Piano',
+      brand: 'Yamaha',
+      price: 41299,
+      rating: 4.7,
+      reviews: 203,
+      image: 'https://images.app.goo.gl/3TvY5Pnojv3HYuHa7',
+      category: 'keyboard',
+      isHot: true
+    },
+    {
+      id: 14,
+      name: 'CT-X700 Keyboard',
+      brand: 'Casio',
+      price: 24799,
+      originalPrice: 29999,
+      rating: 4.5,
+      reviews: 89,
+      image: 'https://images.app.goo.gl/ekxspY2tW6sEfACL9',
+      category: 'keyboard',
+      discount: 17
+    },
+    {
+      id: 15,
+      name: 'MODX8 Synthesizer',
+      brand: 'Yamaha',
+      price: 123999,
+      rating: 4.9,
+      reviews: 67,
+      image: 'https://images.app.goo.gl/AtdMFi6HMVqeEaJF7',
+      category: 'keyboard',
+      isNew: true
+    },
+    {
+      id: 16,
+      name: 'Krome EX 61-Key Workstation',
+      brand: 'Korg',
+      price: 82499,
+      originalPrice: 99999,
+      rating: 4.6,
+      reviews: 134,
+      image: 'https://images.app.goo.gl/YPWJQ5jV8hemC7pY8',
+      category: 'keyboard',
+      discount: 18,
+      isHot: true
+    },
+    {
+      id: 17,
+      name: 'RD-2000 Stage Piano',
+      brand: 'Roland',
+      price: 165999,
+      rating: 4.8,
+      reviews: 92,
+      image: 'https://images.app.goo.gl/TYBa6EbMjPet5oDf8',
+      category: 'keyboard',
+      isNew: true
     }
   ];
 
@@ -216,6 +293,8 @@ const MusicStore: React.FC<MusicStoreProps> = ({ onBackToHome }) => {
     }
   ];
 
+  const allProducts = [...featuredProducts, ...keyboardProducts, ...hotDeals];
+
   const toggleWishlist = (productId: number) => {
     setWishlist(prev => 
       prev.includes(productId) 
@@ -231,7 +310,7 @@ const MusicStore: React.FC<MusicStoreProps> = ({ onBackToHome }) => {
       return;
     }
     
-    const product = [...featuredProducts, ...hotDeals].find(p => p.id === productId);
+    const product = allProducts.find(p => p.id === productId);
     if (product) {
       const existingItem = cartItems.find(item => item.id === productId);
       
@@ -468,13 +547,13 @@ const MusicStore: React.FC<MusicStoreProps> = ({ onBackToHome }) => {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
             <div>
               <h2 className="text-4xl font-bold text-gray-900 mb-4">
-                Fender American Ultra II Stratocaster
+                Roland FP-30X Digital Piano
               </h2>
               <p className="text-lg text-gray-600 mb-6">
-                Experience the pinnacle of electric guitar craftsmanship with the latest American Ultra II series.
+                Experience premium piano performance with authentic sound and responsive touch in a portable design.
               </p>
               <button 
-                onClick={() => handleAddToCart(1)}
+                onClick={() => handleAddToCart(12)}
                 className="bg-blue-600 text-white px-8 py-3 rounded-lg font-semibold hover:bg-blue-700 transition-colors"
               >
                 Buy Now
@@ -482,12 +561,12 @@ const MusicStore: React.FC<MusicStoreProps> = ({ onBackToHome }) => {
             </div>
             <div className="relative">
               <img 
-                src="https://images.pexels.com/photos/1407322/pexels-photo-1407322.jpeg?auto=compress&cs=tinysrgb&w=600&h=400&dpr=2"
-                alt="Fender American Ultra II Stratocaster"
+                src="https://images.app.goo.gl/ht6NKG79zQqueYZ19"
+                alt="Roland FP-30X Digital Piano"
                 className="w-full h-80 object-cover rounded-lg shadow-lg"
               />
               <div className="absolute top-4 right-4 bg-white/90 backdrop-blur-sm px-3 py-1 rounded-full">
-                <span className="text-sm font-semibold text-gray-900">Fender</span>
+                <span className="text-sm font-semibold text-gray-900">Roland</span>
               </div>
             </div>
           </div>
@@ -534,11 +613,11 @@ const MusicStore: React.FC<MusicStoreProps> = ({ onBackToHome }) => {
         </div>
       </section>
 
-      {/* Featured Guitars */}
+      {/* Featured Keyboards & Pianos */}
       <section className="py-12 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between mb-8">
-            <h3 className="text-2xl font-bold text-gray-900">Featured Guitars</h3>
+            <h3 className="text-2xl font-bold text-gray-900">Featured Keyboards & Pianos</h3>
             <div className="flex items-center space-x-4">
               <button className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors">
                 View All
@@ -557,6 +636,26 @@ const MusicStore: React.FC<MusicStoreProps> = ({ onBackToHome }) => {
                   <List className="h-4 w-4" />
                 </button>
               </div>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {keyboardProducts.map((product) => (
+              <ProductCard key={product.id} product={product} />
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Featured Guitars */}
+      <section className="py-12 bg-gray-50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex items-center justify-between mb-8">
+            <h3 className="text-2xl font-bold text-gray-900">Featured Guitars</h3>
+            <div className="flex items-center space-x-4">
+              <button className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors">
+                View All
+              </button>
             </div>
           </div>
 
