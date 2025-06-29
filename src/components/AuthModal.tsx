@@ -133,7 +133,7 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, initialMode = 's
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
       {/* Backdrop */}
       <div 
         className="absolute inset-0 bg-black/50 backdrop-blur-sm"
@@ -141,10 +141,32 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, initialMode = 's
       />
       
       {/* Modal */}
-      <div className="relative w-full max-w-4xl mx-4 bg-white rounded-2xl shadow-2xl overflow-hidden">
-        <div className="grid grid-cols-1 lg:grid-cols-2 min-h-[600px]">
-          {/* Left Side - Branding */}
-          <div className="bg-gradient-to-br from-purple-600 via-purple-700 to-indigo-800 p-8 lg:p-12 text-white relative overflow-hidden">
+      <div className="relative w-full max-w-6xl bg-white rounded-2xl shadow-2xl overflow-hidden max-h-[95vh] overflow-y-auto">
+        {/* Mobile Header */}
+        <div className="lg:hidden bg-gradient-to-r from-purple-600 via-purple-700 to-indigo-800 p-4 text-white relative">
+          <button
+            onClick={onClose}
+            className="absolute top-4 right-4 text-white/80 hover:text-white transition-colors"
+          >
+            <X className="h-6 w-6" />
+          </button>
+          <div className="flex items-center space-x-3 mb-4">
+            <div className="w-10 h-10 bg-white/20 backdrop-blur-sm rounded-xl flex items-center justify-center">
+              <User className="h-5 w-5 text-white" />
+            </div>
+            <div>
+              <h1 className="text-xl font-bold">MusicStore</h1>
+              <p className="text-purple-200 text-sm">Your Musical Journey</p>
+            </div>
+          </div>
+          <h2 className="text-2xl font-bold">
+            {mode === 'signin' ? 'Welcome Back!' : 'Join Our Community'}
+          </h2>
+        </div>
+
+        <div className="grid grid-cols-1 lg:grid-cols-2">
+          {/* Left Side - Branding (Hidden on Mobile) */}
+          <div className="hidden lg:block bg-gradient-to-br from-purple-600 via-purple-700 to-indigo-800 p-8 xl:p-12 text-white relative overflow-hidden min-h-[600px]">
             {/* Close button */}
             <button
               onClick={onClose}
@@ -171,7 +193,7 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, initialMode = 's
 
               {/* Content */}
               <div className="space-y-6">
-                <h2 className="text-3xl lg:text-4xl font-bold leading-tight">
+                <h2 className="text-3xl xl:text-4xl font-bold leading-tight">
                   {mode === 'signin' ? 'Welcome Back!' : 'Join Our Community'}
                 </h2>
                 <p className="text-purple-100 text-lg leading-relaxed">
@@ -199,11 +221,11 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, initialMode = 's
               </div>
 
               {/* Bottom buttons */}
-              <div className="mt-8 flex space-x-4">
-                <button className="px-4 py-2 bg-white/10 backdrop-blur-sm border border-white/20 rounded-lg text-white hover:bg-white/20 transition-colors">
+              <div className="mt-8 flex flex-col sm:flex-row space-y-3 sm:space-y-0 sm:space-x-4">
+                <button className="px-4 py-2 bg-white/10 backdrop-blur-sm border border-white/20 rounded-lg text-white hover:bg-white/20 transition-colors text-center">
                   Learn More
                 </button>
-                <button className="px-4 py-2 bg-white/10 backdrop-blur-sm border border-white/20 rounded-lg text-white hover:bg-white/20 transition-colors">
+                <button className="px-4 py-2 bg-white/10 backdrop-blur-sm border border-white/20 rounded-lg text-white hover:bg-white/20 transition-colors text-center">
                   Contact Support
                 </button>
               </div>
@@ -211,17 +233,30 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, initialMode = 's
           </div>
 
           {/* Right Side - Form */}
-          <div className="p-8 lg:p-12 flex flex-col justify-center">
-            <div className="w-full max-w-sm mx-auto">
-              {/* Header */}
-              <div className="text-center mb-8">
-                <h3 className="text-2xl font-bold text-gray-900 mb-2">
+          <div className="p-4 sm:p-6 lg:p-8 xl:p-12 flex flex-col justify-center">
+            <div className="w-full max-w-md mx-auto">
+              {/* Header - Hidden on mobile (shown in mobile header) */}
+              <div className="hidden lg:block text-center mb-6 xl:mb-8">
+                <h3 className="text-2xl xl:text-3xl font-bold text-gray-900 mb-2">
                   {mode === 'signin' ? 'Sign In' : 'Create Account'}
                 </h3>
-                <p className="text-gray-600">
+                <p className="text-gray-600 text-sm xl:text-base">
                   {mode === 'signin' 
                     ? 'Enter your credentials to access your account'
                     : 'Fill in your details to create a new account'
+                  }
+                </p>
+              </div>
+
+              {/* Mobile Header */}
+              <div className="lg:hidden text-center mb-6">
+                <h3 className="text-xl font-bold text-gray-900 mb-2">
+                  {mode === 'signin' ? 'Sign In' : 'Create Account'}
+                </h3>
+                <p className="text-gray-600 text-sm">
+                  {mode === 'signin' 
+                    ? 'Enter your credentials'
+                    : 'Fill in your details'
                   }
                 </p>
               </div>
@@ -241,19 +276,19 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, initialMode = 's
               {/* Form */}
               <form onSubmit={handleSubmit} className="space-y-4">
                 {mode === 'signup' && (
-                  <div className="grid grid-cols-2 gap-3">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-1">
                         First Name
                       </label>
                       <div className="relative">
-                        <User className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
+                        <User className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4 sm:h-5 sm:w-5" />
                         <input
                           type="text"
                           name="firstName"
                           value={formData.firstName}
                           onChange={handleInputChange}
-                          className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-colors"
+                          className="w-full pl-9 sm:pl-10 pr-4 py-2.5 sm:py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-colors text-sm sm:text-base"
                           placeholder="John"
                           required
                         />
@@ -264,13 +299,13 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, initialMode = 's
                         Last Name
                       </label>
                       <div className="relative">
-                        <User className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
+                        <User className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4 sm:h-5 sm:w-5" />
                         <input
                           type="text"
                           name="lastName"
                           value={formData.lastName}
                           onChange={handleInputChange}
-                          className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-colors"
+                          className="w-full pl-9 sm:pl-10 pr-4 py-2.5 sm:py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-colors text-sm sm:text-base"
                           placeholder="Doe"
                           required
                         />
@@ -284,13 +319,13 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, initialMode = 's
                     Email Address
                   </label>
                   <div className="relative">
-                    <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
+                    <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4 sm:h-5 sm:w-5" />
                     <input
                       type="email"
                       name="email"
                       value={formData.email}
                       onChange={handleInputChange}
-                      className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-colors"
+                      className="w-full pl-9 sm:pl-10 pr-4 py-2.5 sm:py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-colors text-sm sm:text-base"
                       placeholder="john@example.com"
                       required
                     />
@@ -302,13 +337,13 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, initialMode = 's
                     Password
                   </label>
                   <div className="relative">
-                    <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
+                    <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4 sm:h-5 sm:w-5" />
                     <input
                       type={showPassword ? 'text' : 'password'}
                       name="password"
                       value={formData.password}
                       onChange={handleInputChange}
-                      className="w-full pl-10 pr-12 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-colors"
+                      className="w-full pl-9 sm:pl-10 pr-12 py-2.5 sm:py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-colors text-sm sm:text-base"
                       placeholder="••••••••"
                       required
                     />
@@ -317,7 +352,7 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, initialMode = 's
                       onClick={() => setShowPassword(!showPassword)}
                       className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors"
                     >
-                      {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
+                      {showPassword ? <EyeOff className="h-4 w-4 sm:h-5 sm:w-5" /> : <Eye className="h-4 w-4 sm:h-5 sm:w-5" />}
                     </button>
                   </div>
                 </div>
@@ -328,13 +363,13 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, initialMode = 's
                       Confirm Password
                     </label>
                     <div className="relative">
-                      <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
+                      <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4 sm:h-5 sm:w-5" />
                       <input
                         type={showPassword ? 'text' : 'password'}
                         name="confirmPassword"
                         value={formData.confirmPassword}
                         onChange={handleInputChange}
-                        className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-colors"
+                        className="w-full pl-9 sm:pl-10 pr-4 py-2.5 sm:py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-colors text-sm sm:text-base"
                         placeholder="••••••••"
                         required
                       />
@@ -343,17 +378,17 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, initialMode = 's
                 )}
 
                 {mode === 'signin' && (
-                  <div className="flex items-center justify-between">
+                  <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-2 sm:space-y-0">
                     <label className="flex items-center">
                       <input
                         type="checkbox"
-                        className="rounded border-gray-300 text-purple-600 focus:ring-purple-500"
+                        className="rounded border-gray-300 text-purple-600 focus:ring-purple-500 h-4 w-4"
                       />
                       <span className="ml-2 text-sm text-gray-600">Remember me</span>
                     </label>
                     <button
                       type="button"
-                      className="text-sm text-purple-600 hover:text-purple-700 transition-colors"
+                      className="text-sm text-purple-600 hover:text-purple-700 transition-colors text-left sm:text-right"
                     >
                       Forgot password?
                     </button>
@@ -363,11 +398,11 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, initialMode = 's
                 <button
                   type="submit"
                   disabled={isLoading}
-                  className="w-full bg-gradient-to-r from-purple-600 to-indigo-600 text-white py-3 px-4 rounded-lg font-semibold hover:from-purple-700 hover:to-indigo-700 focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center space-x-2"
+                  className="w-full bg-gradient-to-r from-purple-600 to-indigo-600 text-white py-3 sm:py-3.5 px-4 rounded-lg font-semibold hover:from-purple-700 hover:to-indigo-700 focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center space-x-2 text-sm sm:text-base"
                 >
                   {isLoading ? (
                     <>
-                      <div className="w-5 h-5 border-2 border-white/20 border-t-white rounded-full animate-spin" />
+                      <div className="w-4 h-4 sm:w-5 sm:h-5 border-2 border-white/20 border-t-white rounded-full animate-spin" />
                       <span>{mode === 'signin' ? 'Signing In...' : 'Creating Account...'}</span>
                     </>
                   ) : (
@@ -378,7 +413,7 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, initialMode = 's
 
               {/* Switch Mode */}
               <div className="mt-6 text-center">
-                <p className="text-gray-600">
+                <p className="text-gray-600 text-sm sm:text-base">
                   {mode === 'signin' ? "Don't have an account?" : "Already have an account?"}
                   <button
                     onClick={switchMode}
@@ -387,6 +422,24 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, initialMode = 's
                     {mode === 'signin' ? 'Sign Up' : 'Sign In'}
                   </button>
                 </p>
+              </div>
+
+              {/* Mobile Features - Only shown on mobile */}
+              <div className="lg:hidden mt-6 pt-6 border-t border-gray-200">
+                <div className="space-y-3 text-sm text-gray-600">
+                  <div className="flex items-center space-x-2">
+                    <div className="w-2 h-2 bg-cyan-400 rounded-full" />
+                    <span>Exclusive member discounts</span>
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <div className="w-2 h-2 bg-pink-400 rounded-full" />
+                    <span>Priority customer support</span>
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <div className="w-2 h-2 bg-yellow-400 rounded-full" />
+                    <span>Early access to new products</span>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
