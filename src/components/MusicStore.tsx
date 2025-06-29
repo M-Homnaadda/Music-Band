@@ -15,6 +15,7 @@ import {
 } from 'lucide-react';
 import AuthModal from './AuthModal';
 import UserMenu from './UserMenu';
+import CartPage from './CartPage';
 import { useAuth } from '../hooks/useAuth';
 
 interface Product {
@@ -32,6 +33,19 @@ interface Product {
   discount?: number;
 }
 
+interface CartItem {
+  id: number;
+  name: string;
+  brand: string;
+  model: string;
+  price: number;
+  originalPrice?: number;
+  image: string;
+  color: string;
+  extras: string[];
+  quantity: number;
+}
+
 interface MusicStoreProps {
   onBackToHome: () => void;
 }
@@ -45,7 +59,8 @@ const MusicStore: React.FC<MusicStoreProps> = ({ onBackToHome }) => {
   const [wishlist, setWishlist] = useState<number[]>([]);
   const [showAuthModal, setShowAuthModal] = useState(false);
   const [authMode, setAuthMode] = useState<'signin' | 'signup'>('signin');
-  const [cartItems, setCartItems] = useState<number[]>([]);
+  const [cartItems, setCartItems] = useState<CartItem[]>([]);
+  const [showCart, setShowCart] = useState(false);
 
   const categories = [
     { id: 'all', name: 'All Categories', icon: '🎵' },
@@ -72,7 +87,7 @@ const MusicStore: React.FC<MusicStoreProps> = ({ onBackToHome }) => {
   const featuredProducts: Product[] = [
     {
       id: 1,
-      name: 'Fender American Ultra II Stratocaster',
+      name: 'American Ultra II Stratocaster',
       brand: 'Fender',
       price: 2199.99,
       rating: 4.8,
@@ -103,7 +118,7 @@ const MusicStore: React.FC<MusicStoreProps> = ({ onBackToHome }) => {
     },
     {
       id: 4,
-      name: 'PRS SE Custom 24 - Jade',
+      name: 'SE Custom 24 - Jade',
       brand: 'PRS',
       price: 919.00,
       rating: 4.7,
@@ -113,7 +128,7 @@ const MusicStore: React.FC<MusicStoreProps> = ({ onBackToHome }) => {
     },
     {
       id: 5,
-      name: 'Yamaha Pacifica PAC 612V II',
+      name: 'Pacifica PAC 612V II',
       brand: 'Yamaha',
       price: 539.00,
       rating: 4.5,
@@ -123,7 +138,7 @@ const MusicStore: React.FC<MusicStoreProps> = ({ onBackToHome }) => {
     },
     {
       id: 6,
-      name: 'Ibanez RG550 Genesis',
+      name: 'RG550 Genesis',
       brand: 'Ibanez',
       price: 899.00,
       rating: 4.6,
@@ -136,7 +151,7 @@ const MusicStore: React.FC<MusicStoreProps> = ({ onBackToHome }) => {
   const hotDeals: Product[] = [
     {
       id: 7,
-      name: 'Yamaha DTX432K Electronic Drum Set',
+      name: 'DTX432K Electronic Drum Set',
       brand: 'Yamaha',
       price: 599,
       originalPrice: 799,
@@ -149,7 +164,7 @@ const MusicStore: React.FC<MusicStoreProps> = ({ onBackToHome }) => {
     },
     {
       id: 8,
-      name: 'Marshall DSL40CR Tube Combo Amp',
+      name: 'DSL40CR Tube Combo Amp',
       brand: 'Marshall',
       price: 649,
       originalPrice: 799,
@@ -162,7 +177,7 @@ const MusicStore: React.FC<MusicStoreProps> = ({ onBackToHome }) => {
     },
     {
       id: 9,
-      name: 'Shure SM58 Vocal Microphone',
+      name: 'SM58 Vocal Microphone',
       brand: 'Shure',
       price: 99,
       originalPrice: 129,
@@ -175,7 +190,7 @@ const MusicStore: React.FC<MusicStoreProps> = ({ onBackToHome }) => {
     },
     {
       id: 10,
-      name: 'Audio-Technica ATH-M50x Studio Headphones',
+      name: 'ATH-M50x Studio Headphones',
       brand: 'Audio-Technica',
       price: 149,
       originalPrice: 199,
@@ -188,7 +203,7 @@ const MusicStore: React.FC<MusicStoreProps> = ({ onBackToHome }) => {
     },
     {
       id: 11,
-      name: 'Roland FP-30X Digital Piano',
+      name: 'FP-30X Digital Piano',
       brand: 'Roland',
       price: 649,
       originalPrice: 799,
@@ -216,9 +231,46 @@ const MusicStore: React.FC<MusicStoreProps> = ({ onBackToHome }) => {
       return;
     }
     
-    setCartItems(prev => [...prev, productId]);
-    // Here you would typically make an API call to add the item to the cart
-    console.log('Added to cart:', productId);
+    const product = [...featuredProducts, ...hotDeals].find(p => p.id === productId);
+    if (product) {
+      const existingItem = cartItems.find(item => item.id === productId);
+      
+      if (existingItem) {
+        setCartItems(prev => 
+          prev.map(item => 
+            item.id === productId 
+              ? { ...item, quantity: item.quantity + 1 }
+              : item
+          )
+        );
+      } else {
+        const newCartItem: CartItem = {
+          id: product.id,
+          name: product.name,
+          brand: product.brand,
+          model: `#${Math.random().toString().slice(2, 15)}`,
+          price: product.price,
+          originalPrice: product.originalPrice,
+          image: product.image,
+          color: ['Black', 'White', 'Sunburst', 'Natural', 'Blue'][Math.floor(Math.random() * 5)],
+          extras: product.isHot ? ['Premium Case', 'Extended Warranty'] : ['Standard Case'],
+          quantity: 1
+        };
+        setCartItems(prev => [...prev, newCartItem]);
+      }
+    }
+  };
+
+  const handleUpdateQuantity = (id: number, quantity: number) => {
+    setCartItems(prev => 
+      prev.map(item => 
+        item.id === id ? { ...item, quantity } : item
+      )
+    );
+  };
+
+  const handleRemoveItem = (id: number) => {
+    setCartItems(prev => prev.filter(item => item.id !== id));
   };
 
   const handleUserIconClick = () => {
@@ -226,6 +278,15 @@ const MusicStore: React.FC<MusicStoreProps> = ({ onBackToHome }) => {
       setAuthMode('signin');
       setShowAuthModal(true);
     }
+  };
+
+  const handleCartClick = () => {
+    if (!isAuthenticated) {
+      setAuthMode('signin');
+      setShowAuthModal(true);
+      return;
+    }
+    setShowCart(true);
   };
 
   const renderStars = (rating: number) => {
@@ -315,6 +376,18 @@ const MusicStore: React.FC<MusicStoreProps> = ({ onBackToHome }) => {
     </div>
   );
 
+  // Show Cart Page
+  if (showCart) {
+    return (
+      <CartPage 
+        onBackToStore={() => setShowCart(false)}
+        cartItems={cartItems}
+        onUpdateQuantity={handleUpdateQuantity}
+        onRemoveItem={handleRemoveItem}
+      />
+    );
+  }
+
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
@@ -351,11 +424,14 @@ const MusicStore: React.FC<MusicStoreProps> = ({ onBackToHome }) => {
             {/* Right Actions */}
             <div className="flex items-center space-x-4">
               <UserMenu onSignInClick={handleUserIconClick} />
-              <button className="relative text-gray-600 hover:text-blue-600 transition-colors">
+              <button 
+                onClick={handleCartClick}
+                className="relative text-gray-600 hover:text-blue-600 transition-colors"
+              >
                 <ShoppingCart className="h-6 w-6" />
                 {cartItems.length > 0 && (
                   <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
-                    {cartItems.length}
+                    {cartItems.reduce((sum, item) => sum + item.quantity, 0)}
                   </span>
                 )}
               </button>
