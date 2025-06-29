@@ -4,9 +4,11 @@ import MusicStore from './components/MusicStore';
 import AuthModal from './components/AuthModal';
 import UserMenu from './components/UserMenu';
 import { useAuth } from './hooks/useAuth';
+import { useCart } from './hooks/useCart';
 
 function App() {
   const { isAuthenticated } = useAuth();
+  const { getCartItemsCount } = useCart();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [currentTestimonial, setCurrentTestimonial] = useState(0);
   const [isScrolled, setIsScrolled] = useState(false);
@@ -226,10 +228,14 @@ function App() {
 
   const handleExploreStore = () => {
     setShowMusicStore(true);
+    // Scroll to top when entering store
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   const handleBackToHome = () => {
     setShowMusicStore(false);
+    // Scroll to top when returning home
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   const handleAddToCart = (productId: number) => {
@@ -311,6 +317,18 @@ function App() {
 
             <div className="hidden md:flex items-center space-x-4">
               <UserMenu onSignInClick={handleUserIconClick} />
+              {/* Cart Icon with Count */}
+              <button 
+                onClick={handleExploreStore}
+                className="relative text-white hover:text-gray-300 transition-colors"
+              >
+                <ShoppingCart className="h-6 w-6" />
+                {getCartItemsCount() > 0 && (
+                  <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
+                    {getCartItemsCount()}
+                  </span>
+                )}
+              </button>
               <button className="border border-white/30 text-white px-6 py-2 rounded-full hover:bg-white/10 transition-all duration-300 font-medium transform hover:scale-105">
                 <span>Book Now</span>
               </button>

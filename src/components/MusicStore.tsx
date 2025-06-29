@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useEffect } from 'react';
+import React, { useState, useMemo } from 'react';
 import { 
   Search, 
   ShoppingCart, 
@@ -12,33 +12,17 @@ import {
   Grid,
   List,
   SortAsc,
-  Zap,
-  TrendingUp,
-  Award,
+  X,
   Shield,
   Truck,
-  HeadphonesIcon,
-  Music,
-  Volume2,
-  Play,
-  Eye,
-  Share2,
-  X,
-  ArrowRight,
-  CheckCircle,
-  Clock,
-  Flame,
-  Sliders,
-  DollarSign,
-  Package,
-  Sparkles,
-  Tag,
-  FilterX
+  Award
 } from 'lucide-react';
 import AuthModal from './AuthModal';
 import UserMenu from './UserMenu';
+import ProductModal from './ProductModal';
 import CartPage from './CartPage';
 import { useAuth } from '../hooks/useAuth';
+import { useCart } from '../hooks/useCart';
 
 interface Product {
   id: number;
@@ -53,19 +37,7 @@ interface Product {
   isHot?: boolean;
   isNew?: boolean;
   discount?: number;
-}
-
-interface CartItem {
-  id: number;
-  name: string;
-  brand: string;
-  model: string;
-  price: number;
-  originalPrice?: number;
-  image: string;
-  color: string;
-  extras: string[];
-  quantity: number;
+  model?: string;
 }
 
 interface MusicStoreProps {
@@ -74,26 +46,23 @@ interface MusicStoreProps {
 
 const MusicStore: React.FC<MusicStoreProps> = ({ onBackToHome }) => {
   const { isAuthenticated } = useAuth();
+  const { cartItems, addToCart, removeFromCart, updateQuantity, getCartItemsCount } = useCart();
+  
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [selectedBrands, setSelectedBrands] = useState<string[]>([]);
-  const [priceRange, setPriceRange] = useState<[number, number]>([0, 500000]);
+  const [priceRange, setPriceRange] = useState({ min: '', max: '' });
   const [selectedRating, setSelectedRating] = useState(0);
-  const [showOnlyDiscounted, setShowOnlyDiscounted] = useState(false);
-  const [showOnlyInStock, setShowOnlyInStock] = useState(false);
+  const [onSale, setOnSale] = useState(false);
+  const [inStock, setInStock] = useState(false);
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
   const [sortBy, setSortBy] = useState('featured');
   const [wishlist, setWishlist] = useState<number[]>([]);
   const [showAuthModal, setShowAuthModal] = useState(false);
   const [authMode, setAuthMode] = useState<'signin' | 'signup'>('signin');
-  const [cartItems, setCartItems] = useState<CartItem[]>([]);
-  const [showCart, setShowCart] = useState(false);
   const [showFilters, setShowFilters] = useState(false);
-
-  // Scroll to top when component mounts
-  useEffect(() => {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  }, []);
+  const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
+  const [showCart, setShowCart] = useState(false);
 
   const categories = [
     { id: 'all', name: 'All Categories', icon: '🎵', count: 156 },
@@ -103,363 +72,208 @@ const MusicStore: React.FC<MusicStoreProps> = ({ onBackToHome }) => {
     { id: 'keyboard', name: 'Keyboard & Piano', icon: '🎹', count: 28 },
     { id: 'drums', name: 'Drum & Percussion', icon: '🥁', count: 22 },
     { id: 'microphone', name: 'Microphone', icon: '🎤', count: 15 },
-    { id: 'studio', name: 'Studio & Recording', icon: '🎚️', count: 35 },
-    { id: 'pedal', name: 'Pedal & Effects', icon: '🎛️', count: 42 },
+    { id: 'studio', name: 'Studio & Recording', icon: '🎚️', count: 12 },
+    { id: 'pedal', name: 'Pedal & Pedal Board', icon: '🎛️', count: 8 },
     { id: 'amplifier', name: 'Amplifier', icon: '🔊', count: 19 }
   ];
 
-  const topBrands = [
-    { name: 'Fender', logo: 'https://images.pexels.com/photos/1407322/pexels-photo-1407322.jpeg?auto=compress&cs=tinysrgb&w=100&h=50&dpr=2', products: 45 },
-    { name: 'Gibson', logo: 'https://images.pexels.com/photos/1047930/pexels-photo-1047930.jpeg?auto=compress&cs=tinysrgb&w=100&h=50&dpr=2', products: 32 },
-    { name: 'PRS', logo: 'https://images.pexels.com/photos/1190297/pexels-photo-1190297.jpeg?auto=compress&cs=tinysrgb&w=100&h=50&dpr=2', products: 28 },
-    { name: 'Roland', logo: 'https://images.pexels.com/photos/164821/pexels-photo-164821.jpeg?auto=compress&cs=tinysrgb&w=100&h=50&dpr=2', products: 38 },
-    { name: 'Marshall', logo: 'https://images.pexels.com/photos/1751731/pexels-photo-1751731.jpeg?auto=compress&cs=tinysrgb&w=100&h=50&dpr=2', products: 25 },
-    { name: 'Yamaha', logo: 'https://images.pexels.com/photos/1407322/pexels-photo-1407322.jpeg?auto=compress&cs=tinysrgb&w=100&h=50&dpr=2', products: 52 },
-    { name: 'Ibanez', logo: 'https://images.pexels.com/photos/1407322/pexels-photo-1407322.jpeg?auto=compress&cs=tinysrgb&w=100&h=50&dpr=2', products: 28 },
-    { name: 'Shure', logo: 'https://images.pexels.com/photos/164821/pexels-photo-164821.jpeg?auto=compress&cs=tinysrgb&w=100&h=50&dpr=2', products: 15 },
-    { name: 'Audio-Technica', logo: 'https://images.pexels.com/photos/1047930/pexels-photo-1047930.jpeg?auto=compress&cs=tinysrgb&w=100&h=50&dpr=2', products: 22 },
-    { name: 'Kawai', logo: 'https://images.pexels.com/photos/1751731/pexels-photo-1751731.jpeg?auto=compress&cs=tinysrgb&w=100&h=50&dpr=2', products: 18 }
+  const brands = [
+    { name: 'Fender', count: 34 },
+    { name: 'Gibson', count: 28 },
+    { name: 'PRS', count: 15 },
+    { name: 'Roland', count: 22 },
+    { name: 'Marshall', count: 18 },
+    { name: 'Yamaha', count: 31 },
+    { name: 'Ibanez', count: 19 },
+    { name: 'Taylor', count: 12 }
   ];
 
-  // Updated Electric Guitar Products with actual uploaded images
-  const electricGuitarProducts: Product[] = [
+  const allProducts: Product[] = [
+    // Electric Guitars
     {
       id: 1,
-      name: 'Les Paul Studio - Ebony',
-      brand: 'Gibson',
-      price: 181599,
-      originalPrice: 219999,
-      rating: 4.9,
+      name: 'American Ultra II Stratocaster',
+      brand: 'Fender',
+      price: 181499,
+      rating: 4.8,
       reviews: 124,
       image: '/src/assets/products/electric-guitar/guitar-background-upz2txx3cz5k6irg.jpg',
       category: 'electric-guitar',
       isNew: true,
-      discount: 17
+      model: 'AMULTRA2-STRAT'
     },
     {
       id: 2,
-      name: 'Stratocaster Player Series',
+      name: 'Player II Stratocaster HSS',
       brand: 'Fender',
-      price: 68579,
-      rating: 4.7,
-      reviews: 189,
+      price: 68499,
+      rating: 4.6,
+      reviews: 89,
       image: '/src/assets/products/electric-guitar/photo-1516924962500-2b4b3b99ea02.jpg',
       category: 'electric-guitar',
-      isHot: true
+      model: 'PLAYER2-STRAT-HSS'
     },
     {
       id: 3,
-      name: 'American Professional II Stratocaster',
-      brand: 'Fender',
-      price: 231099,
-      originalPrice: 279999,
-      rating: 4.8,
+      name: 'Les Paul Standard 60s Heritage Cherry Sunburst',
+      brand: 'Gibson',
+      price: 230999,
+      rating: 4.9,
       reviews: 156,
       image: '/src/assets/products/electric-guitar/pexels-oskelaq-2016810.jpg',
       category: 'electric-guitar',
-      discount: 17,
-      isNew: true
+      model: 'LP-STD-60S-HCS'
     },
     {
       id: 4,
-      name: 'Custom Electric Guitar - Neon Series',
-      brand: 'Tom Anderson',
-      price: 375869,
-      rating: 4.9,
+      name: 'SE Custom 24 - Jade',
+      brand: 'PRS',
+      price: 75899,
+      rating: 4.7,
       reviews: 73,
       image: '/src/assets/products/electric-guitar/881331.jpg',
       category: 'electric-guitar',
-      isHot: true
+      model: 'SE-CUSTOM24-JADE'
     },
+    // Keyboards & Pianos
     {
       id: 5,
-      name: 'SE Custom 24 - Vintage Sunburst',
-      brand: 'PRS',
-      price: 94519,
-      originalPrice: 115999,
-      rating: 4.6,
+      name: 'P-225B Digital Piano',
+      brand: 'Yamaha',
+      price: 44499,
+      rating: 4.5,
       reviews: 92,
-      image: '/src/assets/products/electric-guitar/guitar-background-upz2txx3cz5k6irg.jpg',
-      category: 'electric-guitar',
-      discount: 19
+      image: '/src/assets/products/keyboard-piano/Yamaha-P-225B-Digital-Piano-Black-Front_large.webp',
+      category: 'keyboard',
+      model: 'P-225B'
     },
     {
       id: 6,
-      name: 'RG550 Genesis Collection',
-      brand: 'Ibanez',
-      price: 74259,
-      rating: 4.5,
-      reviews: 67,
-      image: '/src/assets/products/electric-guitar/photo-1516924962500-2b4b3b99ea02.jpg',
-      category: 'electric-guitar'
-    },
-    {
-      id: 21,
-      name: 'Telecaster American Standard',
-      brand: 'Fender',
-      price: 156799,
-      originalPrice: 189999,
-      rating: 4.8,
-      reviews: 203,
-      image: '/src/assets/products/electric-guitar/pexels-oskelaq-2016810.jpg',
-      category: 'electric-guitar',
-      discount: 17
-    },
-    {
-      id: 22,
-      name: 'SG Standard - Cherry Red',
-      brand: 'Gibson',
-      price: 198599,
-      rating: 4.7,
-      reviews: 145,
-      image: '/src/assets/products/electric-guitar/881331.jpg',
-      category: 'electric-guitar',
-      isNew: true
-    }
-  ];
-
-  // Updated Keyboard & Piano Products with actual uploaded images
-  const keyboardProducts: Product[] = [
-    {
-      id: 12,
-      name: 'RP107 Digital Piano',
-      brand: 'Roland',
-      price: 53609,
-      originalPrice: 65999,
-      rating: 4.8,
-      reviews: 156,
-      image: '/src/assets/products/keyboard-piano/rp107_angle_left_gal.jpg',
-      category: 'keyboard',
-      isNew: true,
-      discount: 19
-    },
-    {
-      id: 13,
-      name: 'P-225B Digital Piano',
+      name: 'CVP-909GP Clavinova',
       brand: 'Yamaha',
-      price: 41299,
-      rating: 4.7,
-      reviews: 203,
-      image: '/src/assets/products/keyboard-piano/Yamaha-P-225B-Digital-Piano-Black-Front_large.webp',
-      category: 'keyboard',
-      isHot: true
-    },
-    {
-      id: 14,
-      name: 'U3 Upright Piano',
-      brand: 'Yamaha',
-      price: 524799,
-      originalPrice: 599999,
+      price: 899999,
       rating: 4.9,
-      reviews: 89,
-      image: '/src/assets/products/keyboard-piano/up_product_u3_po-ebo_163832c6df3b2719f401bc7985f36ead.jpg',
-      category: 'keyboard',
-      discount: 13,
-      isNew: true
-    },
-    {
-      id: 15,
-      name: 'CVP-909GP Grand Piano',
-      brand: 'Yamaha',
-      price: 1249999,
-      rating: 4.9,
-      reviews: 67,
+      reviews: 45,
       image: '/src/assets/products/keyboard-piano/CVP-909GP_a_0001_a0388f6bdfd18943c6b62f8e1ad13801.jpg',
       category: 'keyboard',
-      isNew: true
+      isHot: true,
+      model: 'CVP-909GP'
     },
     {
-      id: 16,
-      name: 'PS500 Digital Piano',
-      brand: 'Kawai',
-      price: 82499,
-      originalPrice: 99999,
-      rating: 4.6,
+      id: 7,
+      name: 'RP107 Digital Piano',
+      brand: 'Roland',
+      price: 49499,
+      originalPrice: 59999,
+      discount: 18,
+      rating: 4.4,
+      reviews: 67,
+      image: '/src/assets/products/keyboard-piano/rp107_angle_left_gal.jpg',
+      category: 'keyboard',
+      model: 'RP107'
+    },
+    {
+      id: 8,
+      name: 'U3 Upright Piano',
+      brand: 'Yamaha',
+      price: 449999,
+      rating: 4.8,
+      reviews: 23,
+      image: '/src/assets/products/keyboard-piano/up_product_u3_po-ebo_163832c6df3b2719f401bc7985f36ead.jpg',
+      category: 'keyboard',
+      model: 'U3-EBO'
+    },
+    {
+      id: 9,
+      name: 'PSR-500 Portable Keyboard',
+      brand: 'Yamaha',
+      price: 12999,
+      originalPrice: 15999,
+      discount: 19,
+      rating: 4.2,
       reviews: 134,
       image: '/src/assets/products/keyboard-piano/ps500-18761795201896_l.jpg',
       category: 'keyboard',
-      discount: 18,
-      isHot: true
+      isNew: true,
+      model: 'PSR-500'
     }
   ];
 
-  // Other category products
-  const acousticGuitarProducts: Product[] = [
-    {
-      id: 31,
-      name: 'CD-60S Acoustic Guitar',
-      brand: 'Fender',
-      price: 24999,
-      rating: 4.5,
-      reviews: 234,
-      image: 'https://images.pexels.com/photos/1047930/pexels-photo-1047930.jpeg?auto=compress&cs=tinysrgb&w=400&h=400&dpr=2',
-      category: 'acoustic-guitar'
-    },
-    {
-      id: 32,
-      name: 'FG830 Acoustic Guitar',
-      brand: 'Yamaha',
-      price: 32999,
-      originalPrice: 39999,
-      rating: 4.6,
-      reviews: 189,
-      image: 'https://images.pexels.com/photos/1407322/pexels-photo-1407322.jpeg?auto=compress&cs=tinysrgb&w=400&h=400&dpr=2',
-      category: 'acoustic-guitar',
-      discount: 18
-    }
-  ];
-
-  const bassProducts: Product[] = [
-    {
-      id: 41,
-      name: 'Player Jazz Bass',
-      brand: 'Fender',
-      price: 89999,
-      rating: 4.7,
-      reviews: 156,
-      image: 'https://images.pexels.com/photos/1190297/pexels-photo-1190297.jpeg?auto=compress&cs=tinysrgb&w=400&h=400&dpr=2',
-      category: 'bass'
-    }
-  ];
-
-  const drumProducts: Product[] = [
-    {
-      id: 7,
-      name: 'DTX432K Electronic Drum Set',
-      brand: 'Yamaha',
-      price: 49479,
-      originalPrice: 65999,
-      discount: 25,
-      rating: 4.4,
-      reviews: 45,
-      image: 'https://images.pexels.com/photos/1751731/pexels-photo-1751731.jpeg?auto=compress&cs=tinysrgb&w=400&h=300&dpr=2',
-      category: 'drums',
-      isHot: true
-    }
-  ];
-
-  const amplifierProducts: Product[] = [
-    {
-      id: 8,
-      name: 'DSL40CR Tube Combo Amp',
-      brand: 'Marshall',
-      price: 53609,
-      originalPrice: 65999,
-      discount: 19,
-      rating: 4.7,
-      reviews: 128,
-      image: 'https://images.pexels.com/photos/1190297/pexels-photo-1190297.jpeg?auto=compress&cs=tinysrgb&w=400&h=300&dpr=2',
-      category: 'amplifier',
-      isHot: true
-    }
-  ];
-
-  const microphoneProducts: Product[] = [
-    {
-      id: 9,
-      name: 'SM58 Vocal Microphone',
-      brand: 'Shure',
-      price: 8179,
-      originalPrice: 10659,
-      discount: 23,
-      rating: 4.8,
-      reviews: 234,
-      image: 'https://images.pexels.com/photos/164821/pexels-photo-164821.jpeg?auto=compress&cs=tinysrgb&w=400&h=300&dpr=2',
-      category: 'microphone',
-      isHot: true
-    }
-  ];
-
-  const studioProducts: Product[] = [
-    {
-      id: 10,
-      name: 'ATH-M50x Studio Headphones',
-      brand: 'Audio-Technica',
-      price: 12309,
-      originalPrice: 16439,
-      discount: 25,
-      rating: 4.6,
-      reviews: 189,
-      image: 'https://images.pexels.com/photos/1047930/pexels-photo-1047930.jpeg?auto=compress&cs=tinysrgb&w=400&h=300&dpr=2',
-      category: 'studio',
-      isHot: true
-    }
-  ];
-
-  const allProducts = [
-    ...electricGuitarProducts, 
-    ...keyboardProducts, 
-    ...acousticGuitarProducts,
-    ...bassProducts,
-    ...drumProducts,
-    ...amplifierProducts,
-    ...microphoneProducts,
-    ...studioProducts
-  ];
-
-  // Enhanced filter logic
+  // Filter products based on all criteria
   const filteredProducts = useMemo(() => {
     let filtered = allProducts;
 
-    // Filter by category
+    // Category filter
     if (selectedCategory !== 'all') {
       filtered = filtered.filter(product => product.category === selectedCategory);
     }
 
-    // Filter by brands
+    // Search filter
+    if (searchQuery) {
+      filtered = filtered.filter(product =>
+        product.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        product.brand.toLowerCase().includes(searchQuery.toLowerCase())
+      );
+    }
+
+    // Brand filter
     if (selectedBrands.length > 0) {
       filtered = filtered.filter(product => selectedBrands.includes(product.brand));
     }
 
-    // Filter by price range
-    filtered = filtered.filter(product => 
-      product.price >= priceRange[0] && product.price <= priceRange[1]
-    );
+    // Price range filter
+    if (priceRange.min || priceRange.max) {
+      filtered = filtered.filter(product => {
+        const min = priceRange.min ? parseFloat(priceRange.min) : 0;
+        const max = priceRange.max ? parseFloat(priceRange.max) : Infinity;
+        return product.price >= min && product.price <= max;
+      });
+    }
 
-    // Filter by rating
+    // Rating filter
     if (selectedRating > 0) {
       filtered = filtered.filter(product => product.rating >= selectedRating);
     }
 
-    // Filter by discount
-    if (showOnlyDiscounted) {
-      filtered = filtered.filter(product => product.discount && product.discount > 0);
-    }
-
-    // Filter by search query
-    if (searchQuery.trim()) {
-      const query = searchQuery.toLowerCase();
-      filtered = filtered.filter(product => 
-        product.name.toLowerCase().includes(query) ||
-        product.brand.toLowerCase().includes(query) ||
-        product.category.toLowerCase().includes(query)
-      );
+    // On sale filter
+    if (onSale) {
+      filtered = filtered.filter(product => product.originalPrice && product.originalPrice > product.price);
     }
 
     // Sort products
     switch (sortBy) {
+      case 'newest':
+        filtered = filtered.sort((a, b) => (b.isNew ? 1 : 0) - (a.isNew ? 1 : 0));
+        break;
       case 'price-low':
-        filtered.sort((a, b) => a.price - b.price);
+        filtered = filtered.sort((a, b) => a.price - b.price);
         break;
       case 'price-high':
-        filtered.sort((a, b) => b.price - a.price);
+        filtered = filtered.sort((a, b) => b.price - a.price);
         break;
       case 'rating':
-        filtered.sort((a, b) => b.rating - a.rating);
+        filtered = filtered.sort((a, b) => b.rating - a.rating);
         break;
-      case 'newest':
-        filtered.sort((a, b) => (b.isNew ? 1 : 0) - (a.isNew ? 1 : 0));
-        break;
-      case 'discount':
-        filtered.sort((a, b) => (b.discount || 0) - (a.discount || 0));
+      case 'deals':
+        filtered = filtered.sort((a, b) => {
+          const aDiscount = a.originalPrice ? ((a.originalPrice - a.price) / a.originalPrice) : 0;
+          const bDiscount = b.originalPrice ? ((b.originalPrice - b.price) / b.originalPrice) : 0;
+          return bDiscount - aDiscount;
+        });
         break;
       default:
-        // Keep original order for 'featured'
-        break;
+        // Featured - keep original order but prioritize hot/new items
+        filtered = filtered.sort((a, b) => {
+          if (a.isHot && !b.isHot) return -1;
+          if (!a.isHot && b.isHot) return 1;
+          if (a.isNew && !b.isNew) return -1;
+          if (!a.isNew && b.isNew) return 1;
+          return 0;
+        });
     }
 
     return filtered;
-  }, [selectedCategory, selectedBrands, priceRange, selectedRating, showOnlyDiscounted, searchQuery, sortBy, allProducts]);
+  }, [selectedCategory, searchQuery, selectedBrands, priceRange, selectedRating, onSale, sortBy]);
 
   const toggleWishlist = (productId: number) => {
     setWishlist(prev => 
@@ -469,53 +283,14 @@ const MusicStore: React.FC<MusicStoreProps> = ({ onBackToHome }) => {
     );
   };
 
-  const handleAddToCart = (productId: number) => {
+  const handleAddToCart = (product: Product, options: { color: string; extras: string[] }) => {
     if (!isAuthenticated) {
       setAuthMode('signin');
       setShowAuthModal(true);
       return;
     }
     
-    const product = allProducts.find(p => p.id === productId);
-    if (product) {
-      const existingItem = cartItems.find(item => item.id === productId);
-      
-      if (existingItem) {
-        setCartItems(prev => 
-          prev.map(item => 
-            item.id === productId 
-              ? { ...item, quantity: item.quantity + 1 }
-              : item
-          )
-        );
-      } else {
-        const newCartItem: CartItem = {
-          id: product.id,
-          name: product.name,
-          brand: product.brand,
-          model: `#${Math.random().toString().slice(2, 15)}`,
-          price: product.price,
-          originalPrice: product.originalPrice,
-          image: product.image,
-          color: ['Black', 'White', 'Sunburst', 'Natural', 'Blue'][Math.floor(Math.random() * 5)],
-          extras: product.isHot ? ['Premium Case', 'Extended Warranty'] : ['Standard Case'],
-          quantity: 1
-        };
-        setCartItems(prev => [...prev, newCartItem]);
-      }
-    }
-  };
-
-  const handleUpdateQuantity = (id: number, quantity: number) => {
-    setCartItems(prev => 
-      prev.map(item => 
-        item.id === id ? { ...item, quantity } : item
-      )
-    );
-  };
-
-  const handleRemoveItem = (id: number) => {
-    setCartItems(prev => prev.filter(item => item.id !== id));
+    addToCart(product, options);
   };
 
   const handleUserIconClick = () => {
@@ -525,48 +300,32 @@ const MusicStore: React.FC<MusicStoreProps> = ({ onBackToHome }) => {
     }
   };
 
-  const handleCartClick = () => {
-    if (!isAuthenticated) {
-      setAuthMode('signin');
-      setShowAuthModal(true);
-      return;
-    }
-    setShowCart(true);
-  };
-
-  const handleCategorySelect = (categoryId: string) => {
-    setSelectedCategory(categoryId);
-    setSearchQuery(''); // Clear search when selecting category
-  };
-
-  const handleBrandToggle = (brand: string) => {
-    setSelectedBrands(prev => 
-      prev.includes(brand) 
-        ? prev.filter(b => b !== brand)
-        : [...prev, brand]
+  const handleBrandToggle = (brandName: string) => {
+    setSelectedBrands(prev =>
+      prev.includes(brandName)
+        ? prev.filter(b => b !== brandName)
+        : [...prev, brandName]
     );
   };
 
-  const clearFilters = () => {
+  const clearAllFilters = () => {
     setSelectedCategory('all');
     setSelectedBrands([]);
-    setPriceRange([0, 500000]);
+    setPriceRange({ min: '', max: '' });
     setSelectedRating(0);
-    setShowOnlyDiscounted(false);
-    setShowOnlyInStock(false);
+    setOnSale(false);
+    setInStock(false);
     setSearchQuery('');
-    setSortBy('featured');
   };
 
   const getActiveFiltersCount = () => {
     let count = 0;
     if (selectedCategory !== 'all') count++;
     if (selectedBrands.length > 0) count += selectedBrands.length;
-    if (priceRange[0] > 0 || priceRange[1] < 500000) count++;
+    if (priceRange.min || priceRange.max) count++;
     if (selectedRating > 0) count++;
-    if (showOnlyDiscounted) count++;
-    if (showOnlyInStock) count++;
-    if (searchQuery.trim()) count++;
+    if (onSale) count++;
+    if (inStock) count++;
     return count;
   };
 
@@ -579,180 +338,130 @@ const MusicStore: React.FC<MusicStoreProps> = ({ onBackToHome }) => {
     ));
   };
 
-  const ProductCard: React.FC<{ product: Product; isHotDeal?: boolean }> = ({ product, isHotDeal = false }) => (
-    <div className="group bg-white rounded-2xl shadow-sm hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2 overflow-hidden border border-gray-100">
-      {/* Product Image Container */}
-      <div className="relative overflow-hidden bg-gradient-to-br from-gray-50 to-gray-100">
-        {/* Badges */}
-        <div className="absolute top-4 left-4 z-20 flex flex-col space-y-2">
-          {product.isNew && (
-            <span className="bg-gradient-to-r from-green-500 to-emerald-500 text-white text-xs px-3 py-1 rounded-full font-bold shadow-lg">
-              NEW
-            </span>
-          )}
-          {product.isHot && (
-            <span className="bg-gradient-to-r from-red-500 to-pink-500 text-white text-xs px-3 py-1 rounded-full font-bold shadow-lg animate-pulse">
-              🔥 HOT
-            </span>
-          )}
-          {product.discount && (
-            <span className="bg-gradient-to-r from-orange-500 to-amber-500 text-white text-xs px-3 py-1 rounded-full font-bold shadow-lg">
-              -{product.discount}% OFF
-            </span>
-          )}
-        </div>
+  const ProductCard: React.FC<{ product: Product }> = ({ product }) => (
+    <div className="bg-white rounded-lg shadow-md hover:shadow-xl transition-all duration-300 transform hover:scale-105 group relative overflow-hidden">
+      {/* Badges */}
+      <div className="absolute top-3 left-3 z-10 flex flex-col space-y-1">
+        {product.isNew && (
+          <span className="bg-green-500 text-white text-xs px-2 py-1 rounded-full font-semibold">NEW</span>
+        )}
+        {product.isHot && (
+          <span className="bg-red-500 text-white text-xs px-2 py-1 rounded-full font-semibold">HOT</span>
+        )}
+        {product.discount && (
+          <span className="bg-orange-500 text-white text-xs px-2 py-1 rounded-full font-semibold">
+            -{product.discount}%
+          </span>
+        )}
+      </div>
 
-        {/* Action Buttons */}
-        <div className="absolute top-4 right-4 z-20 flex flex-col space-y-2 opacity-0 group-hover:opacity-100 transition-all duration-300">
-          <button
-            onClick={() => toggleWishlist(product.id)}
-            className="p-2 bg-white/90 backdrop-blur-sm rounded-full shadow-lg hover:bg-white hover:scale-110 transition-all duration-200"
-          >
-            <Heart 
-              className={`h-4 w-4 transition-colors ${
-                wishlist.includes(product.id) ? 'text-red-500 fill-current' : 'text-gray-600'
-              }`} 
-            />
-          </button>
-          <button className="p-2 bg-white/90 backdrop-blur-sm rounded-full shadow-lg hover:bg-white hover:scale-110 transition-all duration-200">
-            <Eye className="h-4 w-4 text-gray-600" />
-          </button>
-          <button className="p-2 bg-white/90 backdrop-blur-sm rounded-full shadow-lg hover:bg-white hover:scale-110 transition-all duration-200">
-            <Share2 className="h-4 w-4 text-gray-600" />
-          </button>
-        </div>
+      {/* Wishlist Button */}
+      <button
+        onClick={() => toggleWishlist(product.id)}
+        className="absolute top-3 right-3 z-10 p-2 bg-white/80 backdrop-blur-sm rounded-full opacity-0 group-hover:opacity-100 transition-all duration-300 hover:bg-white"
+      >
+        <Heart 
+          className={`h-4 w-4 transition-colors ${
+            wishlist.includes(product.id) ? 'text-red-500 fill-current' : 'text-gray-600'
+          }`} 
+        />
+      </button>
 
-        {/* Product Image */}
-        <div className="aspect-square p-6">
-          <img 
-            src={product.image} 
-            alt={product.name}
-            className="w-full h-full object-cover rounded-xl group-hover:scale-110 transition-transform duration-700"
-          />
-        </div>
-
-        {/* Quick Add Overlay */}
-        <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-all duration-300 flex items-center justify-center">
-          <button 
-            onClick={() => handleAddToCart(product.id)}
-            className="bg-white text-gray-900 px-6 py-3 rounded-full font-bold shadow-xl opacity-0 group-hover:opacity-100 transform translate-y-4 group-hover:translate-y-0 transition-all duration-300 hover:bg-gray-100 hover:scale-105"
-          >
-            Quick Add to Cart
-          </button>
-        </div>
+      {/* Product Image */}
+      <div className="relative overflow-hidden cursor-pointer" onClick={() => setSelectedProduct(product)}>
+        <img 
+          src={product.image} 
+          alt={product.name}
+          className="w-full h-48 object-cover group-hover:scale-110 transition-transform duration-500"
+        />
+        <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-300"></div>
       </div>
 
       {/* Product Info */}
-      <div className="p-6">
-        {/* Brand & Category */}
-        <div className="flex items-center justify-between mb-2">
-          <span className="text-sm font-semibold text-blue-600 bg-blue-50 px-2 py-1 rounded-full">
-            {product.brand}
-          </span>
-          <div className="flex items-center space-x-1">
-            <div className="flex space-x-1">
-              {renderStars(product.rating)}
-            </div>
-            <span className="text-sm text-gray-500 ml-1">({product.reviews})</span>
-          </div>
-        </div>
-        
-        {/* Product Name */}
-        <h3 className="font-bold text-gray-900 mb-3 line-clamp-2 group-hover:text-blue-600 transition-colors text-lg leading-tight">
+      <div className="p-4">
+        <div className="text-sm text-gray-500 mb-1">{product.brand}</div>
+        <h3 className="font-semibold text-gray-900 mb-2 line-clamp-2 group-hover:text-blue-600 transition-colors cursor-pointer"
+            onClick={() => setSelectedProduct(product)}>
           {product.name}
         </h3>
+        
+        {/* Rating */}
+        <div className="flex items-center space-x-1 mb-2">
+          <div className="flex space-x-1">
+            {renderStars(product.rating)}
+          </div>
+          <span className="text-sm text-gray-500">({product.reviews})</span>
+        </div>
 
         {/* Price */}
-        <div className="flex items-center justify-between mb-4">
-          <div className="flex items-center space-x-2">
-            <span className="text-2xl font-bold text-gray-900">₹{product.price.toLocaleString('en-IN')}</span>
-            {product.originalPrice && (
-              <span className="text-sm text-gray-500 line-through">₹{product.originalPrice.toLocaleString('en-IN')}</span>
-            )}
-          </div>
-          {product.discount && (
-            <span className="text-sm text-green-600 font-bold bg-green-50 px-2 py-1 rounded-full">
-              Save ₹{((product.originalPrice || 0) - product.price).toLocaleString('en-IN')}
-            </span>
+        <div className="flex items-center space-x-2 mb-3">
+          <span className="text-lg font-bold text-gray-900">₹{product.price.toLocaleString('en-IN')}</span>
+          {product.originalPrice && (
+            <span className="text-sm text-gray-500 line-through">₹{product.originalPrice.toLocaleString('en-IN')}</span>
           )}
         </div>
 
         {/* Action Buttons */}
-        <div className="flex space-x-3">
+        <div className="flex space-x-2">
           <button 
-            onClick={() => handleAddToCart(product.id)}
-            className="flex-1 bg-gradient-to-r from-blue-600 to-blue-700 text-white py-3 px-4 rounded-xl font-bold hover:from-blue-700 hover:to-blue-800 transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl"
+            onClick={() => setSelectedProduct(product)}
+            className="flex-1 bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 transition-colors font-semibold"
           >
-            Add to Cart
+            Quick View
           </button>
-          <button className="px-4 py-3 border-2 border-gray-200 rounded-xl hover:border-blue-600 hover:text-blue-600 transition-all duration-300 hover:bg-blue-50">
-            <Music className="h-5 w-5" />
+          <button 
+            onClick={() => toggleWishlist(product.id)}
+            className="px-3 py-2 border border-gray-300 rounded-lg hover:border-red-500 hover:text-red-500 transition-colors"
+          >
+            <Heart className={`h-4 w-4 ${wishlist.includes(product.id) ? 'text-red-500 fill-current' : ''}`} />
           </button>
         </div>
       </div>
     </div>
   );
 
-  // Show Cart Page
+  // Show cart page if requested
   if (showCart) {
     return (
       <CartPage 
         onBackToStore={() => setShowCart(false)}
         cartItems={cartItems}
-        onUpdateQuantity={handleUpdateQuantity}
-        onRemoveItem={handleRemoveItem}
+        onUpdateQuantity={updateQuantity}
+        onRemoveItem={removeFromCart}
       />
     );
   }
 
-  const selectedCategoryInfo = categories.find(cat => cat.id === selectedCategory);
-  const activeFiltersCount = getActiveFiltersCount();
-
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-blue-50">
-      {/* Enhanced Header */}
-      <header className="bg-white/80 backdrop-blur-md shadow-sm border-b border-gray-200/50 sticky top-0 z-50">
+    <div className="min-h-screen bg-gray-50">
+      {/* Header */}
+      <header className="bg-white shadow-sm border-b sticky top-0 z-40">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-20">
+          <div className="flex items-center justify-between h-16">
             {/* Logo and Back Button */}
-            <div className="flex items-center space-x-6">
+            <div className="flex items-center space-x-4">
               <button
                 onClick={onBackToHome}
-                className="flex items-center space-x-3 text-gray-600 hover:text-blue-600 transition-all duration-300 group"
+                className="flex items-center space-x-2 text-gray-600 hover:text-blue-600 transition-colors"
               >
-                <div className="p-2 rounded-full bg-gray-100 group-hover:bg-blue-100 transition-colors">
-                  <ArrowLeft className="h-5 w-5" />
-                </div>
-                <span className="hidden sm:inline font-medium">Back to Home</span>
+                <ArrowLeft className="h-5 w-5" />
+                <span className="hidden sm:inline">Back to Home</span>
               </button>
-              <div className="h-8 w-px bg-gray-300 hidden sm:block"></div>
-              <div className="flex items-center space-x-3">
-                <div className="w-10 h-10 bg-gradient-to-r from-blue-600 to-purple-600 rounded-xl flex items-center justify-center">
-                  <Music className="h-6 w-6 text-white" />
-                </div>
-                <div>
-                  <h1 className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-                    MusicStore
-                  </h1>
-                  <p className="text-xs text-gray-500">Premium Instruments</p>
-                </div>
-              </div>
+              <div className="h-6 w-px bg-gray-300 hidden sm:block"></div>
+              <h1 className="text-xl font-bold text-blue-600">MusicStore</h1>
             </div>
 
-            {/* Enhanced Search Bar */}
-            <div className="flex-1 max-w-2xl mx-8">
-              <div className="relative group">
-                <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5 group-focus-within:text-blue-600 transition-colors" />
+            {/* Search Bar */}
+            <div className="flex-1 max-w-lg mx-8">
+              <div className="relative">
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
                 <input
                   type="text"
-                  placeholder="Search for instruments, brands, or accessories..."
+                  placeholder="Search instruments, brands, or accessories"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-full pl-12 pr-6 py-4 border-2 border-gray-200 rounded-2xl focus:ring-4 focus:ring-blue-500/20 focus:border-blue-500 transition-all duration-300 bg-white/50 backdrop-blur-sm text-lg placeholder-gray-400"
+                  className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                 />
-                <div className="absolute right-4 top-1/2 transform -translate-y-1/2 flex items-center space-x-2">
-                  <kbd className="px-2 py-1 text-xs font-semibold text-gray-500 bg-gray-100 border border-gray-200 rounded">⌘K</kbd>
-                </div>
               </div>
             </div>
 
@@ -760,13 +469,13 @@ const MusicStore: React.FC<MusicStoreProps> = ({ onBackToHome }) => {
             <div className="flex items-center space-x-4">
               <UserMenu onSignInClick={handleUserIconClick} />
               <button 
-                onClick={handleCartClick}
-                className="relative p-3 text-gray-600 hover:text-blue-600 transition-all duration-300 hover:bg-blue-50 rounded-xl group"
+                onClick={() => setShowCart(true)}
+                className="relative text-gray-600 hover:text-blue-600 transition-colors"
               >
                 <ShoppingCart className="h-6 w-6" />
-                {cartItems.length > 0 && (
-                  <span className="absolute -top-1 -right-1 bg-gradient-to-r from-red-500 to-pink-500 text-white text-xs rounded-full h-6 w-6 flex items-center justify-center font-bold animate-pulse">
-                    {cartItems.reduce((sum, item) => sum + item.quantity, 0)}
+                {getCartItemsCount() > 0 && (
+                  <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
+                    {getCartItemsCount()}
                   </span>
                 )}
               </button>
@@ -775,280 +484,147 @@ const MusicStore: React.FC<MusicStoreProps> = ({ onBackToHome }) => {
         </div>
       </header>
 
-      {/* Premium Hero Section */}
-      <section className="relative min-h-[80vh] bg-gradient-to-br from-amber-50 via-orange-50 to-red-50 overflow-hidden">
-        {/* Background Pattern */}
-        <div className="absolute inset-0 opacity-5">
-          <div className="absolute top-0 left-0 w-96 h-96 bg-gradient-to-br from-amber-600 to-orange-600 rounded-full blur-3xl -translate-x-48 -translate-y-48"></div>
-          <div className="absolute bottom-0 right-0 w-96 h-96 bg-gradient-to-br from-red-600 to-pink-600 rounded-full blur-3xl translate-x-48 translate-y-48"></div>
-        </div>
-
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center min-h-[60vh]">
-            {/* Left Content */}
-            <div className="space-y-8 animate-in fade-in slide-in-from-left duration-1000">
-              {/* Premium Badge */}
-              <div className="inline-flex items-center space-x-2 bg-gradient-to-r from-amber-100 to-orange-100 border border-amber-200 rounded-full px-4 py-2">
-                <Award className="h-4 w-4 text-amber-600" />
-                <span className="text-sm font-semibold text-amber-800">PREMIUM COLLECTION</span>
+      {/* Enhanced Hero Section */}
+      <section className="relative bg-gradient-to-r from-amber-50 via-orange-50 to-yellow-50 overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-r from-black/20 to-transparent"></div>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+            <div className="relative z-10">
+              <div className="inline-flex items-center space-x-2 bg-amber-100 text-amber-800 px-4 py-2 rounded-full text-sm font-semibold mb-6">
+                <Award className="h-4 w-4" />
+                <span>Premium Collection</span>
               </div>
-
-              {/* Main Heading */}
-              <div className="space-y-4">
-                <h1 className="text-5xl lg:text-7xl font-bold leading-tight">
-                  <span className="bg-gradient-to-r from-gray-900 via-amber-800 to-orange-800 bg-clip-text text-transparent">
-                    GIBSON
-                  </span>
-                  <br />
-                  <span className="text-gray-900 text-3xl lg:text-4xl font-medium">
-                    Les Paul Studio
-                  </span>
-                </h1>
-                <p className="text-xl text-gray-600 leading-relaxed max-w-lg">
-                  Experience the legendary tone and craftsmanship of the iconic Gibson Les Paul Studio. 
-                  Handcrafted with premium mahogany body and maple cap for unparalleled sustain and resonance.
-                </p>
-              </div>
-
-              {/* Features */}
-              <div className="grid grid-cols-2 gap-4">
-                <div className="flex items-center space-x-3">
-                  <div className="w-10 h-10 bg-gradient-to-r from-green-500 to-emerald-500 rounded-full flex items-center justify-center">
-                    <CheckCircle className="h-5 w-5 text-white" />
-                  </div>
-                  <div>
-                    <p className="font-semibold text-gray-900">Premium Mahogany</p>
-                    <p className="text-sm text-gray-600">Body & Neck</p>
-                  </div>
+              <h2 className="text-4xl lg:text-5xl font-bold text-gray-900 mb-6 leading-tight">
+                Gibson Les Paul
+                <span className="block text-amber-600">Standard 60s</span>
+              </h2>
+              <p className="text-lg text-gray-600 mb-8 leading-relaxed">
+                Experience the legendary tone and craftsmanship of the iconic Les Paul Standard 60s. 
+                Featuring premium tonewoods, vintage-style tuners, and that unmistakable Gibson sound 
+                that has defined rock music for decades.
+              </p>
+              <div className="flex items-center space-x-6 mb-8">
+                <div className="text-3xl font-bold text-gray-900">
+                  ₹2,30,999
                 </div>
-                <div className="flex items-center space-x-3">
-                  <div className="w-10 h-10 bg-gradient-to-r from-blue-500 to-cyan-500 rounded-full flex items-center justify-center">
-                    <Zap className="h-5 w-5 text-white" />
-                  </div>
-                  <div>
-                    <p className="font-semibold text-gray-900">490R & 498T</p>
-                    <p className="text-sm text-gray-600">Humbuckers</p>
-                  </div>
-                </div>
-                <div className="flex items-center space-x-3">
-                  <div className="w-10 h-10 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full flex items-center justify-center">
-                    <Star className="h-5 w-5 text-white" />
-                  </div>
-                  <div>
-                    <p className="font-semibold text-gray-900">Lifetime Warranty</p>
-                    <p className="text-sm text-gray-600">Guaranteed Quality</p>
-                  </div>
-                </div>
-                <div className="flex items-center space-x-3">
-                  <div className="w-10 h-10 bg-gradient-to-r from-orange-500 to-red-500 rounded-full flex items-center justify-center">
-                    <Clock className="h-5 w-5 text-white" />
-                  </div>
-                  <div>
-                    <p className="font-semibold text-gray-900">Limited Edition</p>
-                    <p className="text-sm text-gray-600">Only 50 Left</p>
-                  </div>
+                <div className="flex items-center space-x-1">
+                  {renderStars(4.9)}
+                  <span className="text-sm text-gray-600 ml-2">(156 reviews)</span>
                 </div>
               </div>
-
-              {/* Pricing */}
-              <div className="space-y-4">
-                <div className="flex items-center space-x-4">
-                  <span className="text-4xl font-bold text-gray-900">₹1,81,599</span>
-                  <span className="text-2xl text-gray-500 line-through">₹2,19,999</span>
-                  <span className="bg-gradient-to-r from-red-500 to-pink-500 text-white px-4 py-2 rounded-full font-bold text-lg animate-pulse">
-                    17% OFF
-                  </span>
-                </div>
-                <div className="flex items-center space-x-2 text-green-600">
-                  <Flame className="h-5 w-5" />
-                  <span className="font-semibold">Save ₹38,400 • Limited Time Offer</span>
-                </div>
-              </div>
-
-              {/* Action Buttons */}
-              <div className="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-6">
+              <div className="flex space-x-4">
                 <button 
-                  onClick={() => handleAddToCart(1)}
-                  className="bg-gradient-to-r from-amber-600 to-orange-600 text-white px-8 py-4 rounded-2xl font-bold text-lg hover:from-amber-700 hover:to-orange-700 transition-all duration-300 transform hover:scale-105 shadow-xl hover:shadow-2xl flex items-center justify-center space-x-2"
+                  onClick={() => {
+                    const gibsonProduct = allProducts.find(p => p.id === 3);
+                    if (gibsonProduct) setSelectedProduct(gibsonProduct);
+                  }}
+                  className="bg-amber-600 text-white px-8 py-4 rounded-lg font-semibold hover:bg-amber-700 transition-colors text-lg"
                 >
-                  <ShoppingCart className="h-5 w-5" />
-                  <span>Add to Cart</span>
+                  View Details
                 </button>
-                <button className="border-2 border-gray-300 text-gray-700 px-8 py-4 rounded-2xl font-bold text-lg hover:border-amber-600 hover:text-amber-600 transition-all duration-300 hover:bg-amber-50 flex items-center justify-center space-x-2">
-                  <Play className="h-5 w-5" />
-                  <span>Listen Demo</span>
+                <button className="border-2 border-amber-600 text-amber-600 px-8 py-4 rounded-lg font-semibold hover:bg-amber-50 transition-colors text-lg">
+                  Add to Wishlist
                 </button>
-              </div>
-
-              {/* Trust Indicators */}
-              <div className="flex items-center space-x-8 pt-4">
-                <div className="flex items-center space-x-2 text-gray-600">
-                  <Shield className="h-5 w-5 text-green-500" />
-                  <span className="text-sm font-medium">Secure Payment</span>
-                </div>
-                <div className="flex items-center space-x-2 text-gray-600">
-                  <Truck className="h-5 w-5 text-blue-500" />
-                  <span className="text-sm font-medium">Free Shipping</span>
-                </div>
-                <div className="flex items-center space-x-2 text-gray-600">
-                  <Award className="h-5 w-5 text-purple-500" />
-                  <span className="text-sm font-medium">Authentic Guarantee</span>
-                </div>
               </div>
             </div>
-
-            {/* Right Image */}
-            <div className="relative animate-in fade-in slide-in-from-right duration-1000 delay-300">
-              {/* Decorative Elements */}
-              <div className="absolute -inset-8 bg-gradient-to-r from-amber-200/30 to-orange-200/30 rounded-3xl blur-2xl"></div>
-              <div className="absolute top-8 right-8 w-32 h-32 bg-gradient-to-br from-amber-400/20 to-orange-400/20 rounded-full blur-xl"></div>
-              <div className="absolute bottom-8 left-8 w-24 h-24 bg-gradient-to-br from-red-400/20 to-pink-400/20 rounded-full blur-lg"></div>
-
-              {/* Main Product Image */}
-              <div className="relative bg-gradient-to-br from-amber-900 via-orange-900 to-red-900 rounded-3xl overflow-hidden shadow-2xl">
-                <img 
-                  src="/src/assets/electric-guitar-still-life (1).jpg"
-                  alt="Gibson Les Paul Studio - Premium Electric Guitar"
-                  className="w-full h-[600px] object-cover"
-                />
-                
-                {/* Overlay Gradient */}
-                <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent"></div>
-                
-                {/* Floating Elements */}
-                <div className="absolute top-6 left-6 bg-white/90 backdrop-blur-sm rounded-2xl p-4 shadow-lg">
-                  <div className="flex items-center space-x-2">
-                    <div className="flex space-x-1">
-                      {[...Array(5)].map((_, i) => (
-                        <Star key={i} className="h-4 w-4 text-yellow-400 fill-current" />
-                      ))}
-                    </div>
-                    <span className="text-sm font-semibold text-gray-900">4.9 (124 reviews)</span>
-                  </div>
-                </div>
-
-                <div className="absolute bottom-6 right-6 bg-white/90 backdrop-blur-sm rounded-2xl p-4 shadow-lg">
-                  <div className="text-center">
-                    <p className="text-sm text-gray-600">In Stock</p>
-                    <p className="text-lg font-bold text-green-600">50 Available</p>
-                  </div>
-                </div>
-
-                {/* Wishlist Button */}
-                <button
-                  onClick={() => toggleWishlist(1)}
-                  className="absolute top-6 right-6 p-3 bg-white/90 backdrop-blur-sm rounded-full shadow-lg hover:bg-white hover:scale-110 transition-all duration-300"
-                >
-                  <Heart 
-                    className={`h-6 w-6 transition-colors ${
-                      wishlist.includes(1) ? 'text-red-500 fill-current' : 'text-gray-600'
-                    }`} 
-                  />
-                </button>
-              </div>
-
-              {/* Floating Action Button */}
-              <div className="absolute -bottom-6 left-1/2 transform -translate-x-1/2">
-                <button className="bg-white text-gray-900 px-6 py-3 rounded-full font-bold shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:scale-110 flex items-center space-x-2">
-                  <ArrowRight className="h-5 w-5" />
-                  <span>View Details</span>
-                </button>
+            <div className="relative">
+              <div className="absolute -inset-4 bg-gradient-to-r from-amber-400/20 to-orange-400/20 rounded-3xl blur-2xl"></div>
+              <img 
+                src="/src/assets/electric-guitar-still-life (1).jpg"
+                alt="Gibson Les Paul Standard 60s"
+                className="relative w-full h-96 object-cover rounded-2xl shadow-2xl"
+              />
+              <div className="absolute top-6 right-6 bg-white/90 backdrop-blur-sm px-4 py-2 rounded-full">
+                <span className="text-sm font-semibold text-gray-900">Gibson</span>
               </div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Enhanced Filters & Navigation Section */}
-      <section className="bg-white border-b border-gray-200 sticky top-20 z-40">
+      {/* Enhanced Filter Bar */}
+      <div className="bg-white border-b sticky top-16 z-30">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          {/* Main Filter Bar */}
           <div className="flex items-center justify-between py-4">
             <div className="flex items-center space-x-6">
               {/* Filter Toggle */}
-              <button 
+              <button
                 onClick={() => setShowFilters(!showFilters)}
-                className="flex items-center space-x-3 bg-gradient-to-r from-blue-50 to-indigo-50 hover:from-blue-100 hover:to-indigo-100 border border-blue-200 text-blue-700 px-6 py-3 rounded-xl font-semibold transition-all duration-300 transform hover:scale-105 shadow-sm hover:shadow-md"
+                className="flex items-center space-x-2 text-gray-700 hover:text-blue-600 transition-colors"
               >
-                <Sliders className="h-5 w-5" />
+                <Filter className="h-5 w-5" />
                 <span>Filters</span>
-                {activeFiltersCount > 0 && (
-                  <span className="bg-blue-600 text-white text-xs px-2 py-1 rounded-full font-bold">
-                    {activeFiltersCount}
+                {getActiveFiltersCount() > 0 && (
+                  <span className="bg-blue-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
+                    {getActiveFiltersCount()}
                   </span>
                 )}
-                <ChevronDown className={`h-4 w-4 transition-transform duration-300 ${showFilters ? 'rotate-180' : ''}`} />
               </button>
 
-              {/* Quick Category Filters */}
-              <div className="hidden lg:flex items-center space-x-2">
+              {/* Quick Category Buttons */}
+              <div className="hidden md:flex items-center space-x-2">
                 {categories.slice(0, 5).map((category) => (
                   <button
                     key={category.id}
-                    onClick={() => handleCategorySelect(category.id)}
-                    className={`flex items-center space-x-2 px-4 py-2 rounded-xl text-sm font-medium transition-all duration-300 ${
+                    onClick={() => setSelectedCategory(category.id)}
+                    className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${
                       selectedCategory === category.id
-                        ? 'bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-lg'
-                        : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                        ? 'bg-blue-100 text-blue-700'
+                        : 'text-gray-600 hover:text-blue-600 hover:bg-gray-100'
                     }`}
                   >
-                    <span>{category.icon}</span>
-                    <span>{category.name}</span>
+                    {category.icon} {category.name}
                   </button>
                 ))}
               </div>
+
+              {/* Trust Indicators */}
+              <div className="hidden lg:flex items-center space-x-6 text-sm text-gray-600">
+                <div className="flex items-center space-x-1">
+                  <Shield className="h-4 w-4 text-green-500" />
+                  <span>Secure Shopping</span>
+                </div>
+                <div className="flex items-center space-x-1">
+                  <Truck className="h-4 w-4 text-blue-500" />
+                  <span>Free Shipping ₹2000+</span>
+                </div>
+              </div>
             </div>
-            
-            {/* Right Side Controls */}
-            <div className="flex items-center space-x-6">
+
+            <div className="flex items-center space-x-4">
+              {/* Results Count */}
+              <span className="text-sm text-gray-600">
+                {filteredProducts.length} products found
+              </span>
+
               {/* Sort Dropdown */}
               <div className="relative">
                 <select
                   value={sortBy}
                   onChange={(e) => setSortBy(e.target.value)}
-                  className="appearance-none bg-white border-2 border-gray-200 rounded-xl px-4 py-3 pr-10 text-sm font-medium focus:ring-4 focus:ring-blue-500/20 focus:border-blue-500 transition-all duration-300"
+                  className="appearance-none bg-white border border-gray-300 rounded-lg px-4 py-2 pr-8 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                 >
                   <option value="featured">✨ Featured</option>
                   <option value="newest">🆕 Newest First</option>
                   <option value="price-low">💰 Price: Low to High</option>
                   <option value="price-high">💎 Price: High to Low</option>
                   <option value="rating">⭐ Highest Rated</option>
-                  <option value="discount">🔥 Best Deals</option>
+                  <option value="deals">🔥 Best Deals</option>
                 </select>
-                <ChevronDown className="absolute right-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400 pointer-events-none" />
-              </div>
-              
-              {/* Trust Indicators */}
-              <div className="hidden md:flex items-center space-x-6 text-sm">
-                <div className="flex items-center space-x-2 text-green-600">
-                  <Shield className="h-4 w-4" />
-                  <span className="font-medium">Secure Shopping</span>
-                </div>
-                <div className="flex items-center space-x-2 text-blue-600">
-                  <Truck className="h-4 w-4" />
-                  <span className="font-medium">Free Shipping ₹2000+</span>
-                </div>
+                <ChevronDown className="absolute right-2 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400 pointer-events-none" />
               </div>
 
               {/* View Mode Toggle */}
-              <div className="flex items-center space-x-2 bg-gray-100 rounded-xl p-1">
+              <div className="flex items-center space-x-1 border border-gray-300 rounded-lg p-1">
                 <button 
                   onClick={() => setViewMode('grid')}
-                  className={`p-2 rounded-lg transition-all duration-300 ${
-                    viewMode === 'grid' 
-                      ? 'bg-white text-blue-600 shadow-sm' 
-                      : 'text-gray-400 hover:text-gray-600'
-                  }`}
+                  className={`p-2 rounded ${viewMode === 'grid' ? 'bg-blue-100 text-blue-600' : 'text-gray-400'}`}
                 >
                   <Grid className="h-4 w-4" />
                 </button>
                 <button 
                   onClick={() => setViewMode('list')}
-                  className={`p-2 rounded-lg transition-all duration-300 ${
-                    viewMode === 'list' 
-                      ? 'bg-white text-blue-600 shadow-sm' 
-                      : 'text-gray-400 hover:text-gray-600'
-                  }`}
+                  className={`p-2 rounded ${viewMode === 'list' ? 'bg-blue-100 text-blue-600' : 'text-gray-400'}`}
                 >
                   <List className="h-4 w-4" />
                 </button>
@@ -1056,259 +632,54 @@ const MusicStore: React.FC<MusicStoreProps> = ({ onBackToHome }) => {
             </div>
           </div>
 
-          {/* Advanced Filters Panel */}
-          {showFilters && (
-            <div className="border-t border-gray-200 py-6 animate-in slide-in-from-top duration-300">
-              <div className="grid grid-cols-1 lg:grid-cols-5 gap-6">
-                {/* Categories */}
-                <div className="space-y-3">
-                  <h3 className="text-sm font-bold text-gray-900 uppercase tracking-wider flex items-center space-x-2">
-                    <Package className="h-4 w-4" />
-                    <span>Categories</span>
-                  </h3>
-                  <div className="space-y-2 max-h-48 overflow-y-auto">
-                    {categories.map((category) => (
-                      <label key={category.id} className="flex items-center space-x-3 cursor-pointer group">
-                        <input
-                          type="radio"
-                          name="category"
-                          value={category.id}
-                          checked={selectedCategory === category.id}
-                          onChange={() => handleCategorySelect(category.id)}
-                          className="w-4 h-4 text-blue-600 border-gray-300 focus:ring-blue-500"
-                        />
-                        <span className="text-sm text-gray-700 group-hover:text-blue-600 transition-colors flex items-center space-x-2">
-                          <span>{category.icon}</span>
-                          <span>{category.name}</span>
-                          <span className="text-xs text-gray-400">({category.count})</span>
-                        </span>
-                      </label>
-                    ))}
-                  </div>
-                </div>
-
-                {/* Brands */}
-                <div className="space-y-3">
-                  <h3 className="text-sm font-bold text-gray-900 uppercase tracking-wider flex items-center space-x-2">
-                    <Tag className="h-4 w-4" />
-                    <span>Brands</span>
-                  </h3>
-                  <div className="space-y-2 max-h-48 overflow-y-auto">
-                    {topBrands.slice(0, 8).map((brand) => (
-                      <label key={brand.name} className="flex items-center space-x-3 cursor-pointer group">
-                        <input
-                          type="checkbox"
-                          checked={selectedBrands.includes(brand.name)}
-                          onChange={() => handleBrandToggle(brand.name)}
-                          className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
-                        />
-                        <span className="text-sm text-gray-700 group-hover:text-blue-600 transition-colors flex items-center justify-between w-full">
-                          <span>{brand.name}</span>
-                          <span className="text-xs text-gray-400">({brand.products})</span>
-                        </span>
-                      </label>
-                    ))}
-                  </div>
-                </div>
-
-                {/* Price Range */}
-                <div className="space-y-3">
-                  <h3 className="text-sm font-bold text-gray-900 uppercase tracking-wider flex items-center space-x-2">
-                    <DollarSign className="h-4 w-4" />
-                    <span>Price Range</span>
-                  </h3>
-                  <div className="space-y-4">
-                    <div className="flex items-center space-x-3">
-                      <input
-                        type="number"
-                        placeholder="Min"
-                        value={priceRange[0]}
-                        onChange={(e) => setPriceRange([parseInt(e.target.value) || 0, priceRange[1]])}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                      />
-                      <span className="text-gray-400">to</span>
-                      <input
-                        type="number"
-                        placeholder="Max"
-                        value={priceRange[1]}
-                        onChange={(e) => setPriceRange([priceRange[0], parseInt(e.target.value) || 500000])}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                      />
-                    </div>
-                    <div className="space-y-2">
-                      {[
-                        { label: 'Under ₹25,000', min: 0, max: 25000 },
-                        { label: '₹25,000 - ₹75,000', min: 25000, max: 75000 },
-                        { label: '₹75,000 - ₹2,00,000', min: 75000, max: 200000 },
-                        { label: 'Above ₹2,00,000', min: 200000, max: 500000 }
-                      ].map((range) => (
-                        <button
-                          key={range.label}
-                          onClick={() => setPriceRange([range.min, range.max])}
-                          className="block w-full text-left text-sm text-gray-600 hover:text-blue-600 transition-colors"
-                        >
-                          {range.label}
-                        </button>
-                      ))}
-                    </div>
-                  </div>
-                </div>
-
-                {/* Rating */}
-                <div className="space-y-3">
-                  <h3 className="text-sm font-bold text-gray-900 uppercase tracking-wider flex items-center space-x-2">
-                    <Star className="h-4 w-4" />
-                    <span>Rating</span>
-                  </h3>
-                  <div className="space-y-2">
-                    {[4, 3, 2, 1].map((rating) => (
-                      <label key={rating} className="flex items-center space-x-3 cursor-pointer group">
-                        <input
-                          type="radio"
-                          name="rating"
-                          value={rating}
-                          checked={selectedRating === rating}
-                          onChange={() => setSelectedRating(rating)}
-                          className="w-4 h-4 text-blue-600 border-gray-300 focus:ring-blue-500"
-                        />
-                        <div className="flex items-center space-x-2">
-                          <div className="flex space-x-1">
-                            {Array.from({ length: 5 }, (_, i) => (
-                              <Star 
-                                key={i} 
-                                className={`h-4 w-4 ${i < rating ? 'text-yellow-400 fill-current' : 'text-gray-300'}`} 
-                              />
-                            ))}
-                          </div>
-                          <span className="text-sm text-gray-600">& up</span>
-                        </div>
-                      </label>
-                    ))}
-                  </div>
-                </div>
-
-                {/* Special Filters */}
-                <div className="space-y-3">
-                  <h3 className="text-sm font-bold text-gray-900 uppercase tracking-wider flex items-center space-x-2">
-                    <Sparkles className="h-4 w-4" />
-                    <span>Special</span>
-                  </h3>
-                  <div className="space-y-3">
-                    <label className="flex items-center space-x-3 cursor-pointer group">
-                      <input
-                        type="checkbox"
-                        checked={showOnlyDiscounted}
-                        onChange={(e) => setShowOnlyDiscounted(e.target.checked)}
-                        className="w-4 h-4 text-red-600 border-gray-300 rounded focus:ring-red-500"
-                      />
-                      <span className="text-sm text-gray-700 group-hover:text-red-600 transition-colors flex items-center space-x-2">
-                        <Flame className="h-4 w-4 text-red-500" />
-                        <span>On Sale</span>
-                      </span>
-                    </label>
-                    <label className="flex items-center space-x-3 cursor-pointer group">
-                      <input
-                        type="checkbox"
-                        checked={showOnlyInStock}
-                        onChange={(e) => setShowOnlyInStock(e.target.checked)}
-                        className="w-4 h-4 text-green-600 border-gray-300 rounded focus:ring-green-500"
-                      />
-                      <span className="text-sm text-gray-700 group-hover:text-green-600 transition-colors flex items-center space-x-2">
-                        <CheckCircle className="h-4 w-4 text-green-500" />
-                        <span>In Stock</span>
-                      </span>
-                    </label>
-                  </div>
-                </div>
-              </div>
-
-              {/* Filter Actions */}
-              <div className="flex items-center justify-between mt-6 pt-6 border-t border-gray-200">
-                <div className="text-sm text-gray-600">
-                  {filteredProducts.length} product{filteredProducts.length !== 1 ? 's' : ''} found
-                </div>
-                <div className="flex items-center space-x-3">
-                  <button
-                    onClick={clearFilters}
-                    className="flex items-center space-x-2 text-gray-600 hover:text-red-600 transition-colors"
-                  >
-                    <FilterX className="h-4 w-4" />
-                    <span>Clear All</span>
-                  </button>
-                  <button
-                    onClick={() => setShowFilters(false)}
-                    className="bg-blue-600 text-white px-6 py-2 rounded-lg font-semibold hover:bg-blue-700 transition-colors"
-                  >
-                    Apply Filters
-                  </button>
-                </div>
-              </div>
-            </div>
-          )}
-
-          {/* Active Filters Display */}
-          {activeFiltersCount > 0 && !showFilters && (
-            <div className="py-3 border-t border-gray-200">
-              <div className="flex items-center space-x-3 flex-wrap">
-                <span className="text-sm font-medium text-gray-700">Active filters:</span>
+          {/* Active Filters */}
+          {getActiveFiltersCount() > 0 && (
+            <div className="pb-4">
+              <div className="flex items-center space-x-2 flex-wrap">
+                <span className="text-sm text-gray-600">Active filters:</span>
                 {selectedCategory !== 'all' && (
-                  <span className="inline-flex items-center space-x-1 bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm">
-                    <span>{selectedCategoryInfo?.name}</span>
-                    <button
-                      onClick={() => setSelectedCategory('all')}
-                      className="hover:bg-blue-200 rounded-full p-1"
-                    >
+                  <span className="inline-flex items-center space-x-1 bg-blue-100 text-blue-700 px-3 py-1 rounded-full text-sm">
+                    <span>{categories.find(c => c.id === selectedCategory)?.name}</span>
+                    <button onClick={() => setSelectedCategory('all')}>
                       <X className="h-3 w-3" />
                     </button>
                   </span>
                 )}
-                {selectedBrands.map((brand) => (
-                  <span key={brand} className="inline-flex items-center space-x-1 bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm">
+                {selectedBrands.map(brand => (
+                  <span key={brand} className="inline-flex items-center space-x-1 bg-green-100 text-green-700 px-3 py-1 rounded-full text-sm">
                     <span>{brand}</span>
-                    <button
-                      onClick={() => handleBrandToggle(brand)}
-                      className="hover:bg-green-200 rounded-full p-1"
-                    >
+                    <button onClick={() => handleBrandToggle(brand)}>
                       <X className="h-3 w-3" />
                     </button>
                   </span>
                 ))}
-                {(priceRange[0] > 0 || priceRange[1] < 500000) && (
-                  <span className="inline-flex items-center space-x-1 bg-purple-100 text-purple-800 px-3 py-1 rounded-full text-sm">
-                    <span>₹{priceRange[0].toLocaleString()} - ₹{priceRange[1].toLocaleString()}</span>
-                    <button
-                      onClick={() => setPriceRange([0, 500000])}
-                      className="hover:bg-purple-200 rounded-full p-1"
-                    >
+                {(priceRange.min || priceRange.max) && (
+                  <span className="inline-flex items-center space-x-1 bg-purple-100 text-purple-700 px-3 py-1 rounded-full text-sm">
+                    <span>₹{priceRange.min || '0'} - ₹{priceRange.max || '∞'}</span>
+                    <button onClick={() => setPriceRange({ min: '', max: '' })}>
                       <X className="h-3 w-3" />
                     </button>
                   </span>
                 )}
                 {selectedRating > 0 && (
-                  <span className="inline-flex items-center space-x-1 bg-yellow-100 text-yellow-800 px-3 py-1 rounded-full text-sm">
+                  <span className="inline-flex items-center space-x-1 bg-yellow-100 text-yellow-700 px-3 py-1 rounded-full text-sm">
                     <span>{selectedRating}+ stars</span>
-                    <button
-                      onClick={() => setSelectedRating(0)}
-                      className="hover:bg-yellow-200 rounded-full p-1"
-                    >
+                    <button onClick={() => setSelectedRating(0)}>
                       <X className="h-3 w-3" />
                     </button>
                   </span>
                 )}
-                {showOnlyDiscounted && (
-                  <span className="inline-flex items-center space-x-1 bg-red-100 text-red-800 px-3 py-1 rounded-full text-sm">
+                {onSale && (
+                  <span className="inline-flex items-center space-x-1 bg-red-100 text-red-700 px-3 py-1 rounded-full text-sm">
                     <span>On Sale</span>
-                    <button
-                      onClick={() => setShowOnlyDiscounted(false)}
-                      className="hover:bg-red-200 rounded-full p-1"
-                    >
+                    <button onClick={() => setOnSale(false)}>
                       <X className="h-3 w-3" />
                     </button>
                   </span>
                 )}
                 <button
-                  onClick={clearFilters}
-                  className="text-gray-500 hover:text-red-600 text-sm underline transition-colors"
+                  onClick={clearAllFilters}
+                  className="text-sm text-gray-500 hover:text-red-500 underline"
                 >
                   Clear all
                 </button>
@@ -1316,137 +687,221 @@ const MusicStore: React.FC<MusicStoreProps> = ({ onBackToHome }) => {
             </div>
           )}
         </div>
-      </section>
+      </div>
 
-      {/* Products Grid */}
-      <section className="py-12">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          {filteredProducts.length > 0 ? (
-            <div className={`grid gap-8 ${
-              viewMode === 'grid' 
-                ? 'grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4' 
-                : 'grid-cols-1'
-            }`}>
-              {filteredProducts.map((product, index) => (
-                <div key={product.id} style={{ animationDelay: `${index * 100}ms` }}>
-                  <ProductCard product={product} />
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div className="flex gap-8">
+          {/* Enhanced Filters Sidebar */}
+          <div className={`${showFilters ? 'block' : 'hidden'} lg:block w-80 flex-shrink-0`}>
+            <div className="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden sticky top-32">
+              {/* Filter Header */}
+              <div className="bg-gradient-to-r from-blue-50 to-indigo-50 px-6 py-4 border-b border-gray-200">
+                <div className="flex items-center justify-between">
+                  <h3 className="text-lg font-semibold text-gray-900">Filters</h3>
+                  <button
+                    onClick={clearAllFilters}
+                    className="text-sm text-blue-600 hover:text-blue-700 font-medium"
+                  >
+                    Clear all
+                  </button>
                 </div>
-              ))}
-            </div>
-          ) : (
-            <div className="text-center py-16">
-              <div className="w-24 h-24 bg-gray-200 rounded-full flex items-center justify-center mx-auto mb-4">
-                <Search className="h-12 w-12 text-gray-400" />
               </div>
-              <h3 className="text-xl font-semibold text-gray-900 mb-2">No products found</h3>
-              <p className="text-gray-600 mb-6">
-                Try adjusting your search or filter criteria
-              </p>
-              <button
-                onClick={clearFilters}
-                className="bg-blue-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-blue-700 transition-colors"
-              >
-                Clear Filters
-              </button>
-            </div>
-          )}
-        </div>
-      </section>
 
-      {/* Enhanced Newsletter */}
-      <section className="py-16 bg-gradient-to-r from-gray-900 via-blue-900 to-purple-900 text-white relative overflow-hidden">
-        <div className="absolute inset-0 opacity-10">
-          <div className="absolute top-0 left-0 w-96 h-96 bg-white rounded-full blur-3xl -translate-x-48 -translate-y-48"></div>
-          <div className="absolute bottom-0 right-0 w-96 h-96 bg-white rounded-full blur-3xl translate-x-48 translate-y-48"></div>
-        </div>
-        
-        <div className="relative max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <div className="mb-8">
-            <HeadphonesIcon className="h-16 w-16 text-blue-400 mx-auto mb-4" />
-            <h3 className="text-4xl font-bold mb-4">Stay in Tune with Our Latest Offers</h3>
-            <p className="text-xl text-gray-300 leading-relaxed">
-              Get exclusive deals, new product announcements, and music tips delivered to your inbox. Join over 50,000 musicians worldwide.
-            </p>
-          </div>
-          
-          <div className="flex flex-col sm:flex-row max-w-lg mx-auto space-y-4 sm:space-y-0 sm:space-x-4">
-            <input
-              type="email"
-              placeholder="Enter your email address"
-              className="flex-1 px-6 py-4 rounded-2xl text-gray-900 focus:ring-4 focus:ring-blue-500/50 border-0 text-lg placeholder-gray-500"
-            />
-            <button className="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-8 py-4 rounded-2xl font-bold text-lg hover:from-blue-700 hover:to-purple-700 transition-all duration-300 transform hover:scale-105 shadow-xl">
-              Subscribe Now
-            </button>
-          </div>
-          
-          <div className="flex items-center justify-center space-x-8 mt-8 text-sm text-gray-400">
-            <div className="flex items-center space-x-2">
-              <Shield className="h-4 w-4" />
-              <span>No spam, ever</span>
-            </div>
-            <div className="flex items-center space-x-2">
-              <TrendingUp className="h-4 w-4" />
-              <span>Weekly deals</span>
-            </div>
-            <div className="flex items-center space-x-2">
-              <Award className="h-4 w-4" />
-              <span>Exclusive access</span>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Enhanced Footer */}
-      <footer className="bg-gray-900 text-white py-12">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
-            <div>
-              <div className="flex items-center space-x-3 mb-4">
-                <div className="w-10 h-10 bg-gradient-to-r from-blue-600 to-purple-600 rounded-xl flex items-center justify-center">
-                  <Music className="h-6 w-6 text-white" />
+              <div className="max-h-96 overflow-y-auto">
+                {/* Categories */}
+                <div className="p-6 border-b border-gray-200">
+                  <h4 className="font-semibold text-gray-900 mb-4">Categories</h4>
+                  <div className="space-y-3">
+                    {categories.map((category) => (
+                      <label key={category.id} className="flex items-center space-x-3 cursor-pointer group">
+                        <input
+                          type="radio"
+                          name="category"
+                          value={category.id}
+                          checked={selectedCategory === category.id}
+                          onChange={(e) => setSelectedCategory(e.target.value)}
+                          className="w-4 h-4 text-blue-600 border-gray-300 focus:ring-blue-500"
+                        />
+                        <span className="text-sm text-gray-700 group-hover:text-blue-600 transition-colors flex-1">
+                          {category.icon} {category.name}
+                        </span>
+                        <span className="text-xs text-gray-500 bg-gray-100 px-2 py-1 rounded-full">
+                          {category.count}
+                        </span>
+                      </label>
+                    ))}
+                  </div>
                 </div>
-                <h4 className="text-xl font-bold">MusicStore</h4>
+
+                {/* Brands */}
+                <div className="p-6 border-b border-gray-200">
+                  <h4 className="font-semibold text-gray-900 mb-4">Brands</h4>
+                  <div className="space-y-3">
+                    {brands.map((brand) => (
+                      <label key={brand.name} className="flex items-center space-x-3 cursor-pointer group">
+                        <input
+                          type="checkbox"
+                          checked={selectedBrands.includes(brand.name)}
+                          onChange={() => handleBrandToggle(brand.name)}
+                          className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+                        />
+                        <span className="text-sm text-gray-700 group-hover:text-blue-600 transition-colors flex-1">
+                          {brand.name}
+                        </span>
+                        <span className="text-xs text-gray-500 bg-gray-100 px-2 py-1 rounded-full">
+                          {brand.count}
+                        </span>
+                      </label>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Price Range */}
+                <div className="p-6 border-b border-gray-200">
+                  <h4 className="font-semibold text-gray-900 mb-4">Price Range</h4>
+                  <div className="space-y-4">
+                    <div className="grid grid-cols-2 gap-3">
+                      <div>
+                        <label className="block text-xs text-gray-600 mb-1">Min Price</label>
+                        <input
+                          type="number"
+                          placeholder="₹0"
+                          value={priceRange.min}
+                          onChange={(e) => setPriceRange(prev => ({ ...prev, min: e.target.value }))}
+                          className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-xs text-gray-600 mb-1">Max Price</label>
+                        <input
+                          type="number"
+                          placeholder="₹∞"
+                          value={priceRange.max}
+                          onChange={(e) => setPriceRange(prev => ({ ...prev, max: e.target.value }))}
+                          className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                        />
+                      </div>
+                    </div>
+                    <div className="grid grid-cols-2 gap-2">
+                      <button
+                        onClick={() => setPriceRange({ min: '0', max: '50000' })}
+                        className="px-3 py-2 text-xs border border-gray-300 rounded-lg hover:border-blue-500 hover:text-blue-600 transition-colors"
+                      >
+                        Under ₹50K
+                      </button>
+                      <button
+                        onClick={() => setPriceRange({ min: '50000', max: '100000' })}
+                        className="px-3 py-2 text-xs border border-gray-300 rounded-lg hover:border-blue-500 hover:text-blue-600 transition-colors"
+                      >
+                        ₹50K - ₹1L
+                      </button>
+                      <button
+                        onClick={() => setPriceRange({ min: '100000', max: '200000' })}
+                        className="px-3 py-2 text-xs border border-gray-300 rounded-lg hover:border-blue-500 hover:text-blue-600 transition-colors"
+                      >
+                        ₹1L - ₹2L
+                      </button>
+                      <button
+                        onClick={() => setPriceRange({ min: '200000', max: '' })}
+                        className="px-3 py-2 text-xs border border-gray-300 rounded-lg hover:border-blue-500 hover:text-blue-600 transition-colors"
+                      >
+                        Above ₹2L
+                      </button>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Rating */}
+                <div className="p-6 border-b border-gray-200">
+                  <h4 className="font-semibold text-gray-900 mb-4">Customer Rating</h4>
+                  <div className="space-y-3">
+                    {[4, 3, 2, 1].map((rating) => (
+                      <label key={rating} className="flex items-center space-x-3 cursor-pointer group">
+                        <input
+                          type="radio"
+                          name="rating"
+                          value={rating}
+                          checked={selectedRating === rating}
+                          onChange={(e) => setSelectedRating(parseInt(e.target.value))}
+                          className="w-4 h-4 text-blue-600 border-gray-300 focus:ring-blue-500"
+                        />
+                        <div className="flex items-center space-x-1">
+                          {renderStars(rating)}
+                          <span className="text-sm text-gray-700 ml-2">& up</span>
+                        </div>
+                      </label>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Special Filters */}
+                <div className="p-6">
+                  <h4 className="font-semibold text-gray-900 mb-4">Special Offers</h4>
+                  <div className="space-y-3">
+                    <label className="flex items-center space-x-3 cursor-pointer">
+                      <input
+                        type="checkbox"
+                        checked={onSale}
+                        onChange={(e) => setOnSale(e.target.checked)}
+                        className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+                      />
+                      <span className="text-sm text-gray-700">On Sale</span>
+                    </label>
+                    <label className="flex items-center space-x-3 cursor-pointer">
+                      <input
+                        type="checkbox"
+                        checked={inStock}
+                        onChange={(e) => setInStock(e.target.checked)}
+                        className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+                      />
+                      <span className="text-sm text-gray-700">In Stock</span>
+                    </label>
+                  </div>
+                </div>
               </div>
-              <p className="text-gray-400 text-sm leading-relaxed">
-                Your premier destination for professional musical instruments and accessories. Trusted by musicians worldwide since 2010.
-              </p>
-            </div>
-            <div>
-              <h5 className="font-bold mb-4 text-lg">Categories</h5>
-              <ul className="space-y-3 text-sm text-gray-400">
-                <li><a href="#" className="hover:text-white transition-colors hover:underline">Electric Guitars</a></li>
-                <li><a href="#" className="hover:text-white transition-colors hover:underline">Keyboards & Pianos</a></li>
-                <li><a href="#" className="hover:text-white transition-colors hover:underline">Drums & Percussion</a></li>
-                <li><a href="#" className="hover:text-white transition-colors hover:underline">Audio Equipment</a></li>
-              </ul>
-            </div>
-            <div>
-              <h5 className="font-bold mb-4 text-lg">Support</h5>
-              <ul className="space-y-3 text-sm text-gray-400">
-                <li><a href="#" className="hover:text-white transition-colors hover:underline">Contact Us</a></li>
-                <li><a href="#" className="hover:text-white transition-colors hover:underline">Shipping Info</a></li>
-                <li><a href="#" className="hover:text-white transition-colors hover:underline">Returns & Exchanges</a></li>
-                <li><a href="#" className="hover:text-white transition-colors hover:underline">FAQ</a></li>
-              </ul>
-            </div>
-            <div>
-              <h5 className="font-bold mb-4 text-lg">Connect</h5>
-              <ul className="space-y-3 text-sm text-gray-400">
-                <li><a href="#" className="hover:text-white transition-colors hover:underline">Facebook</a></li>
-                <li><a href="#" className="hover:text-white transition-colors hover:underline">Instagram</a></li>
-                <li><a href="#" className="hover:text-white transition-colors hover:underline">YouTube</a></li>
-                <li><a href="#" className="hover:text-white transition-colors hover:underline">Twitter</a></li>
-              </ul>
             </div>
           </div>
-          <div className="border-t border-gray-800 pt-8 text-center">
-            <p className="text-sm text-gray-400">
-              &copy; 2024 MusicStore. All rights reserved. | Designed with ♪ for music lovers worldwide
-            </p>
+
+          {/* Products Grid */}
+          <div className="flex-1">
+            {filteredProducts.length === 0 ? (
+              <div className="text-center py-12">
+                <div className="w-24 h-24 bg-gray-200 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <Search className="h-12 w-12 text-gray-400" />
+                </div>
+                <h3 className="text-xl font-semibold text-gray-900 mb-2">No products found</h3>
+                <p className="text-gray-600 mb-4">Try adjusting your filters or search terms</p>
+                <button
+                  onClick={clearAllFilters}
+                  className="bg-blue-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-blue-700 transition-colors"
+                >
+                  Clear All Filters
+                </button>
+              </div>
+            ) : (
+              <div className={`grid gap-6 ${
+                viewMode === 'grid' 
+                  ? 'grid-cols-1 md:grid-cols-2 lg:grid-cols-3' 
+                  : 'grid-cols-1'
+              }`}>
+                {filteredProducts.map((product) => (
+                  <ProductCard key={product.id} product={product} />
+                ))}
+              </div>
+            )}
           </div>
         </div>
-      </footer>
+      </div>
+
+      {/* Product Modal */}
+      <ProductModal
+        product={selectedProduct!}
+        isOpen={!!selectedProduct}
+        onClose={() => setSelectedProduct(null)}
+        onAddToCart={handleAddToCart}
+        isAuthenticated={isAuthenticated}
+        onSignInClick={handleUserIconClick}
+      />
 
       {/* Auth Modal */}
       <AuthModal 
