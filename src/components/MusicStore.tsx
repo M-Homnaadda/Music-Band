@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { 
   Search, 
   ShoppingCart, 
@@ -59,7 +59,7 @@ interface MusicStoreProps {
 
 const MusicStore: React.FC<MusicStoreProps> = ({ onBackToHome }) => {
   const { isAuthenticated } = useAuth();
-  const { cartItems, addToCart, removeFromCart, updateQuantity, getCartItemsCount } = useCart();
+  const { cartItems, addToCart, removeFromCart, updateQuantity, getCartItemsCount, syncCartOnSignIn } = useCart();
   
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('all');
@@ -77,6 +77,13 @@ const MusicStore: React.FC<MusicStoreProps> = ({ onBackToHome }) => {
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   const [showCart, setShowCart] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
+  // Sync cart when user signs in
+  useEffect(() => {
+    if (isAuthenticated) {
+      syncCartOnSignIn();
+    }
+  }, [isAuthenticated]);
 
   const categories = [
     { id: 'all', name: 'All Categories', icon: '🎵', count: 156 },

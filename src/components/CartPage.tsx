@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { ArrowLeft, Plus, Minus, X, Truck, Store, MapPin } from 'lucide-react';
 
 interface CartItem {
-  id: number;
+  id: string;
   name: string;
   brand: string;
   model: string;
@@ -17,8 +17,8 @@ interface CartItem {
 interface CartPageProps {
   onBackToStore: () => void;
   cartItems: CartItem[];
-  onUpdateQuantity: (id: number, quantity: number) => void;
-  onRemoveItem: (id: number) => void;
+  onUpdateQuantity: (id: string, quantity: number) => void;
+  onRemoveItem: (id: string) => void;
 }
 
 const CartPage: React.FC<CartPageProps> = ({ 
@@ -34,7 +34,7 @@ const CartPage: React.FC<CartPageProps> = ({
   const shippingCost = shippingMethod === 'pickup' ? 0 : 819; // ₹819 for delivery
   const total = subtotal + shippingCost;
 
-  const handleQuantityChange = (id: number, change: number) => {
+  const handleQuantityChange = (id: string, change: number) => {
     const item = cartItems.find(item => item.id === id);
     if (item) {
       const newQuantity = Math.max(1, item.quantity + change);
